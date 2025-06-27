@@ -2,9 +2,10 @@ import './CharacterCard.scss';
 import { type Component, Show, For, createSignal, onMount, createEffect } from 'solid-js';
 import type { Character } from '../lib/types';
 import { A } from '@solidjs/router';
-import Find from './icons/find';
+import Find from './icons/Find';
 import Avatar from './Avatar';
 import { fakeApi } from '../lib/fakeApi';
+import CharacterHeader from './card/CharacterHeader';
 
 interface CharacterCardWithCharacter {
     character: Character;
@@ -26,9 +27,12 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     const [error, setError] = createSignal<string | null>(null);
     const [isOpen, setIsOpen] = createSignal(!props['link-to-main']);
 
-    const toggleOpen = () => setIsOpen(!isOpen());
+    const toggleOpen = () => {
+        if (props['link-to-main']) {
+            setIsOpen(!isOpen());
+        }
+    }
 
-    // If characterId is given but no character, fetch character data
     createEffect(() => {
         if (!props.character && props.characterId) {
             setLoading(true);
@@ -49,10 +53,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     return (
         <div
             class={`character-card ${isOpen() ? 'open' : ''}`}
-            onClick={toggleOpen}
-            role="button"
             tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOpen(); }}
             aria-expanded={isOpen()}
         >
             <Show
@@ -63,23 +64,22 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                     when={!error() && character()}
                     fallback={<div class="error">{error()}</div>}
                 >
-                    <Avatar
-                        avatarColor={character()?.avatarColor}
-                        avatarImage={character()?.avatarImage}
-                        avatarInitial={character()?.avatarInitial}
-                        name={character()?.name || ''}
-                    />
+                    <CharacterHeader
+                        title={character().name}
+                        link={props["link-to-main"] ? `/character/${character().id}` : undefined}
+                        label={`View details for ${character().name}`}
+                        toggleOpen={props["link-to-main"] ? toggleOpen : () => void 0}
+                        class="character-header"
+                    >
+                        <Avatar
+                            avatarColor={character()?.avatarColor}
+                            avatarImage={character()?.avatarImage}
+                            avatarInitial={character()?.avatarInitial}
+                            name={character()?.name || ''}
+                        />
+                    </CharacterHeader>
 
                     <div class="details">
-                        <h3 class="name">
-                            {character()?.name}
-                            <Show when={props['link-to-main']}>
-                                <A href={`/character/${character()?.id}`} class="details-link" aria-label={`View details for ${character()?.name}`}>
-                                    <Find />
-                                </A>
-                            </Show>
-                        </h3>
-
                         <Show when={isOpen()}>
                             <Show when={character()?.bio}>
                                 <p class="bio">{character()?.bio}</p>
@@ -107,8 +107,8 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                         </Show>
                     </div>
                 </Show>
-            </Show>
-        </div>
+            </Show >
+        </div >
     );
 };
 

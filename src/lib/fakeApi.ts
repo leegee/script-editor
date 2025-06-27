@@ -34,8 +34,10 @@ class StoryService {
         return Promise.resolve(undefined);
     }
 
-    async getCharacters(node: Story | Act | Scene | Beat | ScriptLine): Promise<Character[]> {
-        return Promise.resolve(this.getCharactersFrom(node));
+    async getCharacters(node: Story | Act | Scene | Beat | ScriptLine | undefined): Promise<Character[]> {
+        return Promise.resolve(this.getCharactersFrom(
+            typeof node === 'undefined' ? this.story : node
+        ));
     }
 
     async getLocations(node: Story | Act | Scene | Beat | ScriptLine): Promise<Location[]> {
@@ -49,6 +51,10 @@ class StoryService {
 
     async getCharacter(characterId: string): Promise<Character | undefined> {
         return this.story.characters.find(c => c.id === characterId);
+    }
+
+    async getLocation(locationId: string): Promise<Location | undefined> {
+        return this.story.locations.find(loc => loc.id === locationId);
     }
 
     private getScriptLinesFrom(node: Story | Act | Scene | Beat | ScriptLine): ScriptLine[] {

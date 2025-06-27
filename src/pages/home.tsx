@@ -2,12 +2,16 @@
 import './home.scss';
 import CharacterList from '../components/CharacterList';
 import ActsList from '../components/ActsList';
-import { createResource, Suspense } from 'solid-js';
+import { createEffect, createResource, Show, Suspense } from 'solid-js';
 import { getCharacters, getActs } from '../Routes';
 
 export default function Home(props) {
   const [acts] = createResource(getActs);
   const [characters] = createResource(getCharacters);
+
+  createEffect(() => {
+    console.log('xxxxxxxxxx', acts(), characters())
+  });
 
   return (
     <section class="home-layout">
@@ -23,8 +27,11 @@ export default function Home(props) {
 
       <aside class="character-panel">
         <Suspense fallback={<span>Loading characters...</span>}>
-          <CharacterList characters={characters()} />
+          <Show when={characters()} fallback={null}>
+            {(chars) => <CharacterList characters={chars()} />}
+          </Show>
         </Suspense>
+
       </aside>
     </section>
   );

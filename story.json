@@ -26,12 +26,55 @@
         {
             "id": "loc-1",
             "name": "Ancient Forest",
-            "description": "A mysterious forest filled with secrets."
+            "description": "A mysterious forest filled with secrets.",
+            "tags": [
+                "monument",
+                "Budapest",
+                "history"
+            ],
+            "geofence": {
+                "type": "circle",
+                "center": [
+                    19.0760,
+                    47.5145
+                ],
+                "radiusMeters": 150
+            }
         },
         {
             "id": "loc-2",
             "name": "Crystal Cave",
-            "description": "A glowing cave deep beneath the earth."
+            "description": "A glowing cave deep beneath the earth.",
+            "tags": [
+                "spa",
+                "Budapest",
+                "relaxation"
+            ],
+            "geofence": {
+                "type": "polygon",
+                "polygonCoords": [
+                    [
+                        19.0820,
+                        47.5173
+                    ],
+                    [
+                        19.0832,
+                        47.5173
+                    ],
+                    [
+                        19.0832,
+                        47.5180
+                    ],
+                    [
+                        19.0820,
+                        47.5180
+                    ],
+                    [
+                        19.0820,
+                        47.5173
+                    ]
+                ]
+            }
         }
     ],
     "acts": [

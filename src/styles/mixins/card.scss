@@ -1,0 +1,20 @@
+@mixin card-style {
+    background-color: #333;
+    border-radius: 4pt;
+    box-shadow: 0 0 6pt rgba(220, 220, 220, 0.15);
+    padding: 1em;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        box-shadow: 0 0 12pt rgba(220, 220, 220, 0.25);
+        outline: none;
+    }
+
+    &.open {
+        background-color: #2c2c2c;
+        box-shadow: 0 0 12pt rgba(0, 0, 0, 0.7);
+    }
+
+}

@@ -18,7 +18,7 @@ const Avatar: Component<AvatarProps> = (props) => {
                 <img src={props.avatarImage} alt={props.name} class="avatar-img" />
             </Show>
             <Show when={!props.avatarImage}>
-                <span class='name'>{props.avatarInitial ?? props.name[0]}</span>
+                {props.avatarInitial ?? props.name[0]}
             </Show>
         </div>
     );
