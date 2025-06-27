@@ -41,19 +41,21 @@ const ActCard: Component<ActCardProps> = (props) => {
                 Act {props.act.number ?? ''}: {props.act.title}
             </h2>
 
-            <Show when={props.act.summary}>
-                <p class="summary">{props.act.summary}</p>
-            </Show>
+            <Show when={isOpen()}>
+                <Show when={props.act.summary}>
+                    <p class="summary">{props.act.summary}</p>
+                </Show>
 
-            <Show when={props.act.sceneIds?.length}>
-                <SceneList scenes={scenes()} />
-            </Show>
+                <Show when={props.act.sceneIds?.length}>
+                    <SceneList scenes={scenes()} />
+                </Show>
 
-            {/* <Show when={act.totalDurationSeconds}>
+                {/* <Show when={act.totalDurationSeconds}>
                 <p>
                     <strong>Total Duration:</strong> {Math.round(act.totalDurationSeconds!)}s
                 </p>
             </Show> */}
+            </Show>
         </article >
     );
 };

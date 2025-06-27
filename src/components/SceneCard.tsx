@@ -1,6 +1,7 @@
 import './SceneCard.scss';
 import { type Component, Show, For, createSignal } from 'solid-js';
 import type { Scene } from '../lib/types';
+import CharacterCard from './CharacterCard';
 
 interface SceneCardProps {
     scene: Scene;
@@ -10,18 +11,23 @@ const SceneCard: Component<SceneCardProps> = (props) => {
     const { scene } = props;
     const [isOpen, setIsOpen] = createSignal(false);
 
-    const toggleOpen = () => setIsOpen(!isOpen());
+    const toggleOpen = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOpen(!isOpen());
+    }
 
     return (
         <div
             class={`scene-card ${isOpen() ? 'open' : ''}`}
-            onClick={toggleOpen}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOpen(); }}
             aria-expanded={isOpen()}
+            tabIndex={0}
         >
-            <header class="scene-header">
+            <header class="scene-header"
+                onClick={(e) => toggleOpen(e)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOpen(e); }}
+                role="button"
+            >
                 <h2 class="scene-title">{scene.title}</h2>
                 <Show when={scene.durationSeconds !== undefined}>
                     <span class="scene-duration">
@@ -41,7 +47,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                             <strong>Characters:</strong>
                             <ul>
                                 <For each={scene.characters}>
-                                    {(charId) => <li>{charId}</li>}
+                                    {(characterId) => <CharacterCard characterId={characterId} link-to-main={true} />}
                                 </For>
                             </ul>
                         </div>
