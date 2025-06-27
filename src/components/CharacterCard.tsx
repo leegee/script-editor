@@ -1,14 +1,18 @@
 import './CharacterCard.scss';
 import { type Component, Show, For, createSignal } from 'solid-js';
 import type { Character } from '../lib/types';
+import { A } from '@solidjs/router';
+import Find from './icons/find';
+import Avatar from './Avatar';
 
 interface CharacterCardProps {
     character: Character;
+    "link-to-main"?: boolean;
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
     const { character } = props;
-    const [isOpen, setIsOpen] = createSignal(false);
+    const [isOpen, setIsOpen] = createSignal(!props['link-to-main']);
 
     const toggleOpen = () => setIsOpen(!isOpen());
 
@@ -21,24 +25,22 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOpen(); }}
             aria-expanded={isOpen()}
         >
-            <div
-                class="avatar"
-                style={{ 'background-color': character.avatarColor ?? '#999' }}
-            >
-                <Show when={character.avatarImage}>
-                    <img
-                        src={character.avatarImage}
-                        alt={character.name}
-                        class="avatar-img"
-                    />
-                </Show>
-                <Show when={!character.avatarImage}>
-                    {character.avatarInitial ?? character.name[0]}
-                </Show>
-            </div>
+            <Avatar
+                avatarColor={character.avatarColor}
+                avatarImage={character.avatarImage}
+                avatarInitial={character.avatarInitial}
+                name={character.name}
+            />
 
             <div class="details">
-                <h3 class="name">{character.name}</h3>
+                <h3 class="name">
+                    {character.name}
+                    <Show when={props['link-to-main']}>
+                        <A href={`/character/${character.id}`} class="details-link" aria-label={`View details for ${character.name}`}>
+                            <Find />
+                        </A>
+                    </Show>
+                </h3>
 
                 <Show when={isOpen()}>
                     <Show when={character.bio}>
@@ -65,7 +67,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                     </Show>
                 </Show>
             </div>
-        </div>
+        </div >
     );
 };
 

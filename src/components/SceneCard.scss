@@ -1,10 +1,10 @@
-// SceneCard.scss
+// sceneCard.scss
 
 .scene-card {
     background-color: #1e1e1e;
-    border: 1px solid #444;
-    border-radius: 0.5rem;
-    padding: 1rem;
+    border: 0.75pt solid #444; // 1px ≈ 0.75pt
+    border-radius: 0.3125em; // 0.5rem = 8px → 8px / 16px font-size = 0.5em, so 0.5rem ≈ 0.5em, adjusted to 0.3125em (5px) for rounding
+    padding: 1em; // 1rem = 16px (default), so 1em ~ 16px
     color: #eee;
     cursor: pointer;
     user-select: none;
@@ -18,7 +18,7 @@
 
     &.open {
         background-color: #2c2c2c;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 0.25em 0.75em rgba(0, 0, 0, 0.7); // 4px = 0.25em, 12px = 0.75em
     }
 }
 
@@ -30,25 +30,25 @@
 
 .scene-title {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.25em; // 1.25rem = 20px ≈ 15pt (1pt = 1.333px, so 20px ≈ 15pt)
     font-weight: 700;
 }
 
 .scene-duration {
-    font-size: 0.875rem;
+    font-size: 0.875em; // 0.875rem = 14px ≈ 10.5pt
     color: #aaa;
     white-space: nowrap;
 }
 
 .scene-details {
-    margin-top: 1rem;
-    font-size: 0.9rem;
+    margin-top: 0.625em; // 1rem * 0.625 = 10px
+    font-size: 0.9em; // about 14.4px
     line-height: 1.4;
     color: #ccc;
 
     p,
     blockquote {
-        margin: 0.5rem 0;
+        margin: 0.3125em 0; // 5px top and bottom
     }
 }
 
@@ -58,27 +58,28 @@
 }
 
 .scene-characters {
-    margin-top: 0.75rem;
+    margin-top: 0.46875em; // 0.75rem * 0.625 = 12px
 
     strong {
         display: block;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.15625em; // 0.25rem * 0.625 = 4px
         color: #ddd;
     }
 
     ul {
         margin: 0;
-        padding-left: 1.25rem;
+        padding-left: 0.78125em; // 1.25rem * 0.625 = 20px
+
         list-style-type: disc;
 
         li {
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.125em; // 2px
         }
     }
 }
 
 .scene-location {
-    margin-top: 0.75rem;
+    margin-top: 0.46875em; // 0.75rem * 0.625 = 12px
 
     strong {
         color: #ddd;
@@ -86,9 +87,9 @@
 }
 
 .scene-script-excerpt {
-    margin-top: 1rem;
-    padding-left: 1rem;
-    border-left: 4px solid #555;
+    margin-top: 0.625em; // 10px
+    padding-left: 0.625em; // 10px
+    border-left: 3pt solid #555; // 4px → 3pt
     font-style: italic;
     color: #999;
     user-select: text;
