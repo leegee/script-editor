@@ -1,166 +1,138 @@
-import type { Story, Scene, Character, Location, Act, ScriptLine } from './types';
-import { ScriptLineType } from './types';
+import type { Story, Act, Scene, Beat, ScriptLine, Character, Location } from './types';
+import storyData from '../../story.json' assert { type: 'json' };
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+class StoryService {
+    private story: Story;
 
-export const fakeApi = {
+    constructor(story: Story) {
+        this.story = story;
+    }
+
     async getStory(): Promise<Story> {
-        await delay(200);
-        return structuredClone(sampleStory);
-    },
+        return Promise.resolve(this.story);
+    }
 
     async getActs(): Promise<Act[]> {
-        await delay(100);
-        return sampleStory.acts || [];
-    },
-
-    async getAct(actId: string): Promise<Act | undefined> {
-        await delay(100);
-        return sampleStory.acts.find(act => act.id === actId);
-    },
-
-    async getScenes(actId: string): Promise<Scene[]> {
-        await delay(100);
-        return sampleStory.scenes.filter(scene => scene.actId == actId);
-    },
-
-    async getScene(actId: string, sceneId: string): Promise<Scene> {
-        await delay(100);
-        return sampleStory.scenes.find(scene => scene.actId == actId && scene.id === sceneId);
-    },
-
-    async getCharacters(): Promise<Character[]> {
-        await delay(10);
-        return sampleStory.characters;
-    },
-
-    async getCharacter(charId: string): Promise<Character | undefined> {
-        await delay(100);
-        return sampleStory.characters.find(c => c.id === charId);
-    },
-
-    async getLocation(locId: string): Promise<Location | undefined> {
-        await delay(100);
-        return sampleStory.locations.find(l => l.id === locId);
-    },
-
-    async getActScenes(actId: string): Promise<Scene[]> {
-        await delay(150);
-        const act = sampleStory.acts?.find(a => a.id === actId);
-        return act
-            ? sampleStory.scenes.filter(scene => act.sceneIds.includes(scene.id))
-            : [];
-    },
-
-    async updateScene(sceneId: string, updates: Partial<Scene>): Promise<Scene | undefined> {
-        const scene = sampleStory.scenes.find(s => s.id === sceneId);
-        if (!scene) return undefined;
-        Object.assign(scene, updates);
-        return scene;
-    },
-
-    async listActs(): Promise<Act[]> {
-        await delay(100);
-        return sampleStory.acts ?? [];
+        return Promise.resolve(this.story.acts);
     }
-};
 
-// Sample Data Matching `types.ts`
+    async getActById(actId: string): Promise<Act | undefined> {
+        const act = this.story.acts.find(a => a.id === actId);
+        return Promise.resolve(act);
+    }
 
-const sampleStory: Story = {
-    id: 'story-001',
-    title: 'The Demo Tale',
-    description: 'A demonstration story with acts, scenes, and characters.',
-    tags: ['demo', 'fake'],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    async getScenesByActId(actId: string): Promise<Scene[]> {
+        const act = this.story.acts.find(a => a.id === actId);
+        return Promise.resolve(act?.scenes ?? []);
+    }
 
-    characters: [
-        {
-            id: 'char-1',
-            name: 'Alice',
-            avatarColor: '#f44336',
-            bio: 'Blah blah blah',
-        },
-        {
-            id: 'char-2',
-            name: 'Ben',
-            avatarColor: '#2196f3',
-            bio: 'Hmm dee dah',
+    async getSceneById(sceneId: string): Promise<Scene | undefined> {
+        for (const act of this.story.acts) {
+            const scene = act.scenes.find(s => s.id === sceneId);
+            if (scene) return Promise.resolve(scene);
         }
-    ],
+        return Promise.resolve(undefined);
+    }
 
-    locations: [
-        {
-            id: 'loc-1',
-            name: 'Ancient Forest',
-            description: 'A mysterious forest filled with secrets.',
-        },
-        {
-            id: 'loc-2',
-            name: 'Crystal Cave',
-            description: 'A glowing cave deep beneath the earth.',
-        }
-    ],
+    async getCharacters(node: Story | Act | Scene | Beat | ScriptLine): Promise<Character[]> {
+        return Promise.resolve(this.getCharactersFrom(node));
+    }
 
-    scenes: [
-        {
-            id: 'scene-1',
-            title: 'A Whisper in the Trees',
-            summary: 'Alice hears something in the forest.',
-            characters: ['char-1'],
-            locationId: 'loc-1',
-            scriptExcerpt: 'ALICE\n(whispering)\nDid you hear that?',
-            scriptLines: [
-                {
-                    id: 'line-1',
-                    type: ScriptLineType.Description,
-                    text: 'The wind rustles softly through the trees.',
-                },
-                {
-                    id: 'line-2',
-                    type: ScriptLineType.Dialogue,
-                    characterId: 'char-1',
-                    text: 'Did you hear that?',
+    async getLocations(node: Story | Act | Scene | Beat | ScriptLine): Promise<Location[]> {
+        return Promise.resolve(this.getLocationsFrom(node));
+    }
+
+    async getScriptLines(node: Story | Act | Scene | Beat | ScriptLine): Promise<ScriptLine[]> {
+        return Promise.resolve(this.getScriptLinesFrom(node));
+    }
+
+
+    async getCharacter(characterId: string): Promise<Character | undefined> {
+        return this.story.characters.find(c => c.id === characterId);
+    }
+
+    private getScriptLinesFrom(node: Story | Act | Scene | Beat | ScriptLine): ScriptLine[] {
+        const lines: ScriptLine[] = [];
+
+        const recurse = (n: Story | Act | Scene | Beat | ScriptLine | undefined) => {
+            if (!n) return;
+
+            if ('acts' in n) {
+                n.acts.forEach(recurse);
+            } else if ('scenes' in n) {
+                n.scenes.forEach(recurse);
+            } else if ('beats' in n) {
+                n.beats.forEach(recurse);
+            } else if ('scriptLines' in n) {
+                n.scriptLines.forEach(recurse);
+            } else if ('text' in n) {
+                lines.push(n);
+                if ('children' in n && Array.isArray(n.children)) {
+                    n.children.forEach(recurse);
                 }
-            ],
-            actId: 'act-1',
-        },
-        {
-            id: 'scene-2',
-            title: 'Echoes Below',
-            characters: ['char-1', 'char-2'],
-            locationId: 'loc-2',
-            durationSeconds: 90,
-            scriptLines: [
-                {
-                    id: 'line-3',
-                    type: ScriptLineType.Description,
-                    text: 'Crystals glow faintly in the cavern walls.',
-                },
-                {
-                    id: 'line-4',
-                    type: ScriptLineType.Dialogue,
-                    characterId: 'char-2',
-                    text: 'I don’t like this place...',
-                }
-            ],
-            actId: 'act-2',
-        }
-    ],
+            }
+        };
 
-    acts: [
-        {
-            id: 'act-1',
-            number: 1,
-            title: 'The Forest',
-            sceneIds: ['scene-1'],
-        },
-        {
-            id: 'act-2',
-            number: 2,
-            title: 'The Descent',
-            sceneIds: ['scene-2'],
-        }
-    ],
-};
+        recurse(node);
+        return lines;
+    }
+
+    private getCharactersFrom(node: Story | Act | Scene | Beat | ScriptLine): Character[] {
+        const charIds = new Set<string>();
+
+        const recurse = (n: Story | Act | Scene | Beat | ScriptLine | undefined) => {
+            if (!n) return;  // Safety check to avoid 'in' operator on undefined
+            if ('acts' in n) {
+                n.acts.forEach(recurse);
+            } else if ('scenes' in n) {
+                n.scenes.forEach(recurse);
+            } else if ('beats' in n) {
+                n.characterIds?.forEach(id => charIds.add(id));
+                n.beats.forEach(recurse);
+            } else if ('scriptLines' in n) {
+                n.scriptLines.forEach(recurse);
+            } else if ('characterId' in n && typeof n.characterId === 'string') {
+                charIds.add(n.characterId);
+                if ('children' in n && Array.isArray(n.children)) {
+                    n.children.forEach(recurse);
+                }
+            }
+        };
+
+        recurse(node);
+
+        return Array.from(charIds)
+            .map(id => this.story.characters.find(c => c.id === id))
+            .filter((c): c is Character => c !== undefined);
+    }
+
+    private getLocationsFrom(node: Story | Act | Scene | Beat | ScriptLine): Location[] {
+        const locIds = new Set<string>();
+
+        const recurse = (n: Story | Act | Scene | Beat | ScriptLine) => {
+            if ('acts' in n) {
+                n.acts.forEach(recurse);
+            } else if ('scenes' in n) {
+                n.scenes.forEach(recurse);
+            } else if ('beats' in n) {
+                if (n.locationId) locIds.add(n.locationId);
+                n.beats.forEach(recurse);
+            } else if ('scriptLines' in n) {
+                n.scriptLines.forEach(recurse);
+            } else {
+                if ('children' in n && Array.isArray(n.children)) {
+                    n.children.forEach(recurse);
+                }
+            }
+        };
+
+        recurse(node);
+
+        return Array.from(locIds)
+            .map(id => this.story.locations.find(l => l.id === id))
+            .filter((l): l is Location => l !== undefined);
+    }
+
+}
+
+export const fakeApi = new StoryService(storyData);

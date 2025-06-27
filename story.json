@@ -1,0 +1,132 @@
+{
+    "id": "story-001",
+    "title": "The Demo Tale",
+    "description": "A demonstration story with acts, scenes, and characters.",
+    "tags": [
+        "demo",
+        "fake"
+    ],
+    "createdAt": "2025-06-27T00:00:00.000Z",
+    "updatedAt": "2025-06-27T00:00:00.000Z",
+    "characters": [
+        {
+            "id": "char-1",
+            "name": "Alice",
+            "avatarColor": "#f44336",
+            "bio": "Blah blah blah"
+        },
+        {
+            "id": "char-2",
+            "name": "Ben",
+            "avatarColor": "#2196f3",
+            "bio": "Hmm dee dah"
+        }
+    ],
+    "locations": [
+        {
+            "id": "loc-1",
+            "name": "Ancient Forest",
+            "description": "A mysterious forest filled with secrets."
+        },
+        {
+            "id": "loc-2",
+            "name": "Crystal Cave",
+            "description": "A glowing cave deep beneath the earth."
+        }
+    ],
+    "acts": [
+        {
+            "id": "act-1",
+            "number": 1,
+            "title": "The Forest",
+            "summary": "The first act takes place in the forest.",
+            "scenes": [
+                {
+                    "id": "scene-1",
+                    "title": "A Whisper in the Trees",
+                    "summary": "Alice hears something in the forest.",
+                    "characterIds": [
+                        "char-1"
+                    ],
+                    "locationId": "loc-1",
+                    "durationSeconds": 120,
+                    "scriptExcerpt": "ALICE\n(whispering)\nDid you hear that?",
+                    "beats": [
+                        {
+                            "id": "beat-1",
+                            "title": "The Wind",
+                            "summary": "The wind rustles through the trees.",
+                            "durationSeconds": 30,
+                            "scriptLines": [
+                                {
+                                    "id": "line-1",
+                                    "type": "Description",
+                                    "text": "The wind rustles softly through the trees."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "beat-2",
+                            "title": "Alice Speaks",
+                            "durationSeconds": 60,
+                            "scriptLines": [
+                                {
+                                    "id": "line-2",
+                                    "type": "Dialogue",
+                                    "characterId": "char-1",
+                                    "text": "Did you hear that?"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "act-2",
+            "number": 2,
+            "title": "The Descent",
+            "summary": "The second act takes place underground.",
+            "scenes": [
+                {
+                    "id": "scene-2",
+                    "title": "Echoes Below",
+                    "characterIds": [
+                        "char-1",
+                        "char-2"
+                    ],
+                    "locationId": "loc-2",
+                    "durationSeconds": 90,
+                    "scriptExcerpt": "BEN\nI don’t like this place...",
+                    "beats": [
+                        {
+                            "id": "beat-3",
+                            "title": "Crystal Glow",
+                            "durationSeconds": 40,
+                            "scriptLines": [
+                                {
+                                    "id": "line-3",
+                                    "type": "Description",
+                                    "text": "Crystals glow faintly in the cavern walls."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "beat-4",
+                            "title": "Ben’s Fear",
+                            "durationSeconds": 50,
+                            "scriptLines": [
+                                {
+                                    "id": "line-4",
+                                    "type": "Dialogue",
+                                    "characterId": "char-2",
+                                    "text": "I don’t like this place..."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

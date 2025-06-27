@@ -1,14 +1,13 @@
-// pages.home.tsx
+// pages/Home.tsx
 import './home.scss';
 import CharacterList from '../components/CharacterList';
-import { Suspense } from 'solid-js';
-import { createAsync } from '@solidjs/router';
-import { fakeApi } from '../lib/fakeApi';
 import ActsList from '../components/ActsList';
+import { createResource, Suspense } from 'solid-js';
+import { getCharacters, getActs } from '../Routes';
 
 export default function Home(props) {
-  const characters = createAsync(fakeApi.getCharacters);
-  const acts = createAsync(fakeApi.getActs);
+  const [acts] = createResource(getActs);
+  const [characters] = createResource(getCharacters);
 
   return (
     <section class="home-layout">
@@ -27,7 +26,6 @@ export default function Home(props) {
           <CharacterList characters={characters()} />
         </Suspense>
       </aside>
-
     </section>
   );
 }

@@ -11,7 +11,7 @@ interface ActCardProps {
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    const scenes = createAsync(() => fakeApi.getScenes(props.act.id));
+    const scenes = createAsync(() => fakeApi.getScenesByActId(props.act.id));
     const [isOpen, setIsOpen] = createSignal(false);
     const toggleOpen = () => setIsOpen(!isOpen());
 
@@ -46,7 +46,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                     <p class="summary">{props.act.summary}</p>
                 </Show>
 
-                <Show when={props.act.sceneIds?.length}>
+                <Show when={props.act.scenes?.length}>
                     <SceneList scenes={scenes()} />
                 </Show>
 

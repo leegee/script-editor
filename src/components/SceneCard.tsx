@@ -42,11 +42,11 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         <p class="scene-summary">{scene.summary}</p>
                     </Show>
 
-                    <Show when={scene.characters?.length}>
+                    <Show when={scene.characterIds?.length}>
                         <div class="scene-characters">
                             <strong>Characters:</strong>
                             <ul>
-                                <For each={scene.characters}>
+                                <For each={scene.characterIds}>
                                     {(characterId) => <CharacterCard characterId={characterId} link-to-main={true} />}
                                 </For>
                             </ul>

@@ -1,25 +1,17 @@
 // src/lib/types.ts
 
-// --------------------
-// Enums for clarity
-// --------------------
-
 export enum MediaType {
     Image = 'image',
     Video = 'video',
     Audio = 'audio',
 }
 
-export enum ScriptLineType {
-    Dialogue = 'dialogue',
-    Action = 'action',
-    Description = 'description',
-    Parenthetical = 'parenthetical',
-}
-
-// --------------------
-// Core Interfaces
-// --------------------
+// export enum ScriptLineType {
+//     Dialogue = 'Dialogue',
+//     Action = 'Action',
+//     Description = 'Description',
+//     Parenthetical = 'Parenthetical',
+// }
 
 export interface MediaLink {
     type: MediaType;
@@ -36,12 +28,6 @@ export interface Character {
     avatarInitial?: string;
     avatarImage?: string;
     media?: MediaLink[];
-
-    // Derivable metadata
-    firstAppearanceSceneId?: string;
-    totalScreenTimeSeconds?: number;
-    sceneIds?: string[];
-    locationIds?: string[];
 }
 
 export interface Location {
@@ -62,28 +48,30 @@ export interface Location {
 
 export interface ScriptLine {
     id: string;
-    type: ScriptLineType;
-    characterId?: string; // for dialogue lines
+    // type: ScriptLineType;
+    type: string;
+    characterId?: string;
     text: string;
-    timestampSeconds?: number; // optional screenplay timing
-    children?: ScriptLine[]; // nested dialogue or description blocks
+    timestampSeconds?: number;
+}
+
+export interface Beat {
+    id: string;
+    title?: string;
+    summary?: string;
+    durationSeconds?: number;
+    scriptLines: ScriptLine[];
 }
 
 export interface Scene {
     id: string;
     title: string;
     summary?: string;
-    characters: string[]; // character IDs
+    characterIds: string[];
     locationId: string;
     durationSeconds?: number;
-
-    // Optional manually entered summary snippet
     scriptExcerpt?: string;
-
-    scriptLines?: ScriptLine[];
-
-    // Optional back-reference to act
-    actId?: string;
+    beats: Beat[];
 }
 
 export interface Act {
@@ -91,21 +79,16 @@ export interface Act {
     number: number;
     title: string;
     summary?: string;
-    sceneIds: string[];
+    scenes: Scene[];
 }
 
 export interface Story {
     id: string;
     title: string;
     description?: string;
-
+    acts: Act[];
     characters: Character[];
     locations: Location[];
-    scenes: Scene[];
-
-    // Optional act breakdown (Acts contain ordered scene IDs)
-    acts?: Act[];
-
     tags?: string[];
     createdAt?: string;
     updatedAt?: string;
