@@ -21,7 +21,7 @@ export const fakeApi = {
 
     async getScenes(actId: string): Promise<Scene[]> {
         await delay(100);
-        return sampleStory.scenes;
+        return sampleStory.scenes.filter(scene => scene.actId == actId);
     },
 
     async getScene(actId: string, sceneId: string): Promise<Scene> {

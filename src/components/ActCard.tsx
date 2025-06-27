@@ -1,6 +1,6 @@
 import './ActCard.scss';
 
-import { type Component, createSignal, For, Show } from 'solid-js';
+import { type Component, createEffect, createSignal, For, Show } from 'solid-js';
 import type { Act } from '../lib/types';
 import SceneList from './SceneList';
 import { fakeApi } from '../lib/fakeApi';
@@ -18,6 +18,10 @@ const ActCard: Component<ActCardProps> = (props) => {
     const handleClick = () => {
         toggleOpen()
     };
+
+    createEffect(() => {
+        console.log(props.act, scenes())
+    })
 
     return (
         <article
