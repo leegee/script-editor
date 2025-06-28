@@ -1,5 +1,6 @@
 import type { Story, Act, Scene, Beat, ScriptLine, Character, Location } from './types';
 import storyData from '../../story.json' assert { type: 'json' };
+import { traverseStoryTree } from './traverse';
 
 class StoryService {
     private story: Story;
@@ -60,52 +61,25 @@ class StoryService {
     private getScriptLinesFrom(node: Story | Act | Scene | Beat | ScriptLine): ScriptLine[] {
         const lines: ScriptLine[] = [];
 
-        const recurse = (n: Story | Act | Scene | Beat | ScriptLine | undefined) => {
-            if (!n) return;
-
-            if ('acts' in n) {
-                n.acts.forEach(recurse);
-            } else if ('scenes' in n) {
-                n.scenes.forEach(recurse);
-            } else if ('beats' in n) {
-                n.beats.forEach(recurse);
-            } else if ('scriptLines' in n) {
-                n.scriptLines.forEach(recurse);
-            } else if ('text' in n) {
-                lines.push(n);
-                if ('children' in n && Array.isArray(n.children)) {
-                    n.children.forEach(recurse);
-                }
+        traverseStoryTree(node, (n) => {
+            if ('text' in n) {
+                lines.push(n as ScriptLine);
             }
-        };
+        });
 
-        recurse(node);
         return lines;
     }
 
     private getCharactersFrom(node: Story | Act | Scene | Beat | ScriptLine): Character[] {
         const charIds = new Set<string>();
 
-        const recurse = (n: Story | Act | Scene | Beat | ScriptLine | undefined) => {
-            if (!n) return;  // Safety check to avoid 'in' operator on undefined
-            if ('acts' in n) {
-                n.acts.forEach(recurse);
-            } else if ('scenes' in n) {
-                n.scenes.forEach(recurse);
-            } else if ('beats' in n) {
+        traverseStoryTree(node, (n) => {
+            if ('characterIds' in n) {
                 n.characterIds?.forEach(id => charIds.add(id));
-                n.beats.forEach(recurse);
-            } else if ('scriptLines' in n) {
-                n.scriptLines.forEach(recurse);
             } else if ('characterId' in n && typeof n.characterId === 'string') {
                 charIds.add(n.characterId);
-                if ('children' in n && Array.isArray(n.children)) {
-                    n.children.forEach(recurse);
-                }
             }
-        };
-
-        recurse(node);
+        });
 
         return Array.from(charIds)
             .map(id => this.story.characters.find(c => c.id === id))
@@ -113,32 +87,19 @@ class StoryService {
     }
 
     private getLocationsFrom(node: Story | Act | Scene | Beat | ScriptLine): Location[] {
-        const locIds = new Set<string>();
+        const locationIds = new Set<string>();
 
-        const recurse = (n: Story | Act | Scene | Beat | ScriptLine) => {
-            if ('acts' in n) {
-                n.acts.forEach(recurse);
-            } else if ('scenes' in n) {
-                n.scenes.forEach(recurse);
-            } else if ('beats' in n) {
-                if (n.locationId) locIds.add(n.locationId);
-                n.beats.forEach(recurse);
-            } else if ('scriptLines' in n) {
-                n.scriptLines.forEach(recurse);
-            } else {
-                if ('children' in n && Array.isArray(n.children)) {
-                    n.children.forEach(recurse);
-                }
+        traverseStoryTree(node, (n) => {
+            if ('locationId' in n && typeof n.locationId === 'string') {
+                locationIds.add(n.locationId);
             }
-        };
+        });
 
-        recurse(node);
-
-        return Array.from(locIds)
+        return Array.from(locationIds)
             .map(id => this.story.locations.find(l => l.id === id))
             .filter((l): l is Location => l !== undefined);
     }
 
 }
 
-export const fakeApi = new StoryService(storyData);
+export const fakeApi = new StoryService(storyData as Story);
