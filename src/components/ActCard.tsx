@@ -1,45 +1,48 @@
 import './ActCard.scss';
 
 import { type Component, Show } from 'solid-js';
-import type { Act } from '../lib/types';
-import SceneList from './SceneList';
-import { fakeApi } from '../lib/fakeApi';
 import { createAsync } from '@solidjs/router';
+import { fakeApi } from '../lib/fakeApi';
+import SceneList from './SceneList';
 import Card from './Card';
 
 interface ActCardProps {
-    act: Act;
-    summary: boolean;
+    actId: string;
+    summary?: boolean;
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    const { act, summary } = props;
-    const scenes = createAsync(() => fakeApi.getScenesByActId(act.id));
+    const { actId, summary } = props;
+
+    const act = createAsync(() => fakeApi.getActById(actId));
+    const scenes = createAsync(() => fakeApi.getScenesByActId(actId));
 
     return (
-        <Card
-            title={`${act.number}: ${act.title}`}
-            link={summary ? `/act/${act.id}` : undefined}
-            label={`View details for Act ${act.number}`}
-            summary={summary}
-            class="act-card"
-        >
-            <Show when={act.summary}>
-                <p class="summary">{act.summary}</p>
-            </Show>
+        <Show when={act()} fallback={<div class="loading">Loading act...</div>}>
+            <Card
+                title={`${act()!.number}: ${act()!.title}`}
+                link={summary ? `/act/${act()!.id}` : undefined}
+                label={`View details for Act ${act()!.number}`}
+                summary={!!summary}
+                class="act-card"
+            >
+                <Show when={act()!.summary}>
+                    <p class="summary">{act()!.summary}</p>
+                </Show>
 
-            <Show when={scenes()?.length}>
-                <SceneList scenes={scenes()!} />
-            </Show>
+                <Show when={scenes()?.length}>
+                    <SceneList actId={act()!.id} />
+                </Show>
 
-            {/* 
-      <Show when={act.totalDurationSeconds}>
-        <p>
-          <strong>Total Duration:</strong> {Math.round(act.totalDurationSeconds)}s
-        </p>
-      </Show> 
-      */}
-        </Card>
+                {/*
+        <Show when={act()!.totalDurationSeconds}>
+          <p>
+            <strong>Total Duration:</strong> {Math.round(act()!.totalDurationSeconds!)}s
+          </p>
+        </Show>
+        */}
+            </Card>
+        </Show>
     );
 };
 

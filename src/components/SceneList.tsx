@@ -1,19 +1,24 @@
 import './SceneList.scss';
-import { type Component, For } from 'solid-js';
-import type { Scene } from '../lib/types';
+import { type Component, For, Show } from 'solid-js';
+import { createAsync } from '@solidjs/router';
 import SceneCard from './SceneCard';
+import { fakeApi } from '../lib/fakeApi';
 
 interface SceneListProps {
-    scenes: Scene[];
+    actId: string;
 }
 
 const SceneList: Component<SceneListProps> = (props) => {
+    const scenes = createAsync(() => fakeApi.getScenesByActId(props.actId));
+
     return (
-        <section class="scene-list" role="list" aria-label="Scenes List">
-            <For each={props.scenes}>
-                {(scene) => <SceneCard scene={scene} summary={true} />}
-            </For>
-        </section>
+        <Show when={scenes()} fallback={<p>Loading scenes...</p>}>
+            <section class="scene-list" role="list" aria-label="Scenes List">
+                <For each={scenes()}>
+                    {(scene) => <SceneCard sceneId={scene.id} summary={true} />}
+                </For>
+            </section>
+        </Show>
     );
 };
 

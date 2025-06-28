@@ -12,7 +12,7 @@ export default (props: ActsListProps) => {
         <section class="acts-list" role="list" aria-label="Acts List">
             <For each={props.acts}>
                 {(act) => (
-                    <ActCard act={act} summary={true} />
+                    <ActCard actId={act.id} summary={true} />
                 )}
             </For>
         </section>

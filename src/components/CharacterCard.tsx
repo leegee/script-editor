@@ -21,7 +21,6 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 link={props.summary ? `/character/${character()!.id}` : undefined}
                 label={`View details for ${character()!.name}`}
                 summary={!!props.summary}
-                initialOpen={!props.summary}
                 class="character-card"
                 title={
                     <>

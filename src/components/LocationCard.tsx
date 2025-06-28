@@ -4,6 +4,7 @@ import type { Location } from '../lib/types';
 import { story } from '../lib/fakeApi';
 import Map from './Map';
 import Card from './Card';
+import LocationPinIcon from './icons/LocationPin';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -21,12 +22,13 @@ const LocationCard: Component<LocationCardProps> = (props) => {
             fallback={<div class="loading">Loading location...</div>}
         >
             <Card
-                title={location()!.name}
                 link={props.summary ? `/location/${location()!.id}` : undefined}
                 label={`View details for ${location()!.name}`}
                 summary={!!props.summary}
-                initialOpen={!props.summary}
                 class="location-card"
+                title={<>
+                    <LocationPinIcon /> {location()!.name}
+                </>}
             >
                 <Show when={location()!.description}>
                     <p class="description">{location()!.description}</p>

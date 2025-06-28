@@ -6,6 +6,8 @@ import CharacterDetails from "./pages/CharacterDetails";
 import { fakeApi } from "./lib/fakeApi";
 import { query } from "@solidjs/router";
 import LocationDetails from "./pages/LocationDetails";
+import ActDetails from "./pages/ActDetails";
+import SceneDetails from "./pages/SceneDetails";
 
 export const getCharacters = query(() => fakeApi.getCharacters(undefined), "characters");
 export const getActs = query(() => fakeApi.getActs(), "acts");
@@ -23,6 +25,8 @@ export default function Routes() {
       <Route path="/" component={Welcome} />
       <Route path="/character/:id" component={CharacterDetails} />
       <Route path="/location/:id" component={LocationDetails} />
+      <Route path="/scene/:id" component={SceneDetails} />
+      <Route path="/act/:id" component={ActDetails} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Route>
   );
