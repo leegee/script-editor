@@ -1,8 +1,6 @@
 import './CharacterCard.scss';
 import { type Component, Show, For, createSignal, onMount, createEffect } from 'solid-js';
 import type { Character } from '../lib/types';
-import { A } from '@solidjs/router';
-import Find from './icons/Find';
 import Avatar from './Avatar';
 import { fakeApi } from '../lib/fakeApi';
 import CardHeader from './card/CardHeader';
