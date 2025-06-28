@@ -28,19 +28,19 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       class={props.class}
     >
       <h3 class="name">
-        <span>{props.title}</span>
-
-        <Show when={props.link}>
-          <A
-            href={props.link}
-            class="details-link"
-            aria-label={props.label}
-            onClick={e => e.stopPropagation()}
-          >
-            <Find />
-          </A>
-        </Show>
+        {props.title}
       </h3>
+
+      <Show when={props.link}>
+        <A
+          href={props.link}
+          class="details-link"
+          aria-label={props.label}
+          onClick={e => e.stopPropagation()}
+        >
+          <Find />
+        </A>
+      </Show>
     </header>
   );
 };
