@@ -1,8 +1,4 @@
-@use '../styles/mixins/card' as card;
-
 .act-card {
-    @include card.card-style;
-
     p {
         margin: 0.25em 0;
         font-size: 0.9em;

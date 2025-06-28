@@ -1,8 +1,4 @@
-@use '../styles/mixins/card' as card;
-
 .scene-card {
-    @include card.card-style;
-
     .scene-header {
         display: flex;
         justify-content: space-between;

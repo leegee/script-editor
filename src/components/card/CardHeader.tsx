@@ -25,7 +25,6 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       tabIndex={0}
       onClick={props.toggleOpen}
       onKeyDown={onKeyDown}
-      class={props.class}
     >
       <h3 class="name">
         {props.title}

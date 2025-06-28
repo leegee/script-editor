@@ -1,3 +1,4 @@
+import './Card.scss';
 import { type Component, createSignal, JSX } from 'solid-js';
 import CardHeader from './card/CardHeader';
 
