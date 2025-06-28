@@ -1,5 +1,5 @@
-import { onCleanup, onMount, type Component } from 'solid-js';
 import 'ol/ol.css';
+import { onCleanup, onMount, type Component } from 'solid-js';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
@@ -101,7 +101,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     });
 
     return (
-        <div ref={mapContainer} style={{ width: '100%', height: '250px', 'border-radius': '0.5rem' }} />
+        <div ref={mapContainer} style={{ width: '100%', height: '250px' }} />
     );
 };
 

@@ -37,7 +37,7 @@ const CharacterList: Component<CharacterListProps> = (props) => {
             <For each={characters()}>
                 {(character) => (
                     <li>
-                        <CharacterCard character={character} link-to-main={true} />
+                        <CharacterCard character={character} summary={true} />
                     </li>
                 )}
             </For>

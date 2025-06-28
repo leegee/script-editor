@@ -15,19 +15,6 @@
         flex: 1;
     }
 
-    .name {
-        position: relative;
-        margin: 0 0 0.25em 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-
-        .details-link {
-            margin-left: auto;
-        }
-    }
-
     .bio {
         margin: 0 0 0.25em 0;
         color: #ccc;

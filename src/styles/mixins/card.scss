@@ -17,4 +17,62 @@
         box-shadow: 0 0 12pt rgba(0, 0, 0, 0.7);
     }
 
+    .details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .details-link {
+            display: inline-flex;
+            align-items: center;
+            color: #007acc;
+            text-decoration: none;
+            transition: color 0.2s ease;
+
+            &:hover,
+            &:focus {
+                color: #005a9e;
+            }
+
+            svg {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+    }
+
+    .description {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 0.75rem;
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 1em 0;
+
+        .tag {
+            background-color: hsl(226, 100%, 24%);
+            color: hsl(235, 90%, 85%);
+            font-size: 0.875rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            user-select: none;
+        }
+    }
+
+    .loading,
+    .error {
+        color: #999;
+        font-style: italic;
+        font-size: 0.9rem;
+    }
 }

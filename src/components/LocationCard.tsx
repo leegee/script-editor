@@ -1,10 +1,9 @@
 import './LocationCard.scss';
 import { type Component, Show, For, createSignal, createEffect } from 'solid-js';
 import type { Location } from '../lib/types';
-import { A } from '@solidjs/router';
-import Find from './icons/Find';
 import { fakeApi } from '../lib/fakeApi';
 import Map from './Map';
+import CardHeader from './card/CardHeader';
 
 interface LocationCardWithLocation {
     location: Location;
@@ -17,17 +16,17 @@ interface LocationCardWithLocationId {
 }
 
 type LocationCardProps = {
-    "link-to-main"?: boolean;
+    "summary"?: boolean;
 } & (LocationCardWithLocation | LocationCardWithLocationId);
 
 const LocationCard: Component<LocationCardProps> = (props) => {
     const [location, setLocation] = createSignal<Location | null>(props.location ?? null);
     const [loading, setLoading] = createSignal(false);
     const [error, setError] = createSignal<string | null>(null);
-    const [isOpen, setIsOpen] = createSignal(!props['link-to-main']);
+    const [isOpen, setIsOpen] = createSignal(!props['summary']);
 
     const toggleOpen = () => {
-        if (props['link-to-main']) {
+        if (props['summary']) {
             setIsOpen(!isOpen());
         }
     }
@@ -63,43 +62,35 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     fallback={<div class="error">{error()}</div>}
                 >
                     <div class="details">
-                        <header
-                            onClick={toggleOpen}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOpen(); }}
-                        >
-                            <h3 class="name">
-                                {location()?.name}
-                                <Show when={props['link-to-main']}>
-                                    <A href={`/location/${location()?.id}`} class="details-link" aria-label={`View details for ${location()?.name}`}>
-                                        <Find />
-                                    </A>
-                                </Show>
-                            </h3>
-                        </header>
+                        <CardHeader
+                            title={location().name}
+                            link={props["summary"] ? `/location/${location()?.id}` : undefined}
+                            label={`View details for ${location().name}`}
+                            toggleOpen={props["summary"] ? toggleOpen : () => void 0}
+                            class="details-link"
+                        />
 
                         <Show when={isOpen()}>
                             <Show when={location()?.description}>
                                 <p class="description">{location()?.description}</p>
                             </Show>
 
+                            <Show when={isOpen() && location()?.geofence}>
+                                <Map geofence={location()!.geofence!} />
+                            </Show>
+
                             <Show when={location()?.tags?.length}>
                                 <div class="tags">
                                     <For each={location()?.tags}>
-                                        {(tag) => <span class="tag">#{tag}</span>}
+                                        {(tag) => <span class="tag">{tag}</span>}
                                     </For>
                                 </div>
-                            </Show>
-
-                            <Show when={isOpen() && location()?.geofence}>
-                                <Map geofence={location()!.geofence!} />
                             </Show>
                         </Show>
                     </div>
                 </Show>
             </Show>
-        </div>
+        </div >
     );
 };
 

@@ -5,7 +5,7 @@ import { A } from '@solidjs/router';
 import Find from './icons/Find';
 import Avatar from './Avatar';
 import { fakeApi } from '../lib/fakeApi';
-import CharacterHeader from './card/CharacterHeader';
+import CardHeader from './card/CardHeader';
 
 interface CharacterCardWithCharacter {
     character: Character;
@@ -18,17 +18,17 @@ interface CharacterCardWithCharacterId {
 }
 
 type CharacterCardProps = {
-    "link-to-main"?: boolean;
+    "summary"?: boolean;
 } & (CharacterCardWithCharacter | CharacterCardWithCharacterId);
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
     const [character, setCharacter] = createSignal<Character | null>(props.character ?? null);
     const [loading, setLoading] = createSignal(false);
     const [error, setError] = createSignal<string | null>(null);
-    const [isOpen, setIsOpen] = createSignal(!props['link-to-main']);
+    const [isOpen, setIsOpen] = createSignal(!props['summary']);
 
     const toggleOpen = () => {
-        if (props['link-to-main']) {
+        if (props['summary']) {
             setIsOpen(!isOpen());
         }
     }
@@ -64,11 +64,11 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                     when={!error() && character()}
                     fallback={<div class="error">{error()}</div>}
                 >
-                    <CharacterHeader
+                    <CardHeader
                         title={character().name}
-                        link={props["link-to-main"] ? `/character/${character().id}` : undefined}
+                        link={props["summary"] ? `/character/${character().id}` : undefined}
                         label={`View details for ${character().name}`}
-                        toggleOpen={props["link-to-main"] ? toggleOpen : () => void 0}
+                        toggleOpen={props["summary"] ? toggleOpen : () => void 0}
                         class="character-header"
                     >
                         <Avatar
@@ -77,7 +77,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                             avatarInitial={character()?.avatarInitial}
                             name={character()?.name || ''}
                         />
-                    </CharacterHeader>
+                    </CardHeader>
 
                     <div class="details">
                         <Show when={isOpen()}>

@@ -11,7 +11,7 @@ const SceneList: Component<SceneListProps> = (props) => {
     return (
         <section class="scene-list" role="list" aria-label="Scenes List">
             <For each={props.scenes}>
-                {(scene) => <SceneCard scene={scene} />}
+                {(scene) => <SceneCard scene={scene} summary={true} />}
             </For>
         </section>
     );

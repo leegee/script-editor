@@ -9,10 +9,6 @@ export default function Home(props) {
   const [acts] = createResource(getActs);
   const [characters] = createResource(getCharacters);
 
-  createEffect(() => {
-    console.log('xxxxxxxxxx', acts(), characters())
-  });
-
   return (
     <section class="home-layout">
       <aside class="act-panel">
