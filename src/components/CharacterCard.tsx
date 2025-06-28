@@ -18,7 +18,7 @@ interface CharacterCardWithCharacterId {
 }
 
 type CharacterCardProps = {
-    "summary"?: boolean;
+    summary?: boolean;
 } & (CharacterCardWithCharacter | CharacterCardWithCharacterId);
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
@@ -66,9 +66,9 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 >
                     <CardHeader
                         title={character().name}
-                        link={props["summary"] ? `/character/${character().id}` : undefined}
+                        link={props[summary] ? `/character/${character().id}` : undefined}
                         label={`View details for ${character().name}`}
-                        toggleOpen={props["summary"] ? toggleOpen : () => void 0}
+                        toggleOpen={props[summary] ? toggleOpen : () => void 0}
                         class="character-header"
                     >
                         <Avatar

@@ -16,7 +16,7 @@ interface LocationCardWithLocationId {
 }
 
 type LocationCardProps = {
-    "summary"?: boolean;
+    summary?: boolean;
 } & (LocationCardWithLocation | LocationCardWithLocationId);
 
 const LocationCard: Component<LocationCardProps> = (props) => {
@@ -64,9 +64,9 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     <div class="details">
                         <CardHeader
                             title={location().name}
-                            link={props["summary"] ? `/location/${location()?.id}` : undefined}
+                            link={props[summary] ? `/location/${location()?.id}` : undefined}
                             label={`View details for ${location().name}`}
-                            toggleOpen={props["summary"] ? toggleOpen : () => void 0}
+                            toggleOpen={props[summary] ? toggleOpen : () => void 0}
                             class="details-link"
                         />
 
