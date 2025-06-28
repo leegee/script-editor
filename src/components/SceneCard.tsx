@@ -1,10 +1,10 @@
 import './SceneCard.scss';
-import { type Component, Show } from 'solid-js';
-import { createAsync } from '@solidjs/router';
+import { type Component, Show, createMemo } from 'solid-js';
+import { story } from '../lib/fakeApi';
 import CharacterList from './CharacterList';
 import LocationCard from './LocationCard';
+import BeatList from './BeatList';
 import Card from './Card';
-import { fakeApi } from '../lib/fakeApi';
 
 interface SceneCardProps {
     sceneId: string;
@@ -12,46 +12,58 @@ interface SceneCardProps {
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    const { sceneId, summary } = props;
-    const scene = createAsync(() => fakeApi.getSceneById(sceneId));
+    // Get the scene synchronously from the store
+    const scene = createMemo(() => story.scenes[props.sceneId]);
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
-            <Card
-                title={scene()!.title}
-                link={summary ? `/scene/${scene()!.id}` : undefined}
-                label={`View details for ${scene()!.title}`}
-                summary={summary}
-                class="scene-card"
-            >
-                <Show when={scene()!.durationSeconds !== undefined}>
-                    <span class="scene-duration">
-                        {Math.floor(scene()!.durationSeconds! / 60)}m {scene()!.durationSeconds! % 60}s
-                    </span>
-                </Show>
+            {(scAccessor) => {
+                const sc = scAccessor(); // unwrap the scene here
+                return (
+                    <Card
+                        title={sc.title}
+                        link={props.summary ? `/scene/${sc.id}` : undefined}
+                        label={`View details for ${sc.title}`}
+                        summary={props.summary}
+                        class="scene-card"
+                    >
+                        {/* Uncomment if you want to show duration */}
+                        {/* <Show when={sc.durationSeconds !== undefined}>
+                            <p class="scene-duration">
+                                {Math.floor(sc.durationSeconds / 60)}m {sc.durationSeconds % 60}s
+                            </p>
+                        </Show> */}
 
-                <section class="scene-details">
-                    <Show when={scene()!.summary}>
-                        <p class="scene-summary">{scene()!.summary}</p>
-                    </Show>
+                        <section class="scene-details">
+                            <Show when={sc.summary}>
+                                <h3>Summary</h3>
+                                <p class="scene-summary">{sc.summary}</p>
+                            </Show>
 
-                    <Show when={scene()!.characterIds?.length}>
-                        <div class="scene-characters">
-                            <CharacterList characterIds={scene()!.characterIds} />
-                        </div>
-                    </Show>
+                            <Show when={sc.characterIds?.length}>
+                                <h3>Characters</h3>
+                                <div class="scene-characters">
+                                    <CharacterList characterIds={sc.characterIds} />
+                                </div>
+                            </Show>
 
-                    <Show when={scene()!.locationId}>
-                        <LocationCard locationId={scene()!.locationId} summary={true} />
-                    </Show>
+                            <Show when={sc.locationId}>
+                                <LocationCard locationId={sc.locationId} summary={true} />
+                            </Show>
 
-                    <Show when={scene()!.scriptExcerpt}>
-                        <blockquote class="scene-script-excerpt">
-                            {scene()!.scriptExcerpt}
-                        </blockquote>
-                    </Show>
-                </section>
-            </Card>
+                            <Show when={sc.scriptExcerpt}>
+                                <blockquote class="scene-script-excerpt">{sc.scriptExcerpt}</blockquote>
+                            </Show>
+
+                            <h3>Beats</h3>
+
+                            <Show when={sc.beatIds?.length}>
+                                <BeatList sceneId={sc.id} />
+                            </Show>
+                        </section>
+                    </Card>
+                );
+            }}
         </Show>
     );
 };

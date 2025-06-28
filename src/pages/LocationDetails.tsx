@@ -8,8 +8,8 @@ const LocationDetails: Component = () => {
     return (
         <section class="location-details">
             <h2>Location</h2>
-            <Show when={params.id} fallback={<p>Location ID is missing.</p>}>
-                <LocationCard locationId={params.id} />
+            <Show when={params.id} fallback={<p>Location ID is missing.</p>} keyed>
+                {(id) => <LocationCard locationId={id} />}
             </Show>
         </section>
     );

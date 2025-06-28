@@ -1,19 +1,24 @@
 import './CharacterCard.scss';
-import { type Component, Show, For, createMemo, createSignal } from 'solid-js';
+import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Character } from '../lib/types';
 import Avatar from './Avatar';
-import { story } from '../lib/fakeApi'; // Import story store if needed
+import { fakeApi } from '../lib/fakeApi';
 import Card from './Card';
 
 interface CharacterCardProps {
     summary?: boolean;
+    character: Character;
     characterId: string;
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
-    const character = createMemo(() =>
-        story.characters.find(c => c.id === props.characterId) ?? null
-    );
+    const character = createMemo<Character | undefined>(() => {
+        if (props.character) return props.character;
+        if (props.characterId) {
+            return fakeApi.getCharacter(props.characterId);
+        }
+        return undefined;
+    });
 
     return (
         <Show when={character()} fallback={<div class="loading">Loading character...</div>}>

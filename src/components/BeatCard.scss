@@ -1,0 +1,15 @@
+.beat-card {
+    .summary {
+        font-size: large;
+        opacity: 50%;
+        font-style: italic;
+    }
+
+    .character {
+        display: flex;
+        align-items: center;
+        width: auto;
+        float: left;
+        margin-right: 0.6em;
+    }
+}

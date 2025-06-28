@@ -2,18 +2,24 @@
     display: flex;
     min-height: 100vh;
 
-    .act-panel .acts-list {
+    .act-panel .acts-list,
+    .character-panel .character-list {
         margin-top: 0;
         padding-top: 0;
     }
 
-    .character-panel {
+    .right-panel {
         flex: 0 0 min(20vw, 30em);
         min-width: 20vw;
         max-width: 40em;
-        padding: 1rem;
-        border-right: 1px dotted #e5e7eb;
+        padding: 0;
+        margin: 0;
+        margin: 0 1em;
         overflow-y: auto;
+    }
+
+    .right-panel section>.card {
+        margin-bottom: 0.5em;
     }
 }
 

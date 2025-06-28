@@ -26,9 +26,7 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       onClick={props.toggleOpen}
       onKeyDown={onKeyDown}
     >
-      <h3 class="name">
-        {props.title}
-      </h3>
+      <h3>{props.title}</h3>
 
       <Show when={props.link}>
         <A

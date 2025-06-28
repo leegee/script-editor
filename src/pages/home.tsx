@@ -2,12 +2,15 @@
 import './home.scss';
 import CharacterList from '../components/CharacterList';
 import ActsList from '../components/ActsList';
-import { createEffect, createResource, Show, Suspense } from 'solid-js';
-import { getCharacters, getActs } from '../Routes';
+import LocationList from '../components/LocationList';
+import { createResource, Show, Suspense } from 'solid-js';
+import { getCharacters, getActs, getLocations } from '../Routes';
+import Card from '../components/Card';
 
 export default function Home(props) {
   const [acts] = createResource(getActs);
   const [characters] = createResource(getCharacters);
+  const [locations] = createResource(getLocations);
 
   return (
     <section class="home-layout">
@@ -21,14 +24,16 @@ export default function Home(props) {
         {props.children}
       </main>
 
-      <aside class="character-panel">
-        <Suspense fallback={<span>Loading characters...</span>}>
-          <Show when={characters()} fallback={null}>
-            {(chars) => <CharacterList characters={chars()} />}
-          </Show>
-        </Suspense>
+      <aside class="right-panel">
+        <Card class="character-panel" title="Characters" >
+          <CharacterList />
+        </Card>
 
+        <Card class="location-panel" title="Location" >
+          <LocationList />
+        </Card>
       </aside>
+
     </section>
   );
 }

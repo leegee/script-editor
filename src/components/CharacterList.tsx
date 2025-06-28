@@ -1,26 +1,32 @@
 import './CharacterList.scss';
-import { Component, For, createSignal, createEffect } from "solid-js";
+import { Component, For, createResource, Show } from "solid-js";
+import { fakeApi } from "../lib/fakeApi";
 import CharacterCard from "./CharacterCard";
 
 type CharacterListProps = {
-    characterIds: string[];
+    characterIds?: string[];
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
-    // No need to load character data here anymore,
-    // since CharacterCard will fetch by characterId itself.
-    // We just render CharacterCards directly with IDs.
+    // Always get all characters
+    const [characters] = createResource(() => fakeApi.getCharacters());
+
+    // Filter if needed
+    const getCharactersToShow = () =>
+        props.characterIds?.length
+            ? characters()?.filter(c => props.characterIds!.includes(c.id))
+            : characters();
 
     return (
-        <ul class="character-list">
-            <For each={props.characterIds}>
-                {(characterId) => (
-                    <li>
-                        <CharacterCard characterId={characterId} summary={true} />
-                    </li>
-                )}
-            </For>
-        </ul>
+        <Show when={characters()} fallback={<div>Loading characters...</div>}>
+            <section class="character-list">
+                <For each={getCharactersToShow()}>
+                    {(character) => (
+                        <CharacterCard characterId={character.id} summary={true} />
+                    )}
+                </For>
+            </section>
+        </Show>
     );
 };
 

@@ -1,4 +1,4 @@
-// src/lib/types.ts
+// tree for IO
 
 export enum MediaType {
     Image = 'image',
@@ -92,4 +92,103 @@ export interface Story {
     tags?: string[];
     createdAt?: string;
     updatedAt?: string;
+}
+
+
+
+
+// normalized types for DAO
+
+export interface MediaLink {
+    type: MediaType;
+    url: string;
+    description?: string;
+}
+
+export interface Character {
+    id: string;
+    name: string;
+    bio?: string;
+    tags?: string[];
+    avatarColor?: string;
+    avatarInitial?: string;
+    avatarImage?: string;
+    media?: MediaLink[];
+}
+
+export interface Location {
+    id: string;
+    name: string;
+    description?: string;
+    photoUrl?: string;
+    media?: MediaLink[];
+    tags?: string[];
+
+    geofence?: {
+        type: 'circle' | 'polygon';
+        center?: [number, number]; // lat/lng
+        radiusMeters?: number;
+        polygonCoords?: [number, number][];
+    };
+}
+
+// Normalized entities below
+
+export interface ScriptLineNormalized {
+    id: string;
+    type: ScriptLineType;
+    characterId?: string;
+    text: string;
+    timestampSeconds?: number;
+}
+
+export interface BeatNormalized {
+    id: string;
+    title?: string;
+    summary?: string;
+    durationSeconds?: number;
+    scriptLineIds: string[];
+}
+
+export interface SceneNormalized {
+    id: string;
+    title: string;
+    summary?: string;
+    characterIds: string[];
+    locationId: string;
+    durationSeconds?: number;
+    scriptExcerpt?: string;
+    beatIds: string[];
+}
+
+export interface ActNormalized {
+    id: string;
+    number: number;
+    title: string;
+    summary?: string;
+    sceneIds: string[];
+}
+
+export interface StoryNormalized {
+    id: string;
+    title: string;
+    description?: string;
+    actIds: string[];
+    characterIds: string[];
+    locationIds: string[];
+    tags?: string[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+// The normalized data store itself, for reference
+
+export interface NormalizedStoryData {
+    stories: Record<string, StoryNormalized>;
+    acts: Record<string, ActNormalized>;
+    scenes: Record<string, SceneNormalized>;
+    beats: Record<string, BeatNormalized>;
+    scriptLines: Record<string, ScriptLineNormalized>;
+    characters: Record<string, Character>;
+    locations: Record<string, Location>;
 }

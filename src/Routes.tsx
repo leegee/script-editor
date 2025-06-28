@@ -9,6 +9,7 @@ import LocationDetails from "./pages/LocationDetails";
 import ActDetails from "./pages/ActDetails";
 import SceneDetails from "./pages/SceneDetails";
 
+export const getLocations = query(() => fakeApi.getLocations(undefined), "locations");
 export const getCharacters = query(() => fakeApi.getCharacters(undefined), "characters");
 export const getActs = query(() => fakeApi.getActs(), "acts");
 
