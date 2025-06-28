@@ -6,12 +6,12 @@ export enum MediaType {
     Audio = 'audio',
 }
 
-// export enum ScriptLineType {
-//     Dialogue = 'Dialogue',
-//     Action = 'Action',
-//     Description = 'Description',
-//     Parenthetical = 'Parenthetical',
-// }
+export enum ScriptLineType {
+    Dialogue = 'Dialogue',
+    Action = 'Action',
+    Description = 'Description',
+    Parenthetical = 'Parenthetical',
+}
 
 export interface MediaLink {
     type: MediaType;
@@ -48,8 +48,8 @@ export interface Location {
 
 export interface ScriptLine {
     id: string;
-    // type: ScriptLineType;
-    type: string;
+    type: ScriptLineType;
+    // type: string;
     characterId?: string;
     text: string;
     timestampSeconds?: number;
