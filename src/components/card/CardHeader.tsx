@@ -1,7 +1,7 @@
 import './CardHeader.scss';
 import { Component, Show, JSX } from 'solid-js';
 import { A } from '@solidjs/router';
-import Find from '../icons/Find';
+import Find from '../icons/Details';
 
 interface CharacterHeaderProps {
   title: string | JSX.Element;
