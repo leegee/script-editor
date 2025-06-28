@@ -4,11 +4,10 @@ import { A } from '@solidjs/router';
 import Find from '../icons/Find';
 
 interface CharacterHeaderProps {
-  title: string;
+  title: string | JSX.Element;
   link?: string;
   label: string;
   class: string;
-  children?: JSX.Element | JSX.Element[]
   toggleOpen: (e: Event) => void;
 }
 
@@ -28,8 +27,6 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       onKeyDown={onKeyDown}
       class={props.class}
     >
-      {props.children && props.children}
-
       <h3 class="name">
         <span>{props.title}</span>
 

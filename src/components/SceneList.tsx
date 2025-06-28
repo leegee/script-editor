@@ -1,5 +1,5 @@
 import './SceneList.scss';
-import { type Component, For, Show } from 'solid-js';
+import { type Component, For } from 'solid-js';
 import type { Scene } from '../lib/types';
 import SceneCard from './SceneCard';
 

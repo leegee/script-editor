@@ -1,112 +1,68 @@
 import './CharacterCard.scss';
-import { type Component, Show, For, createSignal, onMount, createEffect } from 'solid-js';
+import { type Component, Show, For, createMemo, createSignal } from 'solid-js';
 import type { Character } from '../lib/types';
 import Avatar from './Avatar';
-import { fakeApi } from '../lib/fakeApi';
-import CardHeader from './card/CardHeader';
+import { story } from '../lib/fakeApi'; // Import story store if needed
+import Card from './Card';
 
-interface CharacterCardWithCharacter {
-    character: Character;
-    characterId?: never;
-}
-
-interface CharacterCardWithCharacterId {
-    character?: never;
+interface CharacterCardProps {
+    summary?: boolean;
     characterId: string;
 }
 
-type CharacterCardProps = {
-    summary?: boolean;
-} & (CharacterCardWithCharacter | CharacterCardWithCharacterId);
-
 const CharacterCard: Component<CharacterCardProps> = (props) => {
-    const [character, setCharacter] = createSignal<Character | null>(props.character ?? null);
-    const [loading, setLoading] = createSignal(false);
-    const [error, setError] = createSignal<string | null>(null);
-    const [isOpen, setIsOpen] = createSignal(!props['summary']);
-
-    const toggleOpen = () => {
-        if (props['summary']) {
-            setIsOpen(!isOpen());
-        }
-    }
-
-    createEffect(() => {
-        if (!props.character && props.characterId) {
-            setLoading(true);
-            setError(null);
-            fakeApi.getCharacter(props.characterId)
-                .then(data => {
-                    setCharacter(data);
-                    setError(null);
-                })
-                .catch(() => {
-                    setError('Failed to load character');
-                    setCharacter(null);
-                })
-                .finally(() => setLoading(false));
-        }
-    });
+    const character = createMemo(() =>
+        story.characters.find(c => c.id === props.characterId) ?? null
+    );
 
     return (
-        <section
-            class={`character-card ${isOpen ? 'open' : ''} ${props.summary ? 'summary' : ''}`}
-            tabIndex={0}
-            aria-expanded={isOpen()}
-        >
-            <Show
-                when={!loading()}
-                fallback={<div class="loading">Loading character...</div>}
-            >
-                <Show
-                    when={!error() && character()}
-                    fallback={<div class="error">{error()}</div>}
-                >
-                    <CardHeader
-                        title={character().name}
-                        link={props.summary ? `/character/${character().id}` : undefined}
-                        label={`View details for ${character().name}`}
-                        toggleOpen={props.summary ? toggleOpen : () => void 0}
-                        class={`character-header`}
-                    >
+        <Show when={character()} fallback={<div class="loading">Loading character...</div>}>
+            <Card
+                link={props.summary ? `/character/${character()!.id}` : undefined}
+                label={`View details for ${character()!.name}`}
+                summary={!!props.summary}
+                initialOpen={!props.summary}
+                class="character-card"
+                title={
+                    <>
                         <Avatar
-                            avatarColor={character()?.avatarColor}
-                            avatarImage={character()?.avatarImage}
-                            avatarInitial={character()?.avatarInitial}
-                            name={character()?.name || ''}
+                            avatarColor={character()!.avatarColor}
+                            avatarImage={character()!.avatarImage}
+                            avatarInitial={character()!.avatarInitial}
+                            name={character()!.name}
                         />
-                    </CardHeader>
+                        {character()!.name}
+                    </>
+                }
+            >
 
-                    <div class="details">
-                        <Show when={isOpen()}>
-                            <Show when={character()?.bio}>
-                                <p class="bio">{character()?.bio}</p>
-                            </Show>
+                <Show when={character()!.bio}>
+                    <p class="bio">{character()!.bio}</p>
+                </Show>
 
-                            <Show when={character()?.tags?.length}>
-                                <div class="tags">
-                                    <For each={character()?.tags}>
-                                        {(tag) => <span class="tag">#{tag}</span>}
-                                    </For>
-                                </div>
-                            </Show>
-
-                            <Show when={character()?.totalScreenTimeSeconds}>
-                                <div class="meta">
-                                    Screen Time: {Math.round(character()!.totalScreenTimeSeconds!)}s
-                                </div>
-                            </Show>
-
-                            <Show when={character()?.firstAppearanceSceneId}>
-                                <div class="meta">
-                                    First Appeared in Scene: {character()?.firstAppearanceSceneId}
-                                </div>
-                            </Show>
-                        </Show>
+                <Show when={character()!.tags?.length}>
+                    <div class="tags">
+                        <For each={character()!.tags}>
+                            {(tag) => <span class="tag">#{tag}</span>}
+                        </For>
                     </div>
                 </Show>
-            </Show >
-        </section >
+
+                {/* 
+          <Show when={character()!.totalScreenTimeSeconds}>
+            <div class="meta">
+              Screen Time: {Math.round(character()!.totalScreenTimeSeconds!)}s
+            </div>
+          </Show>
+
+          <Show when={character()!.firstAppearanceSceneId}>
+            <div class="meta">
+              First Appeared in Scene: {character()!.firstAppearanceSceneId}
+            </div>
+          </Show> 
+          */}
+            </Card>
+        </Show >
     );
 };
 
