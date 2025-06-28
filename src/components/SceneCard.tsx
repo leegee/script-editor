@@ -30,9 +30,9 @@ const SceneCard: Component<SceneCardProps> = (props) => {
 
             <CardHeader
                 title={scene.title}
-                link={props[summary] ? `/location/${scene.id}` : undefined}
+                link={props.summary ? `/location/${scene.id}` : undefined}
                 label={`View details for ${scene.title}`}
-                toggleOpen={props[summary] ? toggleOpen : () => void 0}
+                toggleOpen={props.summary ? toggleOpen : () => void 0}
                 class="scene-title"
             />
 

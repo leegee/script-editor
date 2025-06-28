@@ -30,15 +30,15 @@ const ActCard: Component<ActCardProps> = (props) => {
         >
             <CardHeader
                 title={props.act.number + ': ' + props.act.title}
-                link={props[summary] ? `/act/${props.act.id}` : undefined}
+                link={props.summary ? `/act/${props.act.id}` : undefined}
                 label={`View details for Act ${props.act.number}`}
-                toggleOpen={props[summary] ? toggleOpen : () => void 0}
+                toggleOpen={props.summary ? toggleOpen : () => void 0}
                 class="details-link"
             />
 
             <Show when={isOpen()}>
                 <Show when={props.act.summary}>
-                    <p class=summary>{props.act.summary}</p>
+                    <p class="summary">{props.act.summary}</p>
                 </Show>
 
                 <Show when={props.act.scenes?.length}>
