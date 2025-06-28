@@ -1,4 +1,4 @@
-import { type Component, Show, Suspense } from 'solid-js';
+import { type Component, Show } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import CharacterCard from '../components/CharacterCard';
 
