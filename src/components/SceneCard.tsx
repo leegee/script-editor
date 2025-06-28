@@ -12,18 +12,17 @@ interface SceneCardProps {
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    // Get the scene synchronously from the store
     const scene = createMemo(() => story.scenes[props.sceneId]);
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
-            {(scAccessor) => {
-                const sc = scAccessor(); // unwrap the scene here
+            {(sceneUpd) => {
+                const scn = sceneUpd();
                 return (
                     <Card
-                        title={sc.title}
-                        link={props.summary ? `/scene/${sc.id}` : undefined}
-                        label={`View details for ${sc.title}`}
+                        title={scn.title}
+                        link={props.summary ? `/scene/${scn.id}` : undefined}
+                        label={`View details for ${scn.title}`}
                         summary={props.summary}
                         class="scene-card"
                     >
@@ -35,30 +34,30 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         </Show> */}
 
                         <section class="scene-details">
-                            <Show when={sc.summary}>
+                            <Show when={scn.summary}>
                                 <h3>Summary</h3>
-                                <p class="scene-summary">{sc.summary}</p>
+                                <p class="scene-summary">{scn.summary}</p>
                             </Show>
 
-                            <Show when={sc.characterIds?.length}>
+                            <Show when={scn.characterIds?.length}>
                                 <h3>Characters</h3>
                                 <div class="scene-characters">
-                                    <CharacterList characterIds={sc.characterIds} />
+                                    <CharacterList characterIds={scn.characterIds} />
                                 </div>
                             </Show>
 
-                            <Show when={sc.locationId}>
-                                <LocationCard locationId={sc.locationId} summary={true} />
+                            <Show when={scn.locationId}>
+                                <LocationCard locationId={scn.locationId} summary={true} />
                             </Show>
 
-                            <Show when={sc.scriptExcerpt}>
-                                <blockquote class="scene-script-excerpt">{sc.scriptExcerpt}</blockquote>
+                            <Show when={scn.scriptExcerpt}>
+                                <blockquote class="scene-script-excerpt">{scn.scriptExcerpt}</blockquote>
                             </Show>
 
                             <h3>Beats</h3>
 
-                            <Show when={sc.beatIds?.length}>
-                                <BeatList sceneId={sc.id} />
+                            <Show when={scn.beatIds?.length}>
+                                <BeatList sceneId={scn.id} />
                             </Show>
                         </section>
                     </Card>

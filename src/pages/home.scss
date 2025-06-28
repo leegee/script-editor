@@ -2,13 +2,7 @@
     display: flex;
     min-height: 100vh;
 
-    .act-panel .acts-list,
-    .character-panel .character-list {
-        margin-top: 0;
-        padding-top: 0;
-    }
-
-    .right-panel {
+    .panel {
         flex: 0 0 min(20vw, 30em);
         min-width: 20vw;
         max-width: 40em;
@@ -18,7 +12,7 @@
         overflow-y: auto;
     }
 
-    .right-panel section>.card {
+    .panel section>.card {
         margin-bottom: 0.5em;
     }
 }

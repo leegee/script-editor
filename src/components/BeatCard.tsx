@@ -11,7 +11,6 @@ interface BeatCardProps {
 }
 
 const BeatCard: Component<BeatCardProps> = (props) => {
-    // Get beat from store
     const beat = createMemo(() => {
         const scene = story.scenes[props.sceneId];
         if (!scene) return undefined;

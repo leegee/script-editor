@@ -1,21 +1,18 @@
 import './ActsList.scss';
 import { For } from 'solid-js';
-import type { Act } from '../lib/types';
 import ActCard from './ActCard';
+import { fakeApi } from '../lib/fakeApi';
 
-interface ActsListProps {
-    acts: Act[];
-}
+const ActsList = () => {
+    const acts = fakeApi.getActs();
 
-export default (props: ActsListProps) => {
     return (
         <section class="acts-list" role="list" aria-label="Acts List">
-            <For each={props.acts}>
-                {(act) => (
-                    <ActCard actId={act.id} summary={true} />
-                )}
+            <For each={acts}>
+                {(act) => <ActCard actId={act.id} summary={true} />}
             </For>
         </section>
     );
 };
 
+export default ActsList;
