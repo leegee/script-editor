@@ -1,15 +1,20 @@
 .home-layout {
     display: flex;
     min-height: 100vh;
-}
 
-.character-panel {
-    flex: 0 0 min(20vw, 30em);
-    min-width: 20vw;
-    max-width: 40em;
-    padding: 1rem;
-    border-right: 1px dotted #e5e7eb;
-    overflow-y: auto;
+    .act-panel .acts-list {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .character-panel {
+        flex: 0 0 min(20vw, 30em);
+        min-width: 20vw;
+        max-width: 40em;
+        padding: 1rem;
+        border-right: 1px dotted #e5e7eb;
+        overflow-y: auto;
+    }
 }
 
 .main-content {
