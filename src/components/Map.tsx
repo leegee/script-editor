@@ -3,6 +3,7 @@ import { onCleanup, onMount, type Component } from 'solid-js';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
+import { buffer as bufferExtent } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
@@ -12,6 +13,7 @@ import { Feature } from 'ol';
 import { Style, Fill, Stroke } from 'ol/style';
 
 interface LocationMapProps {
+    summary: boolean;
     geofence: {
         type: 'circle' | 'polygon';
         center?: [number, number];
@@ -19,6 +21,9 @@ interface LocationMapProps {
         polygonCoords?: [number, number][];
     };
 }
+
+const MAX_ZOOM_NORMAL = 19;
+const MAX_ZOOM_SUMMARY = 18;
 
 const LocationMap: Component<LocationMapProps> = (props) => {
     let mapContainer!: HTMLDivElement;
@@ -79,19 +84,21 @@ const LocationMap: Component<LocationMapProps> = (props) => {
             ],
             view: new View({
                 center: fromLonLat(props.geofence.center ?? [0, 0]),
-                zoom: 14,
+                zoom: props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL,
             }),
         });
 
+        // Fit the map to the features
         if (features.length > 0) {
-            const extent = vectorSource.getExtent();
-            const padding = 1000; // meters
-            const view = map.getView();
+            const vectorExtent = vectorSource.getExtent();
 
-            view.fit(extent, {
+            const bufferMeters = 100;
+            const bufferedExtent = bufferExtent(vectorExtent, bufferMeters);
+
+            const view = map.getView();
+            view.fit(bufferedExtent, {
                 size: map.getSize(),
-                padding: [padding, padding, padding, padding],
-                maxZoom: 18,
+                maxZoom: props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL,
             });
         }
     });
@@ -101,7 +108,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     });
 
     return (
-        <div ref={mapContainer} style={{ width: '100%', height: '250px' }} />
+        <section ref={mapContainer} style={{ width: '100%', height: '250px' }} />
     );
 };
 
