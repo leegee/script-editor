@@ -23,7 +23,7 @@ const ActCard: Component<ActCardProps> = (props) => {
 
     return (
         <article
-            class="act-card"
+            class={"card act-card " + props.summary ? 'summary' : ''}
             tabIndex={0}
             role="listitem"
             aria-label={`Act ${props.act.number ?? ''}: ${props.act.title}`}

@@ -22,8 +22,8 @@ const SceneCard: Component<SceneCardProps> = (props) => {
     }
 
     return (
-        <div
-            class={`scene-card ${isOpen() ? 'open' : ''}`}
+        <section
+            class={`card scene-card ${isOpen() ? 'open' : ''} ${props.summary ? 'summary' : ''}`}
             aria-expanded={isOpen()}
             tabIndex={0}
         >
@@ -77,7 +77,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                     </Show>
                 </section>
             </Show>
-        </div>
+        </section>
     );
 };
 

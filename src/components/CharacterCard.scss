@@ -4,13 +4,6 @@
 .character-card {
     @include card.card-style;
 
-    header {
-        display: flex;
-        margin: 1em;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
     .details {
         flex: 1;
     }

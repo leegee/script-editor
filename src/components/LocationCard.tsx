@@ -49,8 +49,8 @@ const LocationCard: Component<LocationCardProps> = (props) => {
     });
 
     return (
-        <div
-            class={`location-card ${isOpen() ? 'open' : ''}`}
+        <section
+            class={`location-card ${isOpen() ? 'open' : ''} ${props.summary ? 'summary' : ''}`}
             aria-expanded={isOpen()}
         >
             <Show
@@ -76,7 +76,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                             </Show>
 
                             <Show when={isOpen() && location()?.geofence}>
-                                <Map geofence={location()!.geofence!} />
+                                <Map geofence={location()!.geofence!} summary={props.summary} />
                             </Show>
 
                             <Show when={location()?.tags?.length}>
@@ -90,7 +90,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     </div>
                 </Show>
             </Show>
-        </div >
+        </section >
     );
 };
 

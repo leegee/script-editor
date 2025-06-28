@@ -51,8 +51,8 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     });
 
     return (
-        <div
-            class={`character-card ${isOpen() ? 'open' : ''}`}
+        <section
+            class={`character-card ${isOpen ? 'open' : ''} ${props.summary ? 'summary' : ''}`}
             tabIndex={0}
             aria-expanded={isOpen()}
         >
@@ -69,7 +69,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                         link={props.summary ? `/character/${character().id}` : undefined}
                         label={`View details for ${character().name}`}
                         toggleOpen={props.summary ? toggleOpen : () => void 0}
-                        class="character-header"
+                        class={`character-header`}
                     >
                         <Avatar
                             avatarColor={character()?.avatarColor}
@@ -108,7 +108,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                     </div>
                 </Show>
             </Show >
-        </div >
+        </section >
     );
 };
 
