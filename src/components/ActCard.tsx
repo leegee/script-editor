@@ -20,7 +20,7 @@ const ActCard: Component<ActCardProps> = (props) => {
         <Show when={act} fallback={<div class="loading">Loading act...</div>}>
             <Card
                 title={`${act.number}: ${act.title}`}
-                link={summary ? `/act/${act.id}` : undefined}
+                link={`/act/${act.id}`}
                 label={`View details for Act ${act.number}`}
                 summary={!!summary}
                 class="act-card"
