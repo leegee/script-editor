@@ -1,15 +1,20 @@
+import './Input.scss';
 import { Component, JSX } from 'solid-js';
 
-interface TextInputProps extends JSX.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'value'> {
     as?: 'input' | 'textarea';
+    value?: (() => string | number);
 }
 
 const TextInput: Component<TextInputProps> = (props) => {
-    const { as = 'input', ...rest } = props;
+    const { as = 'input', value, ...rest } = props;
 
-    return as === 'textarea'
-        ? <textarea {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+    const rv = as === 'textarea'
+        ? <textarea value={props.value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+        : <input value={props.value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+
+    return rv;
 };
+
 
 export default TextInput;
