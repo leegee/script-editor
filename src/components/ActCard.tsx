@@ -14,7 +14,7 @@ interface ActCardProps {
 const ActCard: Component<ActCardProps> = (props) => {
     const { actId, summary } = props;
 
-    const act = createAsync(() => fakeApi.getActById(actId));
+    const act = createAsync(() => fakeApi.getAct(actId));
     const scenes = createAsync(() => fakeApi.getScenesByActId(actId));
 
     return (

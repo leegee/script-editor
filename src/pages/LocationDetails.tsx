@@ -1,16 +1,30 @@
-import { type Component, Show } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import LocationCard from '../components/LocationCard';
+import { fakeApi } from '../lib/fakeApi';
 
 const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();
 
+    // Always build a list: either one or all
+    const locations = createMemo(() => {
+        if (params.id) {
+            const loc = fakeApi.getLocation(params.id);
+            return loc ? [loc] : [];
+        }
+        return fakeApi.getLocations();
+    });
+
     return (
         <section class="location-details">
-            <h2>Location</h2>
-            <Show when={params.id} fallback={<p>Location ID is missing.</p>} keyed>
-                {(id) => <LocationCard locationId={id} />}
-            </Show>
+            <h2>Locations</h2>
+            <section class="locations-list" role="list" aria-label="Locations">
+                <For each={locations()}>
+                    {(loc) => (
+                        <LocationCard locationId={loc.id} summary={true} />
+                    )}
+                </For>
+            </section>
         </section>
     );
 };

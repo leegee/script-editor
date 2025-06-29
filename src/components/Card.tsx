@@ -7,6 +7,7 @@ interface CardProps {
     link?: string;
     label?: string;
     summary?: boolean;
+    open?: boolean;
     onToggle?: (isOpen: boolean) => void;
     class?: string;
     children: JSX.Element;
@@ -14,7 +15,7 @@ interface CardProps {
 }
 
 const Card: Component<CardProps> = (props) => {
-    const [isOpen, setIsOpen] = createSignal(!props.summary);
+    const [isOpen, setIsOpen] = createSignal(props.open || !props.summary);
 
     const toggleOpen = (e: Event) => {
         e.preventDefault();

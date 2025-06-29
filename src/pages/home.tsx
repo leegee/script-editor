@@ -6,27 +6,27 @@ import Card from '../components/Card';
 
 export default function Home(props) {
   return (
-    <section class="home-layout">
+    <main class="home-layout">
       <aside class="panel">
-        <Card class="act-panel" title="Acts" >
+        <Card class="act-panel" title="Acts" open={true}>
           <ActsList />
         </Card>
       </aside>
 
-      <main class="main-content">
+      <article class="main-content">
         {props.children}
-      </main>
+      </article>
 
       <aside class="panel">
-        <Card class="character-panel" title="Characters" >
+        <Card class="character-panel" title="Characters" open={true}>
           <CharacterList />
         </Card>
 
-        <Card class="location-panel" title="Location" >
+        <Card class="location-panel" title="Location" open={true}>
           <LocationList />
         </Card>
       </aside>
 
-    </section>
+    </main>
   );
 }

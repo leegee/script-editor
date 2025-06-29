@@ -5,6 +5,10 @@ body {
     margin: 0;
 }
 
+* {
+    border-radius: 4pt;
+}
+
 a {
     color: white;
     text-decoration: none;

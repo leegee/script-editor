@@ -1,15 +1,19 @@
+import './App.scss';
 import { HashRouter, A } from '@solidjs/router';
 import Routes from './Routes';
 
 const AppLayout = (props) => (
     <>
         <nav class="nav-bar">
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <A href="/" class="nav-link">Home</A>
+            <ul>
+                <li>
+                    <A href="/act" class="nav-link">Acts</A>
                 </li>
-                <li class="nav-item">
-                    <A href="/about" class="nav-link">About</A>
+                <li>
+                    <A href="/character" class="nav-link">Characters</A>
+                </li>
+                <li>
+                    <A href="/location" class="nav-link">Locations</A>
                 </li>
             </ul>
         </nav>

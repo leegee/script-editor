@@ -7,8 +7,8 @@ import Card from './Card';
 
 interface CharacterCardProps {
     summary?: boolean;
-    character: Character;
-    characterId: string;
+    character?: Character;
+    characterId?: string;
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {

@@ -1,9 +1,8 @@
 .card {
     border: 1pt solid #fff4;
     background-color: #333;
-    border-radius: 4pt;
     box-shadow: 0 0 6pt rgba(220, 220, 220, 0.15);
-    padding: 0.4em 0.4em;
+    padding: 0.4em 0.4em 0;
     margin: 0.4em 0;
     transition: box-shadow 0.3s ease;
     cursor: pointer;
@@ -26,6 +25,9 @@
         font-size: 0.9rem;
     }
 
+    &.summary {
+        font-size: 80%;
+    }
 
     header {
         display: flex;
@@ -63,7 +65,6 @@
     }
 
     .card-content {
-
         .description {
             font-size: 1rem;
             color: #444;

@@ -30,7 +30,7 @@ class StoryService {
         return Object.values(story.acts);
     }
 
-    getActById(actId: string): ActNormalized | undefined {
+    getAct(actId: string): ActNormalized | undefined {
         return story.acts[actId];
     }
 
