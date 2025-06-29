@@ -1,7 +1,6 @@
 import './ActCard.scss';
 
 import { type Component, Show } from 'solid-js';
-import { createAsync } from '@solidjs/router';
 import { storyApi } from '../lib/story';
 import SceneList from './SceneList';
 import Card from './Card';
