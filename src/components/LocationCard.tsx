@@ -1,7 +1,7 @@
 import './LocationCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Location } from '../lib/types';
-import { storyApi, story } from '../lib/story';
+import { storyApi } from '../lib/story';
 import Map from './Map';
 import Card from './Card';
 import LocationPinIcon from './icons/LocationPin';

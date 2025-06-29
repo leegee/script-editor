@@ -4,6 +4,8 @@ import { type Component, Show } from 'solid-js';
 import { storyApi } from '../lib/story';
 import SceneList from './SceneList';
 import Card from './Card';
+import TextInput from './Input';
+import { bindField } from '../lib/bind-field';
 
 interface ActCardProps {
     actId: string;
@@ -19,15 +21,15 @@ const ActCard: Component<ActCardProps> = (props) => {
     return (
         <Show when={act} fallback={<div class="loading">Loading act...</div>}>
             <Card
-                title={`${act.number}: ${act.title}`}
+                title={<TextInput {...bindField('acts', act.id, 'title')} />}
                 link={`/act/${act.id}`}
                 label={`View details for Act ${act.number}`}
                 summary={!!summary}
                 class="act-card"
             >
-                <Show when={act.summary}>
-                    <p class="summary">{act.summary}</p>
-                </Show>
+                <p class="summary">
+                    <TextInput {...bindField('acts', act.id, 'summary')} />
+                </p>
 
                 <Show when={scenes.length}>
                     <SceneList actId={act.id} />

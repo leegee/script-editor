@@ -14,8 +14,7 @@ interface CharacterHeaderProps {
 
 const CardHeader: Component<CharacterHeaderProps> = (props) => {
   const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || (e.target as HTMLElement).isContentEditable
-    ) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || (e.target as HTMLElement).isContentEditable) {
       return;
     }
     if (e.key === 'Enter' || e.key === 'Escape') {

@@ -18,6 +18,10 @@ const Card: Component<CardProps> = (props) => {
     const [isOpen, setIsOpen] = createSignal(props.open || !props.summary);
 
     const toggleOpen = (e: Event) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+            return;
+        }
         e.preventDefault();
         e.stopPropagation();
         const newOpen = !isOpen();

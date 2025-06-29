@@ -5,6 +5,8 @@ import CharacterList from './CharacterList';
 import LocationCard from './LocationCard';
 import BeatList from './BeatList';
 import Card from './Card';
+import { bindField } from '../lib/bind-field';
+import TextInput from './Input';
 
 interface SceneCardProps {
     sceneId: string;
@@ -20,7 +22,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                 const scn = sceneUpd();
                 return (
                     <Card
-                        title={scn.title}
+                        title={<TextInput {...bindField('scenes', scn.id, 'title')} />}
                         link={props.summary ? `/scene/${scn.id}` : undefined}
                         label={`View details for ${scn.title}`}
                         summary={props.summary}
@@ -34,31 +36,25 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         </Show> */}
 
                         <section class="scene-details">
-                            <Show when={scn.summary}>
-                                <h3>Summary</h3>
-                                <p class="scene-summary">{scn.summary}</p>
-                            </Show>
+                            <h3>Summary</h3>
+                            <p class="scene-summary">
+                                <TextInput {...bindField('scenes', scn.id, 'summary')} />
+                            </p>
 
-                            <Show when={scn.characterIds?.length}>
-                                <h3>Characters</h3>
-                                <div class="scene-characters">
-                                    <CharacterList characterIds={scn.characterIds} />
-                                </div>
-                            </Show>
+                            <h3>Characters</h3>
+                            <div class="scene-characters">
+                                <CharacterList characterIds={scn.characterIds} />
+                            </div>
 
-                            <Show when={scn.locationId}>
-                                <LocationCard locationId={scn.locationId} summary={true} />
-                            </Show>
+                            <h3>Locations</h3>
+                            <LocationCard locationId={scn.locationId} summary={true} />
 
-                            <Show when={scn.scriptExcerpt}>
-                                <blockquote class="scene-script-excerpt">{scn.scriptExcerpt}</blockquote>
-                            </Show>
+                            <blockquote class="scene-script-excerpt">
+                                <TextInput {...bindField('scenes', scn.id, 'scriptExcerpt')} />
+                            </blockquote>
 
                             <h3>Beats</h3>
-
-                            <Show when={scn.beatIds?.length}>
-                                <BeatList sceneId={scn.id} />
-                            </Show>
+                            <BeatList sceneId={scn.id} />
                         </section>
                     </Card>
                 );
