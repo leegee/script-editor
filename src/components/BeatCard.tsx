@@ -42,20 +42,11 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 <section class="script-lines">
                     <For each={scriptLines()}>
                         {(line) => {
-                            const character = storyApi.getCharacter(line.characterId);
                             return (
                                 <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
-                                    <Show when={character}>
+                                    <Show when={line.characterId}>
                                         <div class="character">
-                                            <Avatar
-                                                avatarColor={character.avatarColor}
-                                                avatarImage={character.avatarImage}
-                                                avatarInitial={character.avatarInitial}
-                                                name={character.name}
-                                            />
-                                            <strong>
-                                                <TextInput {...bindField('characters', character.id, 'name')} />
-                                            </strong>
+                                            <Avatar characterId={line.characterId} />
                                         </div>
                                     </Show>
 

@@ -27,17 +27,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 label={`View details for ${character()!.name}`}
                 summary={!!props.summary}
                 class="character-card"
-                title={
-                    <>
-                        <Avatar
-                            avatarColor={character()!.avatarColor}
-                            avatarImage={character()!.avatarImage}
-                            avatarInitial={character()!.avatarInitial}
-                            name={character()!.name}
-                        />
-                        {character()!.name}
-                    </>
-                }
+                title={<Avatar characterId={character().id} />}
             >
 
                 <Show when={character()!.bio}>
