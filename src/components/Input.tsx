@@ -3,7 +3,7 @@ import { Component, JSX } from 'solid-js';
 
 interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'value'> {
     as?: 'input' | 'textarea';
-    value?: (() => string | number);
+    value?: (() => string | string[] | number);
 }
 
 const TextInput: Component<TextInputProps> = (props) => {

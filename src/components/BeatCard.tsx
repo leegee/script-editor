@@ -25,11 +25,14 @@ const BeatCard: Component<BeatCardProps> = (props) => {
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
-                title={beat().title ?? 'Untitled Beat'}
                 // link={`/scene/${props.sceneId}/beat/${props.beatId}`}
                 label={`View details for Beat ${beat().id}`}
                 summary={props.summary}
                 class="beat-card"
+                // title={beat().title ?? 'Untitled Beat'}
+                title={
+                    <TextInput {...bindField('beats', beat().id, 'title')} />
+                }
             >
                 <Show when={beat().summary}>
                     <p class="summary">Summary: {beat().summary}</p>
@@ -39,8 +42,6 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <For each={scriptLines()}>
                         {(line) => {
                             const character = storyApi.getCharacter(line.characterId);
-                            const field = bindField('scriptLines', line.id, 'text');
-
                             return (
                                 <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
                                     <Show when={character}>
@@ -55,11 +56,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                                         </div>
                                     </Show>
 
-                                    <TextInput
-                                        value={field.value}
-                                        as={field.as}
-                                        onBlur={field.onBlur}
-                                    />
+                                    <TextInput {...bindField('scriptLines', line.id, 'text')} />
                                 </blockquote>
                             );
                         }}

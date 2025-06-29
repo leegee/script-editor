@@ -14,7 +14,10 @@ interface CharacterHeaderProps {
 
 const CardHeader: Component<CharacterHeaderProps> = (props) => {
   const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+    if (e.key === 'Enter' || e.key === 'Escape') {
       e.preventDefault();
       props.toggleOpen(e);
     }
@@ -27,7 +30,9 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       onClick={props.toggleOpen}
       onKeyDown={onKeyDown}
     >
-      <h3>{props.title}</h3>
+      <h3>
+        {props.title}
+      </h3>
 
       <Show when={props.link}>
         <A
