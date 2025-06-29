@@ -29,13 +29,14 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 label={`View details for Beat ${beat().id}`}
                 summary={props.summary}
                 class="beat-card"
-                // title={beat().title ?? 'Untitled Beat'}
                 title={
                     <TextInput {...bindField('beats', beat().id, 'title')} />
                 }
             >
                 <Show when={beat().summary}>
-                    <p class="summary">Summary: {beat().summary}</p>
+                    <p class="summary">Summary:
+                        <TextInput {...bindField('beats', beat().id, 'summary')} />
+                    </p>
                 </Show>
 
                 <section class="script-lines">
@@ -52,7 +53,9 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                                                 avatarInitial={character.avatarInitial}
                                                 name={character.name}
                                             />
-                                            <strong>{character.name}:</strong>
+                                            <strong>
+                                                <TextInput {...bindField('characters', character.id, 'name')} />
+                                            </strong>
                                         </div>
                                     </Show>
 

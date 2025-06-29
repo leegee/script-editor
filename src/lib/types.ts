@@ -27,7 +27,7 @@ export interface Character {
     avatarColor?: string;
     avatarInitial?: string;
     avatarImage?: string;
-    media?: MediaLink[];
+    mediaLinkIds?: string[];
 }
 
 export interface Location {
@@ -35,7 +35,7 @@ export interface Location {
     name: string;
     description?: string;
     photoUrl?: string;
-    media?: MediaLink[];
+    mediaLinkIds?: string[];
     tags?: string[];
 
     geofence?: {
@@ -100,6 +100,7 @@ export interface Story {
 // normalized types for DAO
 
 export interface MediaLink {
+    id: string;
     type: MediaType;
     url: string;
     description?: string;
@@ -113,7 +114,7 @@ export interface Character {
     avatarColor?: string;
     avatarInitial?: string;
     avatarImage?: string;
-    media?: MediaLink[];
+    mediaLinkIds?: string[];
 }
 
 export interface Location {
@@ -121,7 +122,7 @@ export interface Location {
     name: string;
     description?: string;
     photoUrl?: string;
-    media?: MediaLink[];
+    mediaLinkIds?: string[];
     tags?: string[];
 
     geofence?: {
