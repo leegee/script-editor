@@ -1,3 +1,5 @@
+// Store containing the whole story 
+
 import { createStore } from 'solid-js/store';
 
 import type {
@@ -40,7 +42,7 @@ class StoryService {
         return act.sceneIds.map(sceneId => story.scenes[sceneId]).filter(Boolean) as SceneNormalized[];
     }
 
-    getSceneById(sceneId: string): SceneNormalized | undefined {
+    getScene(sceneId: string): SceneNormalized | undefined {
         return story.scenes[sceneId];
     }
 
@@ -53,6 +55,14 @@ class StoryService {
     getBeatBySceneIdBeatId(sceneId: string, beatId: string): BeatNormalized | undefined {
         const beats = this.getBeatsBySceneId(sceneId);
         return beats.find(b => b.id === beatId);
+    }
+
+    getScriptLinesByBeatId(beatId: string): ScriptLineNormalized[] {
+        const beat = story.beats[beatId];
+        if (!beat) return [];
+        return beat.scriptLineIds
+            .map(lineId => story.scriptLines[lineId])
+            .filter(Boolean) as ScriptLineNormalized[];
     }
 
     getCharacters(): Character[] {
