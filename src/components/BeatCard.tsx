@@ -1,6 +1,6 @@
 import './BeatCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
-import { story } from '../lib/fakeApi'; // your normalized store
+import { story } from '../lib/story'; // your normalized store
 import Card from './Card';
 import Avatar from './Avatar';
 

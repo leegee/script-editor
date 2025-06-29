@@ -1,7 +1,7 @@
 import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import LocationCard from '../components/LocationCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 
 const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();
@@ -9,10 +9,10 @@ const LocationDetails: Component = () => {
     // Always build a list: either one or all
     const locations = createMemo(() => {
         if (params.id) {
-            const loc = fakeApi.getLocation(params.id);
+            const loc = storyApi.getLocation(params.id);
             return loc ? [loc] : [];
         }
-        return fakeApi.getLocations();
+        return storyApi.getLocations();
     });
 
     return (

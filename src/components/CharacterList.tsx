@@ -1,6 +1,6 @@
 import './CharacterList.scss';
 import { Component, For, createResource, Show } from "solid-js";
-import { fakeApi } from "../lib/fakeApi";
+import { storyApi } from "../lib/story";
 import CharacterCard from "./CharacterCard";
 
 type CharacterListProps = {
@@ -9,7 +9,7 @@ type CharacterListProps = {
 
 const CharacterList: Component<CharacterListProps> = (props) => {
     // Always get all characters
-    const [characters] = createResource(() => fakeApi.getCharacters());
+    const [characters] = createResource(() => storyApi.getCharacters());
 
     // Filter if needed
     const getCharactersToShow = () =>

@@ -1,7 +1,7 @@
 import { For, Show } from 'solid-js';
 import type { Location } from '../lib/types';
 import LocationCard from './LocationCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 import { createAsync } from '@solidjs/router';
 
 type LocationsListProps = {
@@ -10,7 +10,7 @@ type LocationsListProps = {
 
 export default (props: LocationsListProps) => {
     const locations = createAsync(() =>
-        props.locations ? Promise.resolve(props.locations) : fakeApi.getLocations(undefined)
+        props.locations ? Promise.resolve(props.locations) : storyApi.getLocations(undefined)
     );
 
     return (

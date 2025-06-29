@@ -1,10 +1,10 @@
 import './ActsList.scss';
 import { For } from 'solid-js';
 import ActCard from './ActCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 
 const ActsList = () => {
-    const acts = fakeApi.getActs();
+    const acts = storyApi.getActs();
 
     return (
         <section class="acts-list" role="list" aria-label="Acts List">

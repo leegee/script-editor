@@ -77,4 +77,4 @@ class StoryService {
 }
 
 export { story, setStory };
-export const fakeApi = new StoryService();
+export const storyApi = new StoryService();

@@ -1,17 +1,17 @@
 import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import CharacterCard from '../components/CharacterCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 
 const CharacterDetails: Component = () => {
     const params = useParams<{ id: string }>();
 
     const characters = createMemo(() => {
         if (params.id) {
-            const character = fakeApi.getCharacter(params.id);
+            const character = storyApi.getCharacter(params.id);
             return character ? [character] : [];
         }
-        return fakeApi.getCharacters();
+        return storyApi.getCharacters();
     });
 
     return (

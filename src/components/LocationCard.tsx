@@ -1,7 +1,7 @@
 import './LocationCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Location } from '../lib/types';
-import { fakeApi, story } from '../lib/fakeApi';
+import { storyApi, story } from '../lib/story';
 import Map from './Map';
 import Card from './Card';
 import LocationPinIcon from './icons/LocationPin';
@@ -16,7 +16,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
     const location = createMemo<Location | undefined>(() => {
         if (props.location) return props.location;
         if (props.locationId) {
-            return fakeApi.getLocation(props.locationId);
+            return storyApi.getLocation(props.locationId);
         }
         return undefined;
     });

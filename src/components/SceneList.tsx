@@ -2,14 +2,14 @@ import './SceneList.scss';
 import { type Component, For, Show } from 'solid-js';
 import { createAsync } from '@solidjs/router';
 import SceneCard from './SceneCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 
 interface SceneListProps {
     actId: string;
 }
 
 const SceneList: Component<SceneListProps> = (props) => {
-    const scenes = createAsync(() => fakeApi.getScenesByActId(props.actId));
+    const scenes = createAsync(() => storyApi.getScenesByActId(props.actId));
 
     return (
         <Show when={scenes()} fallback={<p>Loading scenes...</p>}>

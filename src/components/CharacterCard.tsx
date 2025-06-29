@@ -2,7 +2,7 @@ import './CharacterCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Character } from '../lib/types';
 import Avatar from './Avatar';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 import Card from './Card';
 
 interface CharacterCardProps {
@@ -15,7 +15,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     const character = createMemo<Character | undefined>(() => {
         if (props.character) return props.character;
         if (props.characterId) {
-            return fakeApi.getCharacter(props.characterId);
+            return storyApi.getCharacter(props.characterId);
         }
         return undefined;
     });

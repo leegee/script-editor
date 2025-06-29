@@ -1,17 +1,17 @@
 import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import ActCard from '../components/ActCard';
-import { fakeApi } from '../lib/fakeApi';
+import { storyApi } from '../lib/story';
 
 const ActDetails: Component = () => {
     const params = useParams<{ id: string }>();
 
     const acts = createMemo(() => {
         if (params.id) {
-            const act = fakeApi.getAct(params.id);
+            const act = storyApi.getAct(params.id);
             return act ? [act] : [];
         }
-        return fakeApi.getActs();
+        return storyApi.getActs();
     });
 
     return (
