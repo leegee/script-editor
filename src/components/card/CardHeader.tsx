@@ -1,7 +1,8 @@
 import './CardHeader.scss';
+
 import { Component, Show, JSX } from 'solid-js';
 import { A } from '@solidjs/router';
-import Find from '../icons/Details';
+import DetailsLink from '../icons/Details';
 
 interface CharacterHeaderProps {
   title: string | JSX.Element;
@@ -35,7 +36,7 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
           aria-label={props.label}
           onClick={e => e.stopPropagation()}
         >
-          <Find />
+          <DetailsLink />
         </A>
       </Show>
     </header>
