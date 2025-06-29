@@ -1,7 +1,6 @@
 .beat-card {
     .summary {
-        font-size: large;
-        opacity: 50%;
+        opacity: 90%;
         font-style: italic;
     }
 
@@ -11,5 +10,10 @@
         width: auto;
         float: left;
         margin-right: 0.6em;
+    }
+
+    .script-line {
+        display: flex;
+        flex-direction: row;
     }
 }
