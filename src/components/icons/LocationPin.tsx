@@ -8,7 +8,7 @@ const LocationPinIcon: Component<{ size?: number; color?: string }> = (props) =>
     const color = props.color ?? 'currentColor';
 
     return (
-        <span class="avatar avatar-circle">
+        <span class="location-pin">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={size}

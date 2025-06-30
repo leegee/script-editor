@@ -1,7 +1,9 @@
+article .act-card .card-title-text {
+    font-size: 1.5em;
+}
+
 .act-card {
-    p {
-        margin: 0.25em 0;
-        font-size: 0.9em;
-        color: #bbb;
+    .act-summary {
+        margin-left: 0.5em;
     }
 }

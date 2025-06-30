@@ -8,7 +8,6 @@ interface CharacterHeaderProps {
   title: string | JSX.Element;
   link?: string;
   label: string;
-  class: string;
   toggleOpen: (e: Event) => void;
 }
 
@@ -25,12 +24,13 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
 
   return (
     <header
+      class='card-header'
       role="button"
       tabIndex={0}
       onClick={props.toggleOpen}
       onKeyDown={onKeyDown}
     >
-      <h3>
+      <h3 class='card-title-text'>
         {props.title}
       </h3>
 

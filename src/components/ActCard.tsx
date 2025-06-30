@@ -27,7 +27,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                 summary={!!summary}
                 class="act-card"
             >
-                <p class="summary">
+                <p class="act-summary">
                     <TextInput {...bindField('acts', act.id, 'summary')} />
                 </p>
 

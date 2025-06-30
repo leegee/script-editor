@@ -31,7 +31,7 @@ const Card: Component<CardProps> = (props) => {
 
     return (
         <section
-            class={`card ${props.class ?? ''} ${isOpen() ? 'open' : ''} ${props.summary ? 'summary' : ''}`}
+            class={`card ${props.class ?? ''} ${isOpen() ? 'open' : 'closed'} ${props.summary ? 'summary' : ''}`}
             tabIndex={0}
             aria-expanded={isOpen()}
             role="region"
@@ -39,7 +39,6 @@ const Card: Component<CardProps> = (props) => {
         >
             {props.title && (
                 <CardHeader
-                    class={props.class}
                     title={props.title}
                     link={props.link}
                     label={props.label}

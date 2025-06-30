@@ -9,9 +9,14 @@ body {
     border-radius: 4pt;
 }
 
-a {
-    color: white;
-    text-decoration: none;
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 0.6em 0;
+    padding: 0;
 }
 
 h1 {
@@ -23,5 +28,27 @@ h2 {
 }
 
 h3 {
+    font-size: 1.2em;
+}
+
+h4 {
     font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    margin-top: 1em;
+    position: relative;
+    bottom: -2pt;
+}
+
+p {
+    margin: 0.25em 0;
+    font-size: 0.9em;
+    color: #bbb;
+}
+
+a {
+    color: white;
+    text-decoration: none;
 }

@@ -36,24 +36,24 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         </Show> */}
 
                         <section class="scene-details">
-                            <h3>Summary</h3>
+                            <h4>Summary</h4>
                             <p class="scene-summary">
                                 <TextInput {...bindField('scenes', scn.id, 'summary')} />
                             </p>
 
-                            <h3>Characters</h3>
+                            <h4>Characters</h4>
                             <div class="scene-characters">
                                 <CharacterList characterIds={scn.characterIds} />
                             </div>
 
-                            <h3>Locations</h3>
+                            <h4>Locations</h4>
                             <LocationCard locationId={scn.locationId} summary={true} />
 
                             <blockquote class="scene-script-excerpt">
                                 <TextInput {...bindField('scenes', scn.id, 'scriptExcerpt')} />
                             </blockquote>
 
-                            <h3>Beats</h3>
+                            <h4>Beats</h4>
                             <BeatList sceneId={scn.id} />
                         </section>
                     </Card>
