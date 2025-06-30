@@ -1,8 +1,10 @@
 .avatar {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    gap: 0.3em;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.6em;
+    width: 100%;
 
     .avatar-circle {
         min-width: 2em;
