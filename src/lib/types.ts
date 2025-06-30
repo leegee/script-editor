@@ -154,3 +154,7 @@ export interface NormalizedStoryData {
     characters: Record<string, Character>;
     locations: Record<string, Location>;
 }
+
+export type EntityMap = {
+    [K in keyof NormalizedStoryData]: NormalizedStoryData[K] extends Record<string, infer Item> ? Item : never;
+};

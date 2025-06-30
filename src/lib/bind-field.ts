@@ -1,10 +1,7 @@
 import { createMemo } from 'solid-js';
-import { story, setStory } from './story';
-import type { NormalizedStoryData } from './types';  // adjust import path
+import { story, setStory, storyApi } from './story';
+import type { EntityMap, NormalizedStoryData } from './types';  // adjust import path
 
-type EntityMap = {
-    [K in keyof NormalizedStoryData]: NormalizedStoryData[K] extends Record<string, infer Item> ? Item : never;
-};
 
 export function bindField<T extends keyof EntityMap>(
     entity: T,
@@ -23,7 +20,9 @@ export function bindField<T extends keyof EntityMap>(
         const target = event.target as HTMLInputElement | HTMLTextAreaElement;
         const newValue = target.value;
         console.log('set story', entity, id, field, newValue)
-        setStory(entity as any, id as any, field as any, newValue);
+        // setStory(entity as any, id as any, field as any, newValue);
+        // TODO should use updateEntity when it exists
+        storyApi.updateEntity(entity, id, field, newValue as EntityMap[T][keyof EntityMap[T]]);
     }
 
     const noop = (_event: Event) => { };

@@ -11,6 +11,7 @@ import type {
     ScriptLineNormalized,
     Character,
     Location,
+    EntityMap,
 } from './types';
 
 import { normalizeStoryData } from './transforme-tree2normalised';
@@ -134,6 +135,21 @@ class StoryService {
                 (list = []) => list.filter(id => id !== entityId)
             );
         }
+    }
+
+    updateEntity<
+        EntityType extends keyof EntityMap,
+        K extends keyof EntityMap[EntityType]
+    >(
+        entityType: EntityType,
+        entityId: string,
+        field: K,
+        newValue: EntityMap[EntityType][K]
+    ) {
+        setStory(entityType, entityId as any, prev => ({
+            ...prev,
+            [field]: newValue,
+        }));
     }
 
 }
