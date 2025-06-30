@@ -49,9 +49,8 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <TextInput {...bindField('beats', beat().id, 'title')} />
                 }
             >
-                <h5>Summary</h5>
-                <p class="beat-summary">
-                    <TextInput {...bindField('beats', beat().id, 'summary')} />
+                <p class="beat-summary-text">
+                    <TextInput placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
                 </p>
 
                 <section class="script-lines">

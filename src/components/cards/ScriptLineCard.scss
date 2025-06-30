@@ -2,6 +2,9 @@
 
 .script-lines {
     .script-line {
+        border-left: 4pt solid grey;
+        padding-left: 4pt;
+
         font-family: 'Courier New', Courier, monospace !important;
 
         &.script-line-description {

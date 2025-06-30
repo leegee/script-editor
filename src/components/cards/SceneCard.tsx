@@ -51,10 +51,9 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         </Show> */}
 
                         <section class="scene-details">
-                            <h4>Summary</h4>
-                            <p class="scene-summary">
-                                <TextInput {...bindField('scenes', scn.id, 'summary')} />
-                            </p>
+                            <h4 class="scene-summary">
+                                <TextInput placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
+                            </h4>
 
                             <h4>Characters</h4>
                             <div class="scene-characters">

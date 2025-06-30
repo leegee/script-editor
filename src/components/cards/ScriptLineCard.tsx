@@ -10,12 +10,12 @@ interface ScriptLineCardProps {
     line: ScriptLineNormalized;
 }
 
-const labelMap: Record<ScriptLineType, string> = {
-    [ScriptLineType.Dialogue]: 'Dial',
-    [ScriptLineType.Action]: 'Act',
-    [ScriptLineType.Description]: 'Desc',
-    [ScriptLineType.Parenthetical]: 'Para',
-};
+// const labelMap: Record<ScriptLineType, string> = {
+//     [ScriptLineType.Dialogue]: 'Dialogue',
+//     [ScriptLineType.Action]: 'Action',
+//     [ScriptLineType.Description]: 'Description',
+//     [ScriptLineType.Parenthetical]: 'Parenthetical',
+// };
 
 const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
     const { line } = props;
@@ -38,7 +38,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     }
                 >
                     {lineTypeOptions.map((type) => (
-                        <option value={type}>{labelMap[type]}</option>
+                        <option value={type}>{type}</option>
                     ))}
                 </select>
             </label>

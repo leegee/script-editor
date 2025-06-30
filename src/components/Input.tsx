@@ -4,6 +4,7 @@ import { Component, JSX } from 'solid-js';
 interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'value'> {
     as?: 'input' | 'textarea';
     value?: (() => string | string[] | number);
+    placeholder?: string;
 }
 
 const TextInput: Component<TextInputProps> = (props) => {
@@ -19,7 +20,7 @@ const TextInput: Component<TextInputProps> = (props) => {
 
     const rv = as === 'textarea'
         ? <textarea classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+        : <input placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
 
     return rv;
 };

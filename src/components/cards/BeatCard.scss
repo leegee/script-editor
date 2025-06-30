@@ -1,11 +1,18 @@
 .beat-card {
     .card-title-text {
-        font-size: 1em !important;
+        font-size: 1.2em !important;
     }
 
-    .beat-summary {
+    .beat-summary-text {
         opacity: 90%;
         font-style: italic;
+        margin-bottom: 1em;
+        margin-left: 0.4em !important;
+    }
+
+    .beat-summary-text:hover,
+    .beat-summary-text:focus {
+        opacity: 1;
     }
 
     .character {
