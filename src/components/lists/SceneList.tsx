@@ -1,7 +1,7 @@
 import './SceneList.scss';
 import { type Component, For, Show } from 'solid-js';
-import SceneCard from './cards/SceneCard';
-import { storyApi } from '../lib/story';
+import SceneCard from '../cards/SceneCard';
+import { storyApi } from '../../lib/story';
 
 interface SceneListProps {
     actId: string;

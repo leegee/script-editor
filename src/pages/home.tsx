@@ -1,8 +1,8 @@
 import './home.scss';
-import CharacterList from '../components/CharacterList';
 import ActsList from '../components/lists/ActsList';
 import LocationList from '../components/lists/LocationList';
 import Card from '../components/Card';
+import CharacterList from '../components/lists/CharacterList';
 
 export default function Home(props) {
   return (

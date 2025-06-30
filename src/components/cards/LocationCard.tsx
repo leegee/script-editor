@@ -1,10 +1,10 @@
 import './LocationCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
-import type { Location } from '../lib/types';
-import { storyApi } from '../lib/story';
-import Map from './Map';
-import Card from './Card';
-import LocationPinIcon from './icons/LocationPin';
+import type { Location } from '../../lib/types';
+import { storyApi } from '../../lib/story';
+import Map from '../Map';
+import Card from '../Card';
+import LocationPinIcon from '../icons/LocationPin';
 
 type LocationCardProps = {
     summary?: boolean;
