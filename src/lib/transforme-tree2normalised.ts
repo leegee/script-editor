@@ -66,7 +66,6 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
                     characterIds: scene.characterIds,
                     locationId: scene.locationId,
                     durationSeconds: scene.durationSeconds,
-                    scriptExcerpt: scene.scriptExcerpt,
                     beatIds,
                 };
             }

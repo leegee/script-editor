@@ -63,10 +63,6 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                             <h4>Locations</h4>
                             <LocationCard locationId={scn.locationId} summary={true} />
 
-                            <blockquote class="scene-script-excerpt">
-                                <TextInput {...bindField('scenes', scn.id, 'scriptExcerpt')} />
-                            </blockquote>
-
                             <h4>Beats</h4>
                             <BeatList sceneId={scn.id} />
 

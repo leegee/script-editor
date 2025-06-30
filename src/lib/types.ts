@@ -71,7 +71,6 @@ export interface Scene {
     characterIds: string[];
     locationId: string;
     durationSeconds?: number;
-    scriptExcerpt?: string;
     beats: Beat[];
 }
 
@@ -121,7 +120,6 @@ export interface SceneNormalized {
     characterIds: string[];
     locationId: string;
     durationSeconds?: number;
-    scriptExcerpt?: string;
     beatIds: string[];
 }
 

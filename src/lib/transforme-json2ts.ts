@@ -42,7 +42,6 @@ function transformScene(raw: any): Scene {
         characterIds: raw.characterIds,
         locationId: raw.locationId,
         durationSeconds: raw.durationSeconds,
-        scriptExcerpt: raw.scriptExcerpt,
         beats: raw.beats.map(transformBeat),
     };
 }

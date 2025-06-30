@@ -94,7 +94,6 @@
                     ],
                     "locationId": "loc-1",
                     "durationSeconds": 120,
-                    "scriptExcerpt": "ALICE\n(whispering)\nDid you hear that?",
                     "beats": [
                         {
                             "id": "beat-1",
@@ -141,7 +140,6 @@
                     ],
                     "locationId": "loc-2",
                     "durationSeconds": 90,
-                    "scriptExcerpt": "BEN\nI don’t like this place...",
                     "beats": [
                         {
                             "id": "beat-3",
