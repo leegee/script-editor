@@ -33,8 +33,9 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <TextInput {...bindField('beats', beat().id, 'title')} />
                 }
             >
+                <h5>Summary</h5>
                 <Show when={beat().summary}>
-                    <p class="summary">Summary:
+                    <p class="beat-summary">
                         <TextInput {...bindField('beats', beat().id, 'summary')} />
                     </p>
                 </Show>
