@@ -14,6 +14,7 @@ export enum ScriptLineType {
 }
 
 export interface MediaLink {
+    id: string;
     type: MediaType;
     url: string;
     description?: string;
@@ -95,45 +96,7 @@ export interface Story {
 }
 
 
-
-
-// normalized types for DAO
-
-export interface MediaLink {
-    id: string;
-    type: MediaType;
-    url: string;
-    description?: string;
-}
-
-export interface Character {
-    id: string;
-    name: string;
-    bio?: string;
-    tags?: string[];
-    avatarColor?: string;
-    avatarInitial?: string;
-    avatarImage?: string;
-    mediaLinkIds?: string[];
-}
-
-export interface Location {
-    id: string;
-    name: string;
-    description?: string;
-    photoUrl?: string;
-    mediaLinkIds?: string[];
-    tags?: string[];
-
-    geofence?: {
-        type: 'circle' | 'polygon';
-        center?: [number, number]; // lat/lng
-        radiusMeters?: number;
-        polygonCoords?: [number, number][];
-    };
-}
-
-// Normalized entities below
+// Normalized entities for DAO below
 
 export interface ScriptLineNormalized {
     id: string;
@@ -181,8 +144,6 @@ export interface StoryNormalized {
     createdAt?: string;
     updatedAt?: string;
 }
-
-// The normalized data store itself, for reference
 
 export interface NormalizedStoryData {
     stories: Record<string, StoryNormalized>;
