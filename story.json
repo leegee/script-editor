@@ -13,13 +13,14 @@
             "id": "char-1",
             "name": "Alice",
             "avatarColor": "#f44336",
-            "bio": "Blah blah blah"
+            "bio": "This is the biography for Alice",
+            "avatarInitial": "X"
         },
         {
             "id": "char-2",
-            "name": "Ben",
+            "name": "Bob",
             "avatarColor": "#2196f3",
-            "bio": "Hmm dee dah"
+            "bio": "This is the biography for Bob"
         }
     ],
     "locations": [
