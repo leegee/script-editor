@@ -1,6 +1,6 @@
 import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import ActCard from '../components/ActCard';
+import ActCard from '../components/cards/ActCard';
 import { storyApi } from '../lib/story';
 
 const ActDetails: Component = () => {

@@ -1,7 +1,7 @@
 import './ActsList.scss';
 import { For } from 'solid-js';
-import ActCard from './ActCard';
-import { storyApi } from '../lib/story';
+import ActCard from '../cards/ActCard';
+import { storyApi } from '../../lib/story';
 
 const ActsList = () => {
     const acts = storyApi.getActs();

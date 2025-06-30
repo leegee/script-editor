@@ -1,6 +1,6 @@
 import { type Component, Show } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import SceneCard from '../components/SceneCard';
+import SceneCard from '../components/cards/SceneCard';
 
 const SceneDetails: Component = () => {
     const params = useParams<{ id: string }>();

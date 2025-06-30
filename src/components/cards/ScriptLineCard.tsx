@@ -1,8 +1,8 @@
 import { type Component, Show } from 'solid-js';
-import Avatar from './Avatar';
-import TextInput from './Input';
-import { bindField } from '../lib/bind-field';
-import { ScriptLineNormalized } from '../lib/types';
+import Avatar from '../Avatar';
+import TextInput from '../Input';
+import { bindField } from '../../lib/bind-field';
+import { ScriptLineNormalized } from '../../lib/types';
 
 interface ScriptLineCardProps {
     line: ScriptLineNormalized;

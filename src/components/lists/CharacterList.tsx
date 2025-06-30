@@ -1,7 +1,7 @@
 import './CharacterList.scss';
 import { Component, For, createResource, Show } from "solid-js";
 import { storyApi } from "../lib/story";
-import CharacterCard from "./CharacterCard";
+import CharacterCard from "./cards/CharacterCard";
 
 type CharacterListProps = {
     characterIds?: string[];

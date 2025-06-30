@@ -1,7 +1,7 @@
 import { For, Show } from 'solid-js';
-import type { Location } from '../lib/types';
-import LocationCard from './LocationCard';
-import { storyApi } from '../lib/story';
+import type { Location } from '../../lib/types';
+import LocationCard from '../cards/LocationCard';
+import { storyApi } from '../../lib/story';
 
 type LocationsListProps = {
     locations?: Location[];

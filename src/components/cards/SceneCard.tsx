@@ -1,12 +1,12 @@
 import './SceneCard.scss';
 import { type Component, Show, createMemo } from 'solid-js';
-import { story } from '../lib/story';
-import CharacterList from './CharacterList';
+import { story } from '../../lib/story';
+import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
-import BeatList from './BeatList';
-import Card from './Card';
-import { bindField } from '../lib/bind-field';
-import TextInput from './Input';
+import BeatList from '../lists/BeatList';
+import Card from '../Card';
+import { bindField } from '../../lib/bind-field';
+import TextInput from '../Input';
 
 interface SceneCardProps {
     sceneId: string;
