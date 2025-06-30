@@ -1,4 +1,6 @@
 import '../Avatar.scss';
+import './LocationPinIcon.scss';
+
 import { type Component } from 'solid-js';
 
 const LocationPinIcon: Component<{ size?: number; color?: string }> = (props) => {
@@ -6,7 +8,7 @@ const LocationPinIcon: Component<{ size?: number; color?: string }> = (props) =>
     const color = props.color ?? 'currentColor';
 
     return (
-        <span class="avatar-circle">
+        <span class="avatar avatar-circle">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={size}

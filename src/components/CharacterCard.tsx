@@ -4,6 +4,8 @@ import type { Character } from '../lib/types';
 import Avatar from './Avatar';
 import { storyApi } from '../lib/story';
 import Card from './Card';
+import { bindField } from '../lib/bind-field';
+import TextInput from './Input';
 
 interface CharacterCardProps {
     summary?: boolean;
@@ -31,7 +33,9 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
             >
 
                 <Show when={character()!.bio}>
-                    <p class="bio">{character()!.bio}</p>
+                    <p class="bio">
+                        <TextInput {...bindField('characters', character().id, 'bio')} />
+                    </p>
                 </Show>
 
                 <Show when={character()!.tags?.length}>

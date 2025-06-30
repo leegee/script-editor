@@ -2,9 +2,9 @@ import './BeatCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
 import { storyApi } from '../lib/story';
 import { bindField } from '../lib/bind-field';
-import TextInput from './Input';
 import Card from './Card';
-import Avatar from './Avatar';
+import TextInput from './Input';
+import ScriptLineCard from './ScriptLineCard';
 
 interface BeatCardProps {
     sceneId: string;
@@ -41,19 +41,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
 
                 <section class="script-lines">
                     <For each={scriptLines()}>
-                        {(line) => {
-                            return (
-                                <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
-                                    <Show when={line.characterId}>
-                                        <div class="character">
-                                            <Avatar characterId={line.characterId} />
-                                        </div>
-                                    </Show>
-
-                                    <TextInput {...bindField('scriptLines', line.id, 'text')} />
-                                </blockquote>
-                            );
-                        }}
+                        {(line) => <ScriptLineCard line={line} />}
                     </For>
                 </section>
             </Card>
