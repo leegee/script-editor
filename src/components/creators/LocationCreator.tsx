@@ -1,4 +1,4 @@
-import { storyApi } from "../lib/story";
+import { storyApi } from "../../lib/story";
 
 export default () => {
     const addNewLocation = () => {

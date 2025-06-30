@@ -24,6 +24,8 @@ const CharacterList: Component<CharacterListProps> = (props) => {
                     )}
                 </For>
 
+                <button class="new">Add character</button>
+
             </section>
         </Show>
     );

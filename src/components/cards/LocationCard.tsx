@@ -3,7 +3,7 @@ import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Location } from '../../lib/types';
 import { storyApi } from '../../lib/story';
 import Map from '../Map';
-import Card from '../Card';
+import Card from './Card';
 import LocationPinIcon from '../icons/LocationPin';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../Input';

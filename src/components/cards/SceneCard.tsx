@@ -4,7 +4,7 @@ import { story, storyApi } from '../../lib/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
 import BeatList from '../lists/BeatList';
-import Card from '../Card';
+import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../Input';
 

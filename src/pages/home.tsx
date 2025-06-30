@@ -1,7 +1,7 @@
 import './home.scss';
 import ActsList from '../components/lists/ActsList';
 import LocationList from '../components/lists/LocationList';
-import Card from '../components/Card';
+import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
 import CharacterCreater from '../components/CharacterCreater';
 
