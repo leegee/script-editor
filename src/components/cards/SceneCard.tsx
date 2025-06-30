@@ -1,6 +1,6 @@
 import './SceneCard.scss';
 import { type Component, Show, createMemo } from 'solid-js';
-import { story } from '../../lib/story';
+import { story, storyApi } from '../../lib/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
 import BeatList from '../lists/BeatList';
@@ -15,6 +15,21 @@ interface SceneCardProps {
 
 const SceneCard: Component<SceneCardProps> = (props) => {
     const scene = createMemo(() => story.scenes[props.sceneId]);
+
+    const addNewBeat = () => {
+        storyApi.createEntity(
+            'beats',
+            {
+                title: 'New Beat',
+                scriptLineIds: [],
+            },
+            {
+                parentType: 'scenes',
+                parentId: props.sceneId,
+                parentListField: 'beatIds'
+            }
+        );
+    };
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
@@ -55,6 +70,9 @@ const SceneCard: Component<SceneCardProps> = (props) => {
 
                             <h4>Beats</h4>
                             <BeatList sceneId={scn.id} />
+
+                            <button class='new' onclick={addNewBeat}>New Beat</button>
+
                         </section>
                     </Card>
                 );

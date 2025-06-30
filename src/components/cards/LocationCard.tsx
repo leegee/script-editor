@@ -33,7 +33,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     label={`View details for ${loc.name}`}
                     summary={!!props.summary}
                     class="location-card"
-                    title={<><LocationPinIcon /> {loc.name}</>}
+                    title={<span><LocationPinIcon /> {loc.name}</span>}
                 >
                     <Show when={loc.description}>
                         <p class="description">{loc.description}</p>

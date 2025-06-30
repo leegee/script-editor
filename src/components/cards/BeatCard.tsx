@@ -5,6 +5,7 @@ import { bindField } from '../../lib/bind-field';
 import Card from '../Card';
 import TextInput from '../Input';
 import ScriptLineCard from './ScriptLineCard';
+import { ScriptLineType } from '../../lib/types';
 
 interface BeatCardProps {
     sceneId: string;
@@ -22,6 +23,21 @@ const BeatCard: Component<BeatCardProps> = (props) => {
         return storyApi.getScriptLinesByBeatId(beat().id);
     });
 
+    const addNewScriptLine = () => {
+        storyApi.createEntity(
+            'scriptLines',
+            {
+                text: 'New Script Line',
+                type: 'Dialogue' as ScriptLineType,
+            },
+            {
+                parentType: 'beats',
+                parentId: props.beatId,
+                parentListField: 'scriptLineIds'
+            }
+        );
+    };
+
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
@@ -34,16 +50,17 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 }
             >
                 <h5>Summary</h5>
-                <Show when={beat().summary}>
-                    <p class="beat-summary">
-                        <TextInput {...bindField('beats', beat().id, 'summary')} />
-                    </p>
-                </Show>
+                <p class="beat-summary">
+                    <TextInput {...bindField('beats', beat().id, 'summary')} />
+                </p>
 
                 <section class="script-lines">
                     <For each={scriptLines()}>
                         {(line) => <ScriptLineCard line={line} />}
                     </For>
+
+                    <button class='new' onclick={addNewScriptLine}>New Script Line</button>
+
                 </section>
             </Card>
         </Show>

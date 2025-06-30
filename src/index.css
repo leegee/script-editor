@@ -57,3 +57,34 @@ a {
     color: white;
     text-decoration: none;
 }
+
+select,
+button {
+    background-color: unset;
+    border: 1pt solid transparent;
+    color: #eeea;
+}
+
+select {
+    appearance: base-select;
+    padding: 0;
+    margin-right: 1em;
+}
+
+button.new {
+    display: block;
+    margin-left: auto;
+    cursor: pointer;
+    padding: 0.5em;
+    margin: 0.5em;
+    margin-left: auto;
+}
+
+button.new::before {
+    content: '➕';
+    padding-right: 0.3em;
+}
+
+button.new:hover {
+    border: 1pt solid white;
+}

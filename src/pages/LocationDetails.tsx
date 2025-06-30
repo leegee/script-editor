@@ -21,7 +21,7 @@ const LocationDetails: Component = () => {
             <section class="locations-list" role="list" aria-label="Locations">
                 <For each={locations()}>
                     {(loc) => (
-                        <LocationCard locationId={loc.id} summary={true} />
+                        <LocationCard locationId={loc.id} summary={false} />
                     )}
                 </For>
             </section>

@@ -59,7 +59,7 @@
     .card-title-text::after {
         padding-left: 1em;
         opacity: 0.5;
-        content: ' ▼ ';
+        content: '▲';
     }
 }
 
@@ -67,6 +67,6 @@
     .card-title-text::after {
         padding-left: 1em;
         opacity: 0.5;
-        content: '▲';
+        content: ' ▼ ';
     }
 }

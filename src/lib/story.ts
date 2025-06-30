@@ -1,4 +1,4 @@
-// Store containing the whole story 
+// Store containing the whole story - will be persisted to localstorage and server, but not yet
 
 import { createStore } from 'solid-js/store';
 
@@ -92,6 +92,13 @@ class StoryService {
         setStory('acts', actId, 'title', newTitle);
     }
 
+    /**
+     * 
+     * @param entityType 
+     * @param data 
+     * @param options 
+     * @returns 
+     */
     createEntity<
         EntityType extends keyof NormalizedStoryData
     >(
