@@ -6,7 +6,6 @@ import CharacterDetails from "./pages/CharacterDetails";
 import LocationDetails from "./pages/LocationDetails";
 import ActDetails from "./pages/ActDetails";
 import SceneDetails from "./pages/SceneDetails";
-import CharacterList from "./pages/CharacterList";
 
 export default function Routes() {
   return (

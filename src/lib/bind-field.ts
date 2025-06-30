@@ -12,16 +12,12 @@ export function bindField<T extends keyof EntityMap>(
 ) {
     const value = createMemo(() => {
         const entityObj = story[entity][id] as EntityMap[T] | undefined;
-        console.log('value set', entity, id, 'is', entityObj?.[field])
         return entityObj?.[field] ?? '';
     });
 
     function handleUpdate(event: Event) {
         const target = event.target as HTMLInputElement | HTMLTextAreaElement;
         const newValue = target.value;
-        console.log('set story', entity, id, field, newValue)
-        // setStory(entity as any, id as any, field as any, newValue);
-        // TODO should use updateEntity when it exists
         storyApi.updateEntity(entity, id, field, newValue as EntityMap[T][keyof EntityMap[T]]);
     }
 
