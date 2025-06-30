@@ -11,6 +11,8 @@ export enum ScriptLineType {
     Action = 'Action',
     Description = 'Description',
     Parenthetical = 'Parenthetical',
+    Shot = 'Shot',
+    Transition = 'Transition'
 }
 
 export interface MediaLink {
