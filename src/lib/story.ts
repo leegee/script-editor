@@ -17,6 +17,12 @@ import { normalizeStoryData } from './transforme-tree2normalised';
 import { transformStory } from './transforme-json2ts';
 import rawStoryData from '../../story.json' assert { type: 'json' };
 
+type ParentOptions = {
+    parentType: keyof NormalizedStoryData;
+    parentId: string;
+    parentListField: string;
+};
+
 const storyData = transformStory(rawStoryData);
 
 const normalized: NormalizedStoryData = normalizeStoryData(storyData);
@@ -84,7 +90,54 @@ class StoryService {
     updateActTitle(actId: string, newTitle: string) {
         setStory('acts', actId, 'title', newTitle);
     }
+
+    createEntity<
+        EntityType extends keyof NormalizedStoryData
+    >(
+        entityType: EntityType,
+        data: Partial<NormalizedStoryData[EntityType][string]> & { id?: string },
+        options?: ParentOptions
+    ): string {
+        const newId = data.id ?? crypto.randomUUID();
+
+        setStory(entityType, newId as any, prev => ({
+            ...prev,
+            ...data,
+            id: newId,
+        }));
+
+        if (options) {
+            setStory(
+                options.parentType,
+                options.parentId as any,
+                options.parentListField as any,
+                (list = []) => [...list, newId]
+            );
+        }
+
+        return newId;
+    }
+    deleteEntity<
+        EntityType extends keyof NormalizedStoryData
+    >(
+        entityType: EntityType,
+        entityId: string,
+        options?: ParentOptions
+    ) {
+        setStory(entityType, entityId as any, undefined); // delete entity
+
+        if (options) {
+            setStory(
+                options.parentType,
+                options.parentId as any,
+                options.parentListField as any,
+                (list = []) => list.filter(id => id !== entityId)
+            );
+        }
+    }
+
 }
+
 
 export { story, setStory };
 export const storyApi = new StoryService();
