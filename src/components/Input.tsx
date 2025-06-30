@@ -8,19 +8,18 @@ interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement |
 
 const TextInput: Component<TextInputProps> = (props) => {
     const { as = 'input', value, ...rest } = props;
-
-    const val = typeof value === 'function' ? value() : undefined;
-
-    if (
-        typeof val === 'undefined' ||
-        (typeof val !== 'number' && val.length === 0)
-    ) {
-        rest.class = (rest.class || '') + ' empty';
+    if (typeof value !== 'function') {
+        throw new TypeError('.value should be a getter: value()');
     }
 
+    const isEmpty = () => {
+        const val = value();
+        return typeof val === 'string' && val.length === 0;
+    };
+
     const rv = as === 'textarea'
-        ? <textarea value={val} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input value={val} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+        ? <textarea classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+        : <input classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
 
     return rv;
 };
