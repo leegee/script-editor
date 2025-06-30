@@ -1,5 +1,5 @@
 import './CharacterList.scss';
-import { Component, For, createResource, Show } from "solid-js";
+import { Component, For, Show } from "solid-js";
 import { storyApi } from "../../lib/story";
 import CharacterCard from "../cards/CharacterCard";
 
@@ -8,10 +8,8 @@ type CharacterListProps = {
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
-    // Always get all characters
-    const [characters] = createResource(() => storyApi.getCharacters());
+    const characters = () => storyApi.getCharacters();
 
-    // Filter if needed
     const getCharactersToShow = () =>
         props.characterIds?.length
             ? characters()?.filter(c => props.characterIds!.includes(c.id))
@@ -25,6 +23,7 @@ const CharacterList: Component<CharacterListProps> = (props) => {
                         <CharacterCard characterId={character.id} summary={true} />
                     )}
                 </For>
+
             </section>
         </Show>
     );

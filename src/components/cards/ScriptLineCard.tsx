@@ -45,12 +45,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
 
             <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
                 <Show when={line.type === 'Dialogue'}>
-                    <Show when={line.characterId}>
-                        <Avatar class="character" characterId={line.characterId} />
-                    </Show>
-                    {/* <Show when={!line.characterId}>
-                        xx
-                    </Show> */}
+                    <Avatar class="character" characterId={line.characterId} />
                 </Show>
 
                 <TextInput {...bindField('scriptLines', line.id, 'text')} />

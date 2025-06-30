@@ -10,6 +10,14 @@
         margin: 0 1em;
         overflow-y: auto;
     }
+
+    .panel {
+        .character-list {
+            .card {
+                width: 100%;
+            }
+        }
+    }
 }
 
 .main-content {

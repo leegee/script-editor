@@ -13,8 +13,7 @@
             "id": "char-1",
             "name": "Alice",
             "avatarColor": "#f44336",
-            "bio": "This is the biography for Alice",
-            "avatarInitial": "X"
+            "bio": "This is the biography for Alice"
         },
         {
             "id": "char-2",

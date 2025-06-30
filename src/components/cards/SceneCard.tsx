@@ -55,15 +55,15 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                                 <TextInput placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
                             </h4>
 
-                            <h4>Characters</h4>
+                            <h4>Scene Locations</h4>
+                            <LocationCard locationId={scn.locationId} summary={true} />
+
+                            <h4>Scene Characters</h4>
                             <div class="scene-characters">
                                 <CharacterList characterIds={scn.characterIds} />
                             </div>
 
-                            <h4>Locations</h4>
-                            <LocationCard locationId={scn.locationId} summary={true} />
-
-                            <h4>Beats</h4>
+                            <h4>Scene Beats</h4>
                             <BeatList sceneId={scn.id} />
 
                             <button class='new' onclick={addNewBeat}>New Beat</button>

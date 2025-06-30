@@ -72,7 +72,6 @@ function transformCharacter(raw: any): Character {
         bio: raw.bio,
         tags: raw.tags,
         avatarColor: raw.avatarColor,
-        avatarInitial: raw.avatarInitial,
         avatarImage: raw.avatarImage,
         // media: raw.media ? raw.media.map(transformMediaLink) : undefined,
         mediaLinkIds: raw.media?.map((m: any) => m.id),

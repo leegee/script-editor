@@ -5,6 +5,8 @@ import { storyApi } from '../../lib/story';
 import Map from '../Map';
 import Card from '../Card';
 import LocationPinIcon from '../icons/LocationPin';
+import { bindField } from '../../lib/bind-field';
+import TextInput from '../Input';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -37,6 +39,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                 >
                     <Show when={loc.description}>
                         <p class="description">{loc.description}</p>
+                        <TextInput {...bindField('characters', loc.description, 'name')} />
                     </Show>
 
                     <Show when={loc.geofence} keyed>

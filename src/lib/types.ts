@@ -28,7 +28,6 @@ export interface Character {
     bio?: string;
     tags?: string[];
     avatarColor?: string;
-    avatarInitial?: string;
     avatarImage?: string;
     mediaLinkIds?: string[];
 }
