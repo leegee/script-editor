@@ -44,7 +44,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
             </label>
 
             <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
-                <Show when={line.characterId}>
+                <Show when={line.type === 'Dialogue'}>
                     <div class="character">
                         <Avatar characterId={line.characterId} />
                     </div>
