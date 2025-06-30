@@ -7,13 +7,14 @@ import TextInput from './Input';
 interface AvatarProps {
     characterId: string;
     showName?: boolean;
+    class?: string;
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
     const character = storyApi.getCharacter(props.characterId);
     const showName = props.showName ?? true;
     return (
-        <aside class="avatar">
+        <aside class={`avatar ${props.class ?? ''}`}>
             <div
                 class="avatar-circle"
                 style={{ 'background-color': character.avatarColor ?? '#999' }}
