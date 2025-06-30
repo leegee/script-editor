@@ -58,6 +58,7 @@ function transformAct(raw: any): Act {
 
 function transformMediaLink(raw: any): MediaLink {
     return {
+        id: raw.id,
         type: raw.type as MediaType,
         url: raw.url,
         description: raw.description,
@@ -73,7 +74,8 @@ function transformCharacter(raw: any): Character {
         avatarColor: raw.avatarColor,
         avatarInitial: raw.avatarInitial,
         avatarImage: raw.avatarImage,
-        media: raw.media ? raw.media.map(transformMediaLink) : undefined,
+        // media: raw.media ? raw.media.map(transformMediaLink) : undefined,
+        mediaLinkIds: raw.media?.map((m: any) => m.id),
     };
 }
 
@@ -84,7 +86,8 @@ function transformLocation(raw: any): Location {
         description: raw.description,
         photoUrl: raw.photoUrl,
         tags: raw.tags,
-        media: raw.media ? raw.media.map(transformMediaLink) : undefined,
+        // media: raw.media ? raw.media.map(transformMediaLink) : undefined,
+        mediaLinkIds: raw.media?.map((m: any) => m.id),
         geofence: raw.geofence ? {
             type: raw.geofence.type,
             center: raw.geofence.center,
