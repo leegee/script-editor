@@ -1,46 +1,79 @@
-// src/components/Tree.tsx
-import { For, createSignal } from "solid-js";
-import { Scene, ScriptLine } from "~/lib/types";
+import { For, Show } from 'solid-js';
+import type {
+    StoryNormalized,
+    ActNormalized,
+    SceneNormalized,
+    BeatNormalized,
+    ScriptLineNormalized,
+} from '../lib/types';
+import { storyApi } from '../stores/story';
 
-export interface TreeNode {
-    id: string;
-    label: string;
-    type: 'story' | 'act' | 'scene' | 'beat' | 'line';
-    children?: TreeNode[];
-    ref?: Scene | ScriptLine;
+function ScriptLineNode(props: { line: ScriptLineNormalized }) {
+    return <li>🎭 {props.line.text}</li>;
 }
 
-
-interface TreeProps {
-    nodes: TreeNode[];
-}
-
-export function Tree({ nodes }: TreeProps) {
+function BeatNode(props: { beat: BeatNormalized }) {
+    const scriptLines = () => storyApi.getScriptLinesByBeatId(props.beat.id);
     return (
-        <ul role="tree" style={{ "list-style": "none", padding: 0 }}>
-            <For each={nodes}>
-                {(node) => <TreeNodeView node={node} />}
-            </For>
-        </ul>
+        <li>
+            <strong>Beat #{props.beat.number}</strong>
+            <Show when={scriptLines().length > 0}>
+                <ul>
+                    <For each={scriptLines()}>
+                        {(line) => <ScriptLineNode line={line} />}
+                    </For>
+                </ul>
+            </Show>
+        </li>
     );
 }
 
-function TreeNodeView({ node }: { node: TreeNode }) {
-    const [open, setOpen] = createSignal(false);
-    const hasChildren = !!node.children?.length;
+function SceneNode(props: { scene: SceneNormalized }) {
+    const beats = () => storyApi.getBeatsBySceneId(props.scene.id);
+    return (
+        <li>
+            <strong>Scene #{props.scene.number}: {props.scene.title}</strong>
+            <Show when={beats().length > 0}>
+                <ul>
+                    <For each={beats()}>
+                        {(beat) => <BeatNode beat={beat} />}
+                    </For>
+                </ul>
+            </Show>
+        </li>
+    );
+}
+
+function ActNode(props: { act: ActNormalized }) {
+    const scenes = () => storyApi.getScenesByActId(props.act.id);
+    return (
+        <li>
+            <strong>Act #{props.act.number}: {props.act.title}</strong>
+            <Show when={scenes().length > 0}>
+                <ul>
+                    <For each={scenes()}>
+                        {(scene) => <SceneNode scene={scene} />}
+                    </For>
+                </ul>
+            </Show>
+        </li>
+    );
+}
+
+export default function StoryTree() {
+    const story = () => storyApi.getStory();
+    const acts = () => storyApi.getActs();
 
     return (
-        <li role="treeitem" aria-expanded={hasChildren ? open() : undefined} style={{ padding: "4px 8px" }}>
-            <div style={{ display: "flex", "align-items": "center", cursor: hasChildren ? "pointer" : "default" }}
-                onClick={() => hasChildren && setOpen(!open())}>
-                {hasChildren && (
-                    <span style="width:16px;">{open() ? "▼" : "▶"}</span>
-                )}
-                <span style={{ "margin-left": hasChildren ? "4px" : "20px" }}>{node.label}</span>
-            </div>
-            {hasChildren && open() && (
-                <Tree nodes={node.children!} />
-            )}
-        </li>
+        <div>
+            <h2>{story()?.title ?? 'Untitled Story'}</h2>
+            <Show when={acts().length > 0} fallback={<p>No acts found</p>}>
+                <ul>
+                    <For each={acts()}>
+                        {(act) => <ActNode act={act} />}
+                    </For>
+                </ul>
+            </Show>
+        </div>
     );
 }
