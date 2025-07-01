@@ -32,7 +32,7 @@ interface StoryApi {
     updateEntity: (entityType: string, id: string, field: string, value: any) => Promise<void>;
 }
 
-interface LocationMapProps {
+export interface LocationMapProps {
     locationId: string;
     summary?: boolean;
     onUpdate?: (newGeofence: Geofence) => void; // Optional callback
@@ -40,6 +40,8 @@ interface LocationMapProps {
 
 const MAX_ZOOM_NORMAL = 19;
 const MAX_ZOOM_SUMMARY = 18;
+
+const mapFilter = "invert(20%) brightness(90%) contrast(120%) hue-rotate(0)";
 
 const LocationMap: Component<LocationMapProps> = (props) => {
     let mapContainer!: HTMLDivElement;
@@ -51,8 +53,18 @@ const LocationMap: Component<LocationMapProps> = (props) => {
 
     const [geofence, setGeofence] = createSignal<Geofence | null>(null);
 
+    const handleFullscreenChange = () => {
+        if (document.fullscreenElement === mapContainer) {
+            mapContainer.style.filter = 'none';
+        } else {
+            mapContainer.style.filter = mapFilter;
+        }
+    };
+
     // Load location and geofence on mount
     onMount(() => {
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
         const loc = storyApi.getLocation(props.locationId);
         setGeofence(loc?.geofence ?? { type: null });
 
@@ -84,6 +96,8 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         });
 
         map.addControl(new FullScreen());
+
+        mapContainer.style.filter = mapFilter;
 
         // Add initial geofence feature(s) to vector source
         if (loc?.geofence) {
@@ -132,6 +146,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
 
     onCleanup(() => {
         map?.setTarget(null);
+        document.removeEventListener('fullscreenchange', handleFullscreenChange);
     });
 
     function addGeofenceFeature(geo: Geofence) {
@@ -209,7 +224,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     async function updateGeofence(newGeo: Geofence) {
         setGeofence(newGeo);
         try {
-            await storyApi.updateEntity('locations', props.locationId, 'geofence', newGeo);
+            storyApi.updateEntity('locations', props.locationId, 'geofence', newGeo);
             props.onUpdate?.(newGeo);
         } catch (e) {
             console.error('Error updating geofence:', e);
@@ -222,7 +237,6 @@ const LocationMap: Component<LocationMapProps> = (props) => {
             style={{
                 width: '100%',
                 height: '250pt',
-                filter: "invert(20%) brightness(90%) contrast(120%) hue-rotate(0)",
             }}
         />
     );
