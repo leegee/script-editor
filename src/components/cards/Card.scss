@@ -42,11 +42,11 @@
             margin: 1em 0;
 
             .tag {
-                background-color: hsl(226, 100%, 24%);
-                color: hsl(235, 90%, 85%);
+                border: 1pt solid #eeea;
+                color: #eeea;
                 font-size: 0.875rem;
                 padding: 0.15rem 0.5rem;
-                border-radius: 12px;
+                border-radius: 10pt;
                 user-select: none;
             }
         }
