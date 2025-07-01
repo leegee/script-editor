@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "bun:test";
-import { storyApi, story } from "../src/lib/story";
+import { storyApi, story } from "../src/stores/story";
 
 describe("StoryService CRUD operations", () => {
     let testActId: string;
