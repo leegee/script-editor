@@ -27,6 +27,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
         <div class='script-line-container'>
             <label>
                 <select
+                    class='script-line-type'
                     value={line.type}
                     onChange={(e) =>
                         storyApi.updateEntity(

@@ -1,7 +1,8 @@
 import './SceneList.scss';
 import { type Component, createMemo, For, Show } from 'solid-js';
-import SceneCard from '../cards/SceneCard';
 import { storyApi } from '../../lib/story';
+import SceneCard from '../cards/SceneCard';
+import SceneCreator from '../creators/SceneCreator';
 
 interface SceneListProps {
     actId: string;
@@ -11,13 +12,14 @@ const SceneList: Component<SceneListProps> = (props) => {
     const scenes = createMemo(() => storyApi.getScenesByActId(props.actId));
 
     return (
-        <Show when={scenes} fallback={<p>Loading scenes...</p>}>
-            <section class="scene-list" role="list" aria-label="Scenes List">
+        <section class="scene-list" role="list" aria-label="Scenes List">
+            <Show when={scenes} fallback={<p>Loading scenes...</p>}>
                 <For each={scenes()}>
                     {(scene) => <SceneCard sceneId={scene.id} summary={true} />}
                 </For>
-            </section>
-        </Show>
+            </Show>
+            <SceneCreator />
+        </section>
     );
 };
 

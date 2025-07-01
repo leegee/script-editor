@@ -1,7 +1,10 @@
 .character-card {
 
-    .character-content {
+    .avatar select {
+        min-width: 50%;
+    }
 
+    .character-content {
         margin-left: 3em;
 
         .bio {

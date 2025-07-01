@@ -1,6 +1,20 @@
 @use "../../style/mixins/fonts.scss";
 
 .script-lines {
+    margin: 0.3em;
+
+    .script-line-type {
+        font-variant: small-caps;
+        text-transform: uppercase;
+        @include fonts.system();
+        font-size: small;
+        opacity: 50%;
+    }
+
+    .script-line-type:hover {
+        opacity: 100%;
+    }
+
     .script-line {
         padding: 0;
         margin: 0;
