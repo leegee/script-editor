@@ -13,12 +13,13 @@ interface ImageThumbnailProps<
     entityId: string;
     field: FieldType;
     alt?: string;
+    openModal?: boolean;
 }
 
 const ImageThumbnail = <EntityType extends keyof EntityMap, FieldType extends keyof EntityMap[EntityType]>(
     props: ImageThumbnailProps<EntityType, FieldType>
 ) => {
-    const [lightboxOpen, setLightboxOpen] = createSignal(false);
+    const [lightboxOpen, setLightboxOpen] = createSignal(props.openModal);
 
     const entity = createMemo(() => storyApi.getEntity(props.entityType, props.entityId));
 
