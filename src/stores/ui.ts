@@ -2,12 +2,12 @@ import { createStore } from "solid-js/store";
 
 type UiOptionsType = {
     showActMetaData: boolean;
-    showActSceneaData: boolean;
+    showSceneData: boolean;
 };
 
 const defaults: UiOptionsType = {
     showActMetaData: false,
-    showActSceneaData: false,
+    showSceneData: false,
 };
 
 export const [uiOptions, setUiOptions] = createStore<UiOptionsType>(defaults);

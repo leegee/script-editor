@@ -5,7 +5,8 @@ body {
     margin: 0;
 
     --script-cta-fg: oldlace;
-    --script-cta-bg: rgb(10, 10, 206);
+    --script-cta-bg: hsl(240, 91%, 42%);
+    --script-active-bg: hsl(240, 41%, 42%);
 }
 
 * {

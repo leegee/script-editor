@@ -1,0 +1,23 @@
+.nav-bar {
+    ul {
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        gap: 0.4em;
+        margin: 0.6em;
+        padding: 0;
+
+        li {
+            margin: 0;
+            padding: 2pt 0.6em;
+            border: 1pt solid #fff4;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        li label {
+            padding-right: 1em;
+        }
+    }
+}
