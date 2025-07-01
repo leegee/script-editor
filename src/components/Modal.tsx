@@ -1,4 +1,3 @@
-// components/Modal.tsx
 import { type Component, JSX, Show } from 'solid-js';
 import './Modal.scss';
 
