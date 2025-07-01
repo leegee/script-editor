@@ -1,8 +1,10 @@
 import './Input.scss';
 import { Component, JSX } from 'solid-js';
 
+export type InputTypesEnum = 'input' | 'textarea' | 'color' | 'url';
+
 interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'value'> {
-    as?: 'input' | 'textarea' | 'color' | 'url';
+    as?: InputTypesEnum;
     value?: (() => string | string[] | number);
     placeholder?: string;
 }

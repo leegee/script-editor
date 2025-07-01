@@ -6,7 +6,7 @@ import Map from '../Map';
 import Card from './Card';
 import LocationPinIcon from '../icons/LocationPin';
 import { bindField } from '../../lib/bind-field';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 
 type LocationCardProps = {
     summary?: boolean;

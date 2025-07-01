@@ -3,7 +3,7 @@ import { type Component, Show, For, createMemo } from 'solid-js';
 import { storyApi } from '../../lib/story';
 import { bindField } from '../../lib/bind-field';
 import Card from './Card';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 import ScriptLineCard from './ScriptLineCard';
 import { ScriptLineType } from '../../lib/types';
 

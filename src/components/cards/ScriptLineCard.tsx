@@ -1,7 +1,7 @@
 import "./ScriptLineCard.scss";
 import { type Component, Show } from 'solid-js';
 import Avatar from '../Avatar';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
 import { ScriptLineNormalized, ScriptLineType } from '../../lib/types';
 import { storyApi } from "../../lib/story";

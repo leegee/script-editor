@@ -4,7 +4,7 @@ import { type Component, Show } from 'solid-js';
 import { storyApi } from '../../lib/story';
 import SceneList from '../lists/SceneList';
 import Card from './Card';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
 
 interface ActCardProps {

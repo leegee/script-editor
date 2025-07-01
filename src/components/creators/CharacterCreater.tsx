@@ -3,7 +3,7 @@ import { storyApi } from "../../lib/story";
 import { createSignal, Show } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 
 const NewCharacterModal = () => {
     const [newCharacterId, setNewCharacterId] = createSignal<string | null>(null);

@@ -5,7 +5,7 @@ import Avatar from '../Avatar';
 import { storyApi } from '../../lib/story';
 import Card from './Card';
 import { bindField } from '../../lib/bind-field';
-import TextInput from '../Input';
+import TextInput from '../TextInput';
 
 interface CharacterCardProps {
     summary?: boolean;

@@ -2,7 +2,7 @@ import './Avatar.scss';
 import { storyApi } from '../lib/story';
 import { createSignal, createMemo, type Component, Show, For } from 'solid-js';
 import { bindField } from '../lib/bind-field';
-import TextInput from './Input';
+import TextInput from './TextInput';
 
 interface AvatarProps {
     characterId?: string;
