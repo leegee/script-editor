@@ -31,22 +31,20 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 class="character-card"
                 title={<Avatar characterId={character().id} />}
             >
-
-                <Show when={character()!.bio}>
+                <div class='character-content'>
                     <p class="bio">
                         <TextInput {...bindField('characters', character().id, 'bio')} />
                     </p>
-                </Show>
 
-                <Show when={character()!.tags?.length}>
-                    <div class="tags">
-                        <For each={character()!.tags}>
-                            {(tag) => <span class="tag">#{tag}</span>}
-                        </For>
-                    </div>
-                </Show>
+                    <Show when={character()!.tags?.length}>
+                        <div class="tags">
+                            <For each={character()!.tags}>
+                                {(tag) => <span class="tag">#{tag}</span>}
+                            </For>
+                        </div>
+                    </Show>
 
-                {/* 
+                    {/* 
           <Show when={character()!.totalScreenTimeSeconds}>
             <div class="meta">
               Screen Time: {Math.round(character()!.totalScreenTimeSeconds!)}s
@@ -59,6 +57,8 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
             </div>
           </Show> 
           */}
+
+                </div>
             </Card>
         </Show >
     );
