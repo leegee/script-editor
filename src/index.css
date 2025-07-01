@@ -3,12 +3,14 @@ body {
     color: #ddd;
     border: 0;
     margin: 0;
+
+    --script-cta-fg: oldlace;
+    --script-cta-bg: rgb(10, 10, 206);
 }
 
 * {
     border-radius: 4pt;
 }
-
 
 h1,
 h2,
@@ -63,6 +65,7 @@ button {
     background-color: unset;
     border: 1pt solid transparent;
     color: #eeea;
+    cursor: pointer;
 }
 
 select {

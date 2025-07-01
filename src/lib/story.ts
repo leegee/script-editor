@@ -123,6 +123,8 @@ class StoryService {
             );
         }
 
+        console.info('CREATED', entityType, newId);
+
         return newId;
     }
 

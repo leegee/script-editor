@@ -2,7 +2,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: #3333;
+    background: rgba(0, 0, 0, 0.5);
     z-index: 10;
 }
 
@@ -47,6 +47,11 @@
             border: 1pt solid #fffa;
             padding: 0.3em;
             margin-left: 0.6em;
+        }
+
+        button.save {
+            background-color: var(--script-cta-bg);
+            color: var(--script-cta-fg);
         }
     }
 }

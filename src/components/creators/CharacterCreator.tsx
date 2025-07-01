@@ -33,7 +33,7 @@ const NewCharacterModal = () => {
         <div class="creator-form">
             <button class='new' onclick={openModal}>New Character</button>
 
-            <Modal open={!!newCharacterId()} onClose={cancel}>
+            <Modal title="Create A New Character" open={!!newCharacterId()} onClose={cancel}>
                 {newCharacterId() && (() => {
                     const id = newCharacterId()!;
                     const nameField = bindField('characters', id, 'name');
@@ -42,8 +42,6 @@ const NewCharacterModal = () => {
 
                     return (
                         <div>
-                            <h2>Create A New Character</h2>
-
                             <label>
                                 <span class='text'>Name:</span>
                                 <TextInput
@@ -77,10 +75,10 @@ const NewCharacterModal = () => {
                                 />
                             </label>
 
-                            <div class="actions">
-                                <button onClick={saveCharacter}>Save</button>
-                                <button onClick={cancel}>Cancel</button>
-                            </div>
+                            <footer class="actions">
+                                <button class="cancel" onClick={cancel}>Cancel</button>
+                                <button class="save" onClick={saveCharacter}>Save</button>
+                            </footer>
                         </div>
                     );
                 })()}

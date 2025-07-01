@@ -63,11 +63,9 @@ const LocationCreator = () => {
         <div class="creator-form">
             <button class="new" onclick={openModal}>New Location</button>
 
-            <Modal open={!!newLocationId()} onClose={cancel}>
+            <Modal title='Create A New Location' open={!!newLocationId()} onClose={cancel}>
                 {newLocationId() && (() => (
                     <div>
-                        <h2>Create A New Location</h2>
-
                         <label>
                             <span class="text">Name:</span>
                             <TextInput
@@ -109,10 +107,10 @@ const LocationCreator = () => {
 
                         <Map locationId={newLocationId()} />
 
-                        <div class="actions">
-                            <button onClick={saveLocation}>Save</button>
-                            <button onClick={cancel}>Cancel</button>
-                        </div>
+                        <footer class="actions">
+                            <button class="cancel" onClick={cancel}>Cancel</button>
+                            <button class="save" onClick={saveLocation}>Save</button>
+                        </footer>
                     </div>
                 ))()}
             </Modal>

@@ -3,6 +3,7 @@ import ActsList from '../components/lists/ActsList';
 import LocationList from '../components/lists/LocationList';
 import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
+import ActCreator from '../components/creators/ActCreator';
 
 export default function Home(props) {
   return (
@@ -11,6 +12,7 @@ export default function Home(props) {
         <h1>&nbsp;</h1>
         <Card class="act-panel" title="Acts" open={true}>
           <ActsList />
+          <ActCreator />
         </Card>
       </aside>
 

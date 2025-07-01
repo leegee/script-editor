@@ -1,5 +1,5 @@
 import './CharacterList.scss';
-import { Component, For, Show } from "solid-js";
+import { Component, createMemo, For, Show } from "solid-js";
 import { storyApi } from "../../lib/story";
 import CharacterCard from "../cards/CharacterCard";
 import CharacterCreator from '../creators/CharacterCreator';
@@ -9,7 +9,7 @@ type CharacterListProps = {
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
-    const characters = () => storyApi.getCharacters();
+    const characters = createMemo(() => storyApi.getCharacters());
 
     const getCharactersToShow = () =>
         props.characterIds?.length
