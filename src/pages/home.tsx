@@ -9,7 +9,7 @@ export default function Home(props) {
   return (
     <main class="home-layout">
       <aside class="panel">
-        <h1>&nbsp;</h1>
+        <h2>&nbsp;</h2>
         <Card class="act-panel" title="Acts" open={true}>
           <ActsList />
           <ActCreator />
@@ -21,7 +21,7 @@ export default function Home(props) {
       </article>
 
       <aside class="panel">
-        <h1>&nbsp;</h1>
+        <h2>&nbsp;</h2>
         <Card class="character-panel" title="Characters" open={true}>
           <CharacterList />
         </Card>
