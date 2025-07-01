@@ -38,7 +38,6 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     title={<span><LocationPinIcon /> {loc.name}</span>}
                 >
                     <Show when={loc.description}>
-                        <p class="description">{loc.description}</p>
                         <TextInput {...bindField('characters', loc.description, 'name')} />
                     </Show>
 
