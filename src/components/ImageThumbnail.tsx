@@ -42,10 +42,9 @@ const ImageThumbnail = <EntityType extends keyof EntityMap, FieldType extends ke
         );
     };
 
-
     return (
         <Show
-            when={src()?.trim()}
+            when={src()}
             fallback={
                 <section class="image-placeholder">
                     <span>No image</span>
@@ -59,11 +58,11 @@ const ImageThumbnail = <EntityType extends keyof EntityMap, FieldType extends ke
         >
             <section class="image-thumbnail">
                 <div class='image-preview'>
-                    <img src={src()} alt={props.alt ?? ''} onClick={() => setLightboxOpen(true)} />
+                    <img src={src()} alt={props.alt ?? props.field} onClick={() => setLightboxOpen(true)} />
                 </div>
 
                 <Modal title='Image' open={lightboxOpen()} onClose={closeModal}>
-                    <img class='image-in-modal' src={src()} alt={props.alt ?? ''} />
+                    <img class='image-in-modal' src={src()} alt={props.alt ?? props.field} />
                     <div class="actions">
                         <FileInput
                             entity={props.entityType}
