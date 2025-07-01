@@ -58,11 +58,11 @@ const ImageThumbnail = <EntityType extends keyof EntityMap, FieldType extends ke
         >
             <section class="image-thumbnail">
                 <div class='image-preview'>
-                    <img src={src()} alt={props.alt ?? props.field} onClick={() => setLightboxOpen(true)} />
+                    <img src={src()} alt={props.alt ?? props.field as string} onClick={() => setLightboxOpen(true)} />
                 </div>
 
                 <Modal title='Image' open={lightboxOpen()} onClose={closeModal}>
-                    <img class='image-in-modal' src={src()} alt={props.alt ?? props.field} />
+                    <img class='image-in-modal' src={src()} alt={props.alt ?? props.field as string} />
                     <div class="actions">
                         <FileInput
                             entity={props.entityType}
