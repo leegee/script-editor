@@ -41,7 +41,7 @@ export interface LocationMapProps {
 const MAX_ZOOM_NORMAL = 19;
 const MAX_ZOOM_SUMMARY = 18;
 
-const mapFilter = "invert(20%) brightness(90%) contrast(120%) hue-rotate(0)";
+const mapFilter = "invert(20%) brightness(60%) contrast(120%) hue-rotate(0)";
 
 const LocationMap: Component<LocationMapProps> = (props) => {
     let mapContainer!: HTMLDivElement;
@@ -234,7 +234,10 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     return (
         <section
             ref={mapContainer}
+            onmouseenter={() => mapContainer.style.filter = 'none'}
+            onmouseout={() => mapContainer.style.filter = mapFilter}
             style={{
+                transition: 'filter 0.2s ease-in',
                 width: '100%',
                 height: '250pt',
             }}
