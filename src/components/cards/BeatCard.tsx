@@ -46,7 +46,10 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 summary={props.summary}
                 class="beat-card"
                 title={
-                    <TextInput {...bindField('beats', beat().id, 'title')} />
+                    <>
+                        <span class='icon'>➤</span>
+                        <TextInput {...bindField('beats', beat().id, 'title')} />
+                    </>
                 }
             >
                 <p class="beat-summary-text">
@@ -58,7 +61,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                         {(line) => <ScriptLineCard line={line} />}
                     </For>
 
-                    <button class='new' onclick={addNewScriptLine}>Script Line</button>
+                    <button class='new' onclick={addNewScriptLine}>Line</button>
 
                 </section>
             </Card>

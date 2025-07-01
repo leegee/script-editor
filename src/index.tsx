@@ -1,4 +1,4 @@
-import './index.css';
+import './style/index.css';
 import { render } from 'solid-js/web';
 import App from './App';
 

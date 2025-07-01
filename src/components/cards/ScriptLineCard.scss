@@ -19,18 +19,19 @@
     .script-line {
         padding: 0;
         margin: 0;
-        margin-bottom: 10pt 0;
+        margin-bottom: 10pt;
         display: flex;
         flex-direction: row;
         align-content: flex-start;
         font-size: 120%;
+        margin-left: 0.3em;
 
         &.script-line-description {
             @include fonts.italic();
         }
 
         &.script-line-dialogue input {
-            font-family: 'Courier New', Courier, monospace !important;
+            @include fonts.typewriter();
             width: 100%;
         }
 

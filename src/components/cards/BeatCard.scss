@@ -1,3 +1,5 @@
+@use "../../style/mixins/fonts.scss";
+
 .beat-card {
     .card-title-text {
         font-size: 1.2em !important;
@@ -5,9 +7,10 @@
 
     .beat-summary-text {
         opacity: 90%;
-        font-style: italic;
+        @include fonts.italic();
         margin-bottom: 1em;
         margin-left: 0.4em !important;
+        margin-top: -2pt;
     }
 
     .beat-summary-text:hover,
@@ -23,7 +26,4 @@
         margin-right: 0.6em;
     }
 
-    .beat-summary {
-        font-style: italic;
-    }
 }
