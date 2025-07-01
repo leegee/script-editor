@@ -29,7 +29,8 @@ const FileInput = <
 >(
     props: FileInputProps<EntityType, K>
 ): JSX.Element => {
-    // Destructure props for stable closure in onChange
+
+    // Remember: destructure props for stable closure in onChange!
     const { entity, id, field, accept } = props;
 
     const uniqueId = createMemo(() => {
