@@ -56,19 +56,6 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     <h5>Description</h5>
                     <div class='location-desc-and-photo'>
                         <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
-                        {/* <Show when={location().photoUrl}>
-                            <div class="image-preview">
-                                <img src={location().photoUrl} alt="Location photo" />
-                            </div>
-                        </Show>
-                        <Show when={!location().photoUrl}>
-                            <span class='text'>Image (optional):</span>
-                            <FileInput
-                                entity="locations"
-                                id={location().id}
-                                field="photoUrl"
-                            />
-                        </Show> */}
                         <ImageThumbnail entityType='locations' entityId={location().id} field='photoUrl' />
                     </div>
 
