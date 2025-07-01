@@ -1,5 +1,5 @@
 import './ImageThumbnail.scss';
-import { Show, createSignal, createMemo, createEffect } from 'solid-js';
+import { Show, createSignal, createMemo } from 'solid-js';
 import { storyApi } from '../lib/story';
 import FileInput from './FileInput';
 import { type EntityMap } from '../lib/types';
