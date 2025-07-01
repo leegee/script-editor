@@ -1,10 +1,35 @@
+$max-depth: 5;
+
+@function nest-selectors($selector, $depth) {
+    $result: $selector;
+
+    @for $i from 2 through $depth {
+        $result: "#{$result} #{$selector}";
+    }
+
+    @return $result;
+}
+
+
 .card {
     border: 1pt solid rgba(255, 255, 255, 0.166);
-    background-color: rgba(50, 50, 50, 0.1);
     box-shadow: 0 0 6pt rgba(220, 220, 220, 0.15);
     padding: 0 0.4em;
     margin: 0.6em 0 0.4em;
     transition: box-shadow 0.3s ease;
+
+    background-color: hsla(0, 0%, 20%, 0.1);
+
+    // Loop to create nested styles
+    @for $i from 1 through $max-depth {
+        $lightness: 20% + ($i * 10%);
+
+        @at-root {
+            #{nest-selectors('.card', $i)} {
+                background-color: hsla(0, 0%, $lightness, 0.1);
+            }
+        }
+    }
 
     &:hover,
     &:focus {
