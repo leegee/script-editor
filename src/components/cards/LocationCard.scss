@@ -1,9 +1,11 @@
 .location-card {
-    .card-title-text svg {
-        margin-top: 2pt;
+    .location-heading {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
     }
 
-    .card-title-text span {
+    .card-title-text {
         width: 100%
     }
 }

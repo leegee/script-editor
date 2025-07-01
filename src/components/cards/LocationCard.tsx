@@ -23,6 +23,16 @@ const LocationCard: Component<LocationCardProps> = (props) => {
         return undefined;
     });
 
+    const onNameInput = (e: InputEvent) => {
+        const val = (e.target as HTMLInputElement).value;
+        storyApi.updateEntity('locations', location().id, 'name', val);
+    };
+
+    const onDescriptionInput = (e: InputEvent) => {
+        const val = (e.target as HTMLTextAreaElement).value;
+        storyApi.updateEntity('locations', location().id, 'description', val);
+    };
+
     return (
         <Show
             when={location()}
@@ -35,15 +45,17 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     label={`View details for ${loc.name}`}
                     summary={!!props.summary}
                     class="location-card"
-                    title={<span><LocationPinIcon /> {loc.name}</span>}
-                >
-                    <Show when={loc.description}>
-                        <TextInput {...bindField('characters', loc.description, 'name')} />
-                    </Show>
+                    title={
+                        <span class='location-heading'>
+                            <LocationPinIcon />
+                            <TextInput value={() => loc.name} onInput={onNameInput} />
+                        </span>
+                    } >
 
-                    <Show when={loc.geofence} keyed>
-                        {(geofence) => <Map locationId={loc.id} summary={props.summary} />}
-                    </Show>
+                    <h5>Description</h5>
+                    <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
+
+                    <Map locationId={loc.id} summary={props.summary} />
 
                     <Show when={loc.tags?.length}>
                         <div class="tags">
