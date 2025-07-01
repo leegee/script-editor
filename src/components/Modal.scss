@@ -1,0 +1,45 @@
+/* components/Modal.scss */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: #3333;
+    z-index: 10;
+}
+
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333F;
+    border: 1pt solid #fff4;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    z-index: 11;
+    max-width: 500px;
+    width: 90%;
+
+    .modal-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.75rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+
+    .actions {
+        border-top: 1pt solid #fffa;
+        padding: 1em 0 0 0;
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            border: 1pt solid #fffa;
+            padding: 0.3em;
+            margin-left: 0.6em;
+        }
+    }
+}
