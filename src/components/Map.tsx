@@ -4,6 +4,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
+import FullScreen from 'ol/control/FullScreen';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -81,6 +82,8 @@ const LocationMap: Component<LocationMapProps> = (props) => {
                 zoom: initialZoom,
             }),
         });
+
+        map.addControl(new FullScreen());
 
         // Add initial geofence feature(s) to vector source
         if (loc?.geofence) {
@@ -216,7 +219,11 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     return (
         <section
             ref={mapContainer}
-            style={{ width: '100%', height: '300px' }}
+            style={{
+                width: '100%',
+                height: '250pt',
+                filter: "invert(20%) brightness(90%) contrast(120%) hue-rotate(0)",
+            }}
         />
     );
 };
