@@ -21,7 +21,12 @@ const ActCard: Component<ActCardProps> = (props) => {
     return (
         <Show when={act} fallback={<div class="loading">Loading act...</div>}>
             <Card
-                title={<TextInput {...bindField('acts', act.id, 'title')} />}
+                title={
+                    <>
+                        <TextInput {...bindField('acts', act.id, 'title')} />
+                        <span class='icon'>🎭</span>
+                    </>
+                }
                 link={`/act/${act.id}`}
                 label={`View details for Act ${act.number}`}
                 summary={!!summary}

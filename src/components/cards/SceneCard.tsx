@@ -38,7 +38,12 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                 const scn = sceneUpd();
                 return (
                     <Card
-                        title={<TextInput {...bindField('scenes', scn.id, 'title')} />}
+                        title={
+                            <>
+                                <span class='icon'>🎬 </span>
+                                <TextInput {...bindField('scenes', scn.id, 'title')} />
+                            </>
+                        }
                         link={props.summary ? `/scene/${scn.id}` : undefined}
                         label={`View details for ${scn.title}`}
                         summary={props.summary}

@@ -42,11 +42,10 @@ $max-depth: 5;
         box-shadow: 0 0 12pt rgba(0, 0, 0, 0.7);
     }
 
-    &.loading,
-    &.error {
-        color: #999;
-        font-style: italic;
-        font-size: 0.9rem;
+    .card-title-text {
+        .icon {
+            margin-right: 0.6em;
+        }
     }
 
     &.summary {

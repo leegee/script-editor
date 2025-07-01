@@ -16,11 +16,11 @@ export default function () {
                 <A href="/location" class="nav-link">Locations</A>
             </li>
             <li>
-                <label>Act Meta</label>
+                <label>Act Info</label>
                 <Switch checked={uiOptions.showActMetaData} onUpdate={(checked) => setUiOptions('showActMetaData', checked)} />
             </li>
             <li>
-                <label>Scene Meta</label>
+                <label>Scene Info</label>
                 <Switch checked={uiOptions.showSceneData} onUpdate={(checked) => setUiOptions('showSceneData', checked)} />
             </li>
         </ul>
