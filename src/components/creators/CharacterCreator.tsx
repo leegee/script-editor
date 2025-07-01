@@ -1,4 +1,4 @@
-import './CharacterCreater.scss';
+import './Creator.scss';
 import { storyApi } from "../../lib/story";
 import { createSignal, Show } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
@@ -30,7 +30,7 @@ const NewCharacterModal = () => {
     };
 
     return (
-        <div class="character-creator">
+        <div class="creator-form">
             <button class='new' onclick={openModal}>New Character</button>
 
             <Modal open={!!newCharacterId()} onClose={cancel}>

@@ -2,7 +2,7 @@ import './CharacterList.scss';
 import { Component, For, Show } from "solid-js";
 import { storyApi } from "../../lib/story";
 import CharacterCard from "../cards/CharacterCard";
-import CharacterCreator from '../creators/CharacterCreater';
+import CharacterCreator from '../creators/CharacterCreator';
 
 type CharacterListProps = {
     characterIds?: string[];
@@ -17,18 +17,16 @@ const CharacterList: Component<CharacterListProps> = (props) => {
             : characters();
 
     return (
-        <Show when={characters()} fallback={<div>Loading characters...</div>}>
-            <section class="character-list">
+        <section class="character-list">
+            <Show when={characters()} fallback={<div>No characters found</div>}>
                 <For each={getCharactersToShow()}>
                     {(character) => (
                         <CharacterCard characterId={character.id} summary={true} />
                     )}
                 </For>
-
-                <CharacterCreator />
-
-            </section>
-        </Show>
+            </Show>
+            <CharacterCreator />
+        </section>
     );
 };
 
