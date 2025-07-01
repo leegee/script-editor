@@ -5,8 +5,9 @@ import { storyApi } from '../../lib/story';
 import Map from '../Map';
 import Card from './Card';
 import LocationPinIcon from '../icons/LocationPin';
-import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
+import FileInput from '../FileInput';
+import ImageThumbnail from '../ImageThumbnail';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -53,7 +54,23 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     } >
 
                     <h5>Description</h5>
-                    <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
+                    <div class='location-desc-and-photo'>
+                        <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
+                        {/* <Show when={location().photoUrl}>
+                            <div class="image-preview">
+                                <img src={location().photoUrl} alt="Location photo" />
+                            </div>
+                        </Show>
+                        <Show when={!location().photoUrl}>
+                            <span class='text'>Image (optional):</span>
+                            <FileInput
+                                entity="locations"
+                                id={location().id}
+                                field="photoUrl"
+                            />
+                        </Show> */}
+                        <ImageThumbnail entityType='locations' entityId={location().id} field='photoUrl' />
+                    </div>
 
                     <Map locationId={loc.id} summary={props.summary} />
 

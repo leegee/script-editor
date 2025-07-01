@@ -1,4 +1,4 @@
-import { type Component, JSX, Show } from 'solid-js';
+import { type Component, createEffect, JSX, Show } from 'solid-js';
 import './Modal.scss';
 
 type ModalProps = {
@@ -9,6 +9,10 @@ type ModalProps = {
 };
 
 const Modal: Component<ModalProps> = (props) => {
+    createEffect(() => {
+        console.log('Modal open:', props.open);
+    });
+
     return (
         <Show when={props.open}>
             <div class="modal-overlay" onClick={props.onClose} />
