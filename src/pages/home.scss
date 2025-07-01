@@ -9,9 +9,20 @@
         padding: 0;
         margin: 0 0.6em;
         overflow-y: auto;
+
+        header {
+            font-size: 1em;
+        }
     }
+
 }
 
 .main-content {
     flex: 1;
+
+    .acts-list {
+        display: flex;
+        flex-direction: row;
+    }
+
 }
