@@ -1,9 +1,8 @@
 import 'ol/ol.css';
-import { onCleanup, onMount, type Component } from 'solid-js';
+import { onCleanup, onMount, createSignal, createEffect, type Component } from 'solid-js';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { fromLonLat } from 'ol/proj';
-import { buffer as bufferExtent } from 'ol/extent';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
@@ -11,15 +10,31 @@ import VectorSource from 'ol/source/Vector';
 import { Circle as CircleGeom, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke } from 'ol/style';
+import { Draw, Modify, Snap } from 'ol/interaction';
+import { storyApi } from '../lib/story';
+
+interface Geofence {
+    type: 'circle' | 'polygon' | null;
+    center?: [number, number];
+    radiusMeters?: number;
+    polygonCoords?: [number, number][];
+}
+
+interface Location {
+    id: string;
+    geofence: Geofence | null;
+    // other location fields...
+}
+
+interface StoryApi {
+    getLocation: (id: string) => Location | undefined;
+    updateEntity: (entityType: string, id: string, field: string, value: any) => Promise<void>;
+}
 
 interface LocationMapProps {
-    summary: boolean;
-    geofence: {
-        type: 'circle' | 'polygon';
-        center?: [number, number];
-        radiusMeters?: number;
-        polygonCoords?: [number, number][];
-    };
+    locationId: string;
+    summary?: boolean;
+    onUpdate?: (newGeofence: Geofence) => void; // Optional callback
 }
 
 const MAX_ZOOM_NORMAL = 19;
@@ -28,53 +43,32 @@ const MAX_ZOOM_SUMMARY = 18;
 const LocationMap: Component<LocationMapProps> = (props) => {
     let mapContainer!: HTMLDivElement;
     let map: Map;
+    let vectorSource: VectorSource;
+    let drawInteraction: Draw | null = null;
+    let modifyInteraction: Modify | null = null;
+    let snapInteraction: Snap | null = null;
 
+    const [geofence, setGeofence] = createSignal<Geofence | null>(null);
+
+    // Load location and geofence on mount
     onMount(() => {
-        const vectorSource = new VectorSource();
-        const features: Feature[] = [];
+        const loc = storyApi.getLocation(props.locationId);
+        setGeofence(loc?.geofence ?? { type: null });
 
-        if (props.geofence.type === 'circle' && props.geofence.center && props.geofence.radiusMeters) {
-            const center = fromLonLat(props.geofence.center);
-            const radius = props.geofence.radiusMeters;
-
-            const circle = new Feature({
-                geometry: new CircleGeom(center, radius),
-            });
-
-            circle.setStyle(new Style({
-                stroke: new Stroke({ color: '#007bff', width: 2 }),
-                fill: new Fill({ color: 'rgba(0, 123, 255, 0.2)' }),
-            }));
-
-            vectorSource.addFeature(circle);
-            features.push(circle);
-        }
-
-        if (props.geofence.type === 'polygon' && props.geofence.polygonCoords?.length) {
-            const coords = props.geofence.polygonCoords.map(coord => fromLonLat(coord));
-
-            if (
-                coords.length >= 3 &&
-                (coords[0][0] !== coords[coords.length - 1][0] ||
-                    coords[0][1] !== coords[coords.length - 1][1])
-            ) {
-                coords.push(coords[0]);
-            }
-
-            const polygon = new Feature({
-                geometry: new Polygon([coords]),
-            });
-
-            polygon.setStyle(new Style({
-                stroke: new Stroke({ color: '#28a745', width: 2 }),
-                fill: new Fill({ color: 'rgba(40, 167, 69, 0.2)' }),
-            }));
-
-            vectorSource.addFeature(polygon);
-            features.push(polygon);
-        }
+        vectorSource = new VectorSource();
 
         const vectorLayer = new VectorLayer({ source: vectorSource });
+
+        let initialCenter: [number, number];
+        let initialZoom: number;
+
+        if (loc?.geofence) {
+            initialCenter = fromLonLat([0, 0]) as [number, number];
+            initialZoom = props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL;
+        } else {
+            initialCenter = fromLonLat([10, 50]) as [number, number];; // lon, lat
+            initialZoom = 4;
+        }
 
         map = new Map({
             target: mapContainer,
@@ -83,32 +77,147 @@ const LocationMap: Component<LocationMapProps> = (props) => {
                 vectorLayer,
             ],
             view: new View({
-                center: fromLonLat(props.geofence.center ?? [0, 0]),
-                zoom: props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL,
+                center: initialCenter,
+                zoom: initialZoom,
             }),
         });
 
-        // Fit the map to the features
-        if (features.length > 0) {
-            const vectorExtent = vectorSource.getExtent();
-
-            const bufferMeters = 100;
-            const bufferedExtent = bufferExtent(vectorExtent, bufferMeters);
-
-            const view = map.getView();
-            view.fit(bufferedExtent, {
-                size: map.getSize(),
-                maxZoom: props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL,
-            });
+        // Add initial geofence feature(s) to vector source
+        if (loc?.geofence) {
+            addGeofenceFeature(loc.geofence);
+            fitMapToGeofence();
         }
+
+        // Setup modify interaction for editing
+        modifyInteraction = new Modify({ source: vectorSource });
+        map.addInteraction(modifyInteraction);
+
+        snapInteraction = new Snap({ source: vectorSource });
+        map.addInteraction(snapInteraction);
+
+        modifyInteraction.on('modifyend', () => {
+            const updatedFeature = vectorSource.getFeatures()[0];
+            if (updatedFeature) {
+                const newGeofence = featureToGeofence(updatedFeature);
+                if (newGeofence) {
+                    updateGeofence(newGeofence);
+                }
+            }
+        });
+
+        // Setup draw interaction to allow user to draw polygon or circle geofence
+        // For simplicity, let's enable polygon drawing only; you can extend to circles as needed
+        drawInteraction = new Draw({
+            source: vectorSource,
+            type: 'Polygon',
+        });
+        map.addInteraction(drawInteraction);
+
+        drawInteraction.on('drawend', (event) => {
+            // Remove old features, only keep the new one
+            vectorSource.clear();
+            vectorSource.addFeature(event.feature);
+
+            // Convert feature to geofence and update
+            const newGeofence = featureToGeofence(event.feature);
+            if (newGeofence) {
+                updateGeofence(newGeofence);
+            }
+        });
+
     });
 
     onCleanup(() => {
         map?.setTarget(null);
     });
 
+    function addGeofenceFeature(geo: Geofence) {
+        vectorSource.clear();
+        if (geo.type === 'polygon' && geo.polygonCoords && geo.polygonCoords.length >= 3) {
+            // Make sure polygon coords are closed (first = last)
+            let coords = geo.polygonCoords.map((coord: [number, number]) => fromLonLat(coord));
+            if (
+                coords.length > 2 &&
+                (coords[0][0] !== coords[coords.length - 1][0] ||
+                    coords[0][1] !== coords[coords.length - 1][1])
+            ) {
+                coords = [...coords, coords[0]];
+            }
+            const polygon = new Feature(new Polygon([coords]));
+            polygon.setStyle(
+                new Style({
+                    stroke: new Stroke({ color: '#28a745', width: 2 }),
+                    fill: new Fill({ color: 'rgba(40, 167, 69, 0.2)' }),
+                })
+            );
+            vectorSource.addFeature(polygon);
+        } else if (geo.type === 'circle' && geo.center && geo.radiusMeters) {
+            const center = fromLonLat(geo.center);
+            const circle = new Feature(new CircleGeom(center, geo.radiusMeters));
+            circle.setStyle(
+                new Style({
+                    stroke: new Stroke({ color: '#007bff', width: 2 }),
+                    fill: new Fill({ color: 'rgba(0, 123, 255, 0.2)' }),
+                })
+            );
+            vectorSource.addFeature(circle);
+        }
+    }
+
+    function fitMapToGeofence() {
+        const features = vectorSource.getFeatures();
+        if (features.length === 0) {
+            return;
+        }
+        const extent = vectorSource.getExtent();
+        if (!extent) {
+            return;
+        }
+        map.getView().fit(extent, {
+            maxZoom: props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL,
+            padding: [50, 50, 50, 50],
+        });
+    }
+
+    function featureToGeofence(feature: Feature): Geofence | null {
+        const geom = feature.getGeometry();
+        if (!geom) return null;
+
+        if (geom instanceof Polygon) {
+            const coords = geom.getCoordinates()[0];
+            // Convert back to lon/lat and remove closing point duplicate if exists
+            let polygonCoords = coords.map((coord: [number, number]) => toLonLat(coord)) as [number, number][];
+            if (
+                polygonCoords.length > 2 &&
+                polygonCoords[0][0] === polygonCoords[polygonCoords.length - 1][0] &&
+                polygonCoords[0][1] === polygonCoords[polygonCoords.length - 1][1]
+            ) {
+                polygonCoords = polygonCoords.slice(0, -1);
+            }
+            return { type: 'polygon', polygonCoords };
+        } else if (geom instanceof CircleGeom) {
+            const center = toLonLat(geom.getCenter()) as [number, number];
+            const radiusMeters = geom.getRadius();
+            return { type: 'circle', center, radiusMeters };
+        }
+        return null;
+    }
+
+    async function updateGeofence(newGeo: Geofence) {
+        setGeofence(newGeo);
+        try {
+            await storyApi.updateEntity('locations', props.locationId, 'geofence', newGeo);
+            props.onUpdate?.(newGeo);
+        } catch (e) {
+            console.error('Error updating geofence:', e);
+        }
+    }
+
     return (
-        <section ref={mapContainer} style={{ width: '100%', height: '250px' }} />
+        <section
+            ref={mapContainer}
+            style={{ width: '100%', height: '300px' }}
+        />
     );
 };
 

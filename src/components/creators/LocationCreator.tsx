@@ -4,6 +4,7 @@ import { storyApi } from '../../lib/story';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
 import FileInput from '../FileInput';
+import Map from '../Map';
 
 const LocationCreator = () => {
     const [newLocationId, setNewLocationId] = createSignal<string | null>(null);
@@ -106,7 +107,7 @@ const LocationCreator = () => {
                         </label>
 
 
-                        {/* Add UI for geofence, tags here if you want */}
+                        <Map locationId={newLocationId()} />
 
                         <div class="actions">
                             <button onClick={saveLocation}>Save</button>

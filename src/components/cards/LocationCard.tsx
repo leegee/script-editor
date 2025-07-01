@@ -43,7 +43,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                     </Show>
 
                     <Show when={loc.geofence} keyed>
-                        {(geofence) => <Map geofence={geofence} summary={props.summary} />}
+                        {(geofence) => <Map locationId={loc.id} summary={props.summary} />}
                     </Show>
 
                     <Show when={loc.tags?.length}>
