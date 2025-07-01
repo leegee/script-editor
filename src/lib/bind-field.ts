@@ -1,13 +1,12 @@
 import { createMemo } from 'solid-js';
-import { story, setStory, storyApi } from './story';
-import type { EntityMap, NormalizedStoryData } from './types';  // adjust import path
-
+import { story, storyApi } from './story';
+import type { EntityMap } from './types';  // adjust import path
 
 export function bindField<T extends keyof EntityMap>(
     entity: T,
     id: string,
     field: keyof EntityMap[T],
-    as: 'input' | 'textarea' = 'input',
+    as: 'input' | 'textarea' | 'color' | 'url' = 'input',
     useOnBlur = true,
 ) {
     const value = createMemo(() => {

@@ -20,6 +20,15 @@ input:focus {
 textarea.empty,
 input.empty {
     border-bottom: 1pt dotted #fff5;
+}
+
+input {
     min-height: 1em;
-    min-width: 100%;
+    max-width: 100%;
+}
+
+textarea {
+    border-bottom: 1pt dotted #fff5;
+    min-height: 2em;
+    width: 100%;
 }

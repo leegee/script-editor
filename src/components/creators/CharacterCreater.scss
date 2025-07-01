@@ -1,0 +1,15 @@
+// CharacterCreater.scss
+
+.character-creator {
+    label {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin: 0.6em 0;
+        padding: 0.3em;
+
+        .text {
+            width: 30%;
+        }
+    }
+}
