@@ -128,6 +128,28 @@ class StoryService {
         return newId;
     }
 
+    getEntity<EntityType extends keyof EntityMap>(
+        entityType: EntityType,
+        entityId: string
+    ): EntityMap[EntityType] | undefined {
+        return story[entityType][entityId] as unknown as EntityMap[EntityType];
+    }
+
+    updateEntity<
+        EntityType extends keyof EntityMap,
+        K extends keyof EntityMap[EntityType]
+    >(
+        entityType: EntityType,
+        entityId: string,
+        field: K,
+        newValue: EntityMap[EntityType][K]
+    ) {
+        setStory(entityType, entityId as any, prev => ({
+            ...prev,
+            [field]: newValue,
+        }));
+    }
+
     deleteEntity<
         EntityType extends keyof NormalizedStoryData
     >(
@@ -146,22 +168,6 @@ class StoryService {
             );
         }
     }
-
-    updateEntity<
-        EntityType extends keyof EntityMap,
-        K extends keyof EntityMap[EntityType]
-    >(
-        entityType: EntityType,
-        entityId: string,
-        field: K,
-        newValue: EntityMap[EntityType][K]
-    ) {
-        setStory(entityType, entityId as any, prev => ({
-            ...prev,
-            [field]: newValue,
-        }));
-    }
-
 }
 
 
