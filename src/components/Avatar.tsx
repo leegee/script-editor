@@ -1,22 +1,21 @@
 import './Avatar.scss';
 import { storyApi } from '../lib/story';
-import { createSignal, createMemo, type Component, Show, For } from 'solid-js';
-import { bindField } from '../lib/bind-field';
+import { createSignal, createMemo, Show, For, Component } from 'solid-js';
+import ImageThumbnail from './ImageThumbnail';
 import TextInput from './TextInput';
+import { bindField } from '../lib/bind-field';
+import Modal from './Modal';
 
 interface AvatarProps {
     characterId?: string;
     showName?: boolean;
     class?: string;
-    isNew?: boolean;  // new prop to control editing mode
+    isNew?: boolean;
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
     const allCharacters = storyApi.getCharacters();
-
-    // Use initial selectedId either from props.characterId or first character
     const [selectedId, setSelectedId] = createSignal(props.characterId ?? allCharacters[0]?.id);
-
     const character = createMemo(() => {
         const id = selectedId();
         return id ? storyApi.getCharacter(id) : undefined;
@@ -24,6 +23,7 @@ const Avatar: Component<AvatarProps> = (props) => {
 
     const showName = props.showName ?? true;
     const isNew = props.isNew ?? false;
+    const [showModal, setShowModal] = createSignal(false);
 
     return (
         <aside class={`avatar ${props.class ?? ''}`}>
@@ -33,27 +33,47 @@ const Avatar: Component<AvatarProps> = (props) => {
                     style={{ 'background-color': character()!.avatarColor ?? '#999' }}
                 >
                     <Show when={character()!.avatarImage} fallback={
-                        character()!.name.substring(0, 1) ?? character()!.name[0]
+                        <div>
+                            <button
+                                class="avatar-initial"
+                                onClick={() => setShowModal(true)}
+                                aria-label={`Add an image for ${character()!.name}`}
+                            >
+                                {character()!.name.substring(0, 1)}
+                            </button>
+                            <Show when={showModal()}>
+                                <Modal title={`Select an image for ${character().name}`} open={showModal()} onClose={() => setShowModal(false)}>
+                                    <ImageThumbnail
+                                        entityType="characters"
+                                        entityId={character()!.id}
+                                        field="avatarImage"
+                                        alt={character()!.name}
+                                        openModal={true}
+                                    />
+                                </Modal>
+                            </Show>
+                        </div>
                     }>
-                        <img src={character()!.avatarImage} alt={character()!.name} class="avatar-img" />
+                        {/* Show image thumbnail with controlled openModal */}
+                        <ImageThumbnail
+                            entityType="characters"
+                            entityId={character()!.id}
+                            field="avatarImage"
+                            alt={character()!.name}
+                        />
                     </Show>
                 </div>
 
-                {/* Show dropdown only when NOT isNew */}
+                {/* Select dropdown when NOT isNew */}
                 <Show when={!isNew}>
-                    <select
-                        value={selectedId()}
-                        onInput={(e) => setSelectedId((e.target as HTMLSelectElement).value)}
-                    >
+                    <select value={selectedId()} onInput={e => setSelectedId((e.target as HTMLSelectElement).value)}>
                         <For each={allCharacters}>
-                            {(c) => (
-                                <option value={c.id}>{c.name}</option>
-                            )}
+                            {(c) => <option value={c.id}>{c.name}</option>}
                         </For>
                     </select>
                 </Show>
 
-                {/* Show name input only when isNew is true */}
+                {/* Editable name input when isNew */}
                 <Show when={isNew && showName && character()}>
                     <em>
                         <TextInput {...bindField('characters', character()!.id, 'name')} />
