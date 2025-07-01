@@ -5,6 +5,7 @@ import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
 import FileInput from '../FileInput';
+import ImageThumbnail from '../ImageThumbnail';
 
 const NewCharacterModal = () => {
     const [newCharacterId, setNewCharacterId] = createSignal<string | null>(null);
@@ -68,11 +69,7 @@ const NewCharacterModal = () => {
 
                             <label>
                                 <span class='text'>Image (optional):</span>
-                                <FileInput
-                                    entity="characters"
-                                    id={newCharacterId()}
-                                    field="avatarImage"
-                                />
+                                <ImageThumbnail entityType='characters' entityId={newCharacterId()} field='avatarImage' />
                             </label>
 
                             <footer class="actions">
