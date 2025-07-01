@@ -43,7 +43,6 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         summary={props.summary}
                         class="scene-card"
                     >
-                        {/* Uncomment if you want to show duration */}
                         {/* <Show when={sc.durationSeconds !== undefined}>
                             <p class="scene-duration">
                                 {Math.floor(sc.durationSeconds / 60)}m {sc.durationSeconds % 60}s

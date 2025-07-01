@@ -33,12 +33,13 @@ const ActCard: Component<ActCardProps> = (props) => {
                 <SceneList actId={act.id} />
 
                 {/*
-        <Show when={act.totalDurationSeconds}>
-          <p>
-            <strong>Total Duration:</strong> {Math.round(act.totalDurationSeconds!)}s
-          </p>
-        </Show>
-        */}
+                    <Show when={act.totalDurationSeconds}>
+                    <p>
+                        <strong>Total Duration:</strong> {Math.round(act.totalDurationSeconds!)}s
+                    </p>
+                    </Show>
+                */}
+
             </Card>
         </Show>
     );

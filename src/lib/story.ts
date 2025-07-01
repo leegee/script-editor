@@ -36,7 +36,7 @@ class StoryService {
     }
 
     getActs(): ActNormalized[] {
-        return Object.values(story.acts);
+        return Object.values(story.acts).sort((a, b) => a.number - b.number);
     }
 
     getAct(actId: string): ActNormalized | undefined {
