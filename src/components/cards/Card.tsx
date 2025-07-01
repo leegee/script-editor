@@ -40,7 +40,7 @@ const Card: Component<CardProps> = (props) => {
             {props.title && (
                 <CardHeader
                     title={props.title}
-                    link={props.link}
+                    link={props.summary ? props.link : undefined}
                     label={props.label}
                     toggleOpen={props.summary ? toggleOpen : undefined}
                 />
