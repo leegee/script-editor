@@ -7,6 +7,7 @@ import BeatList from '../lists/BeatList';
 import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
+import { uiOptions } from '../../stores/ui';
 
 interface SceneCardProps {
     sceneId: string;
@@ -43,26 +44,30 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         summary={props.summary}
                         class="scene-card"
                     >
-                        {/* <Show when={sc.durationSeconds !== undefined}>
+                        <section class="scene-details">
+
+                            {/* <Show when={sc.durationSeconds !== undefined}>
                             <p class="scene-duration">
                                 {Math.floor(sc.durationSeconds / 60)}m {sc.durationSeconds % 60}s
                             </p>
                         </Show> */}
 
-                        <section class="scene-details">
-                            <h4 class="scene-summary">
-                                <TextInput placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
-                            </h4>
+                            <Show when={uiOptions.showActMetaData}>
+                                <h4 class="scene-summary">
+                                    <TextInput placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
+                                </h4>
 
-                            <h4>Scene Locations</h4>
-                            <LocationCard locationId={scn.locationId} summary={true} />
+                                <h4>Scene Locations</h4>
+                                <LocationCard locationId={scn.locationId} summary={true} />
 
-                            <h4>Scene Characters</h4>
-                            <div class="scene-characters">
-                                <CharacterList characterIds={scn.characterIds} />
-                            </div>
+                                <h4>Scene Characters</h4>
+                                <div class="scene-characters">
+                                    <CharacterList characterIds={scn.characterIds} />
+                                </div>
 
-                            <h4>Scene Beats</h4>
+                                <h4>Scene Beats</h4>
+                            </Show>
+
                             <BeatList sceneId={scn.id} />
 
                             <button class='new' onclick={addNewBeat}>Beat</button>
@@ -71,7 +76,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                     </Card>
                 );
             }}
-        </Show>
+        </Show >
     );
 };
 

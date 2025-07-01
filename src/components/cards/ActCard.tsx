@@ -2,6 +2,7 @@ import './ActCard.scss';
 
 import { type Component, Show } from 'solid-js';
 import { storyApi } from '../../stores/story';
+import { uiOptions } from '../../stores/ui';
 import SceneList from '../lists/SceneList';
 import Card from './Card';
 import TextInput from '../TextInput';
@@ -26,9 +27,11 @@ const ActCard: Component<ActCardProps> = (props) => {
                 summary={!!summary}
                 class="act-card"
             >
-                <p class="act-summary">
-                    <TextInput placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
-                </p>
+                <Show when={uiOptions.showActMetaData}>
+                    <p class="act-summary">
+                        <TextInput placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
+                    </p>
+                </Show>
 
                 <SceneList actId={act.id} />
 
