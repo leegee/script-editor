@@ -16,7 +16,6 @@ const ActCard: Component<ActCardProps> = (props) => {
     const { actId, summary } = props;
 
     const act = storyApi.getAct(actId);
-    const scenes = storyApi.getScenesByActId(actId);
 
     return (
         <Show when={act} fallback={<div class="loading">Loading act...</div>}>
