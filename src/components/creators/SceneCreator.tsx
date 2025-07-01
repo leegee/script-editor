@@ -5,7 +5,11 @@ import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
 
-const SceneCreator = () => {
+interface SceneCreatorProps {
+    actId: string;
+}
+
+const SceneCreator = (props: SceneCreatorProps) => {
     const [newSceneId, setNewSceneId] = createSignal<string | null>(null);
 
     const openModal = () => {
@@ -16,6 +20,10 @@ const SceneCreator = () => {
             locationId: undefined,
             durationSeconds: undefined,
             beatIds: [],
+        }, {
+            parentType: 'acts',
+            parentId: props.actId,
+            parentListField: 'sceneIds',
         });
         setNewSceneId(id);
     };
