@@ -31,7 +31,7 @@ const ActCreator = () => {
 
     return (
         <div class="creator-form">
-            <button class="new" onclick={openModal}>New Act</button>
+            <button class="new" onclick={openModal}>Act</button>
 
             <Modal title="Create New Act" open={!!newActId()} onClose={cancel}>
                 {newActId() && (() => {

@@ -33,7 +33,7 @@ const SceneCreator = () => {
 
     return (
         <div class="creator-form">
-            <button class="new" onClick={openModal}>New Scene</button>
+            <button class="new" onClick={openModal}>Scene</button>
 
             <Modal title="Create New Scene" open={!!newSceneId()} onClose={cancel}>
                 {newSceneId() && (() => {

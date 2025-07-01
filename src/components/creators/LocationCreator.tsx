@@ -61,7 +61,7 @@ const LocationCreator = () => {
 
     return (
         <div class="creator-form">
-            <button class="new" onclick={openModal}>New Location</button>
+            <button class="new" onclick={openModal}>Location</button>
 
             <Modal title='Create A New Location' open={!!newLocationId()} onClose={cancel}>
                 {newLocationId() && (() => (

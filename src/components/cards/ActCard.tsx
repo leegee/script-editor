@@ -28,12 +28,10 @@ const ActCard: Component<ActCardProps> = (props) => {
                 class="act-card"
             >
                 <p class="act-summary">
-                    <TextInput {...bindField('acts', act.id, 'summary')} />
+                    <TextInput placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
                 </p>
 
-                <Show when={scenes.length}>
-                    <SceneList actId={act.id} />
-                </Show>
+                <SceneList actId={act.id} />
 
                 {/*
         <Show when={act.totalDurationSeconds}>

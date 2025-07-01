@@ -66,7 +66,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                             <h4>Scene Beats</h4>
                             <BeatList sceneId={scn.id} />
 
-                            <button class='new' onclick={addNewBeat}>New Beat</button>
+                            <button class='new' onclick={addNewBeat}>Beat</button>
 
                         </section>
                     </Card>

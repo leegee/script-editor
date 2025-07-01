@@ -58,7 +58,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                         {(line) => <ScriptLineCard line={line} />}
                     </For>
 
-                    <button class='new' onclick={addNewScriptLine}>New Script Line</button>
+                    <button class='new' onclick={addNewScriptLine}>Script Line</button>
 
                 </section>
             </Card>
