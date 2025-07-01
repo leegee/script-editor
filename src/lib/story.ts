@@ -125,6 +125,7 @@ class StoryService {
 
         return newId;
     }
+
     deleteEntity<
         EntityType extends keyof NormalizedStoryData
     >(
