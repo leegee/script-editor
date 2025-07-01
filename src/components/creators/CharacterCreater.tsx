@@ -4,6 +4,7 @@ import { createSignal, Show } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
+import FileInput from '../FileInput';
 
 const NewCharacterModal = () => {
     const [newCharacterId, setNewCharacterId] = createSignal<string | null>(null);
@@ -54,12 +55,6 @@ const NewCharacterModal = () => {
 
                             <label>
                                 <span class='text'>Avatar Color:</span>
-                                {/* <input
-                                    type="color"
-                                    value={avatarColorField.value()}
-                                    onInput={avatarColorField.onInput}
-                                    onBlur={avatarColorField.onBlur}
-                                /> */}
                                 <TextInput {...avatarColorField} as="color" />
                             </label>
 
@@ -70,6 +65,15 @@ const NewCharacterModal = () => {
                                     onInput={bioField.onInput}
                                     onBlur={bioField.onBlur}
                                     as='textarea'
+                                />
+                            </label>
+
+                            <label>
+                                <span class='text'>Image (optional):</span>
+                                <FileInput
+                                    entity="characters"
+                                    id={id}
+                                    field="avatarImage"
                                 />
                             </label>
 

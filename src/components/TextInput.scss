@@ -1,5 +1,4 @@
-textarea,
-input {
+.custom-input {
     background: unset;
     width: 100%;
     border-radius: 2pt;
@@ -11,23 +10,21 @@ input {
     font-family: inherit;
 }
 
-textarea:focus,
-input:focus {
+.custom-input:focus {
     transition: border 0.6s ease-in-out;
     border: 1pt solid #fff5;
 }
 
-textarea.empty,
-input.empty {
+.custom-input.empty {
     border-bottom: 1pt dotted #fff5;
 }
 
-input {
+input.custom-input {
     min-height: 1em;
     max-width: 100%;
 }
 
-textarea {
+textarea.custom-input {
     border-bottom: 1pt dotted #fff5;
     min-height: 2em;
     width: 100%;

@@ -1,4 +1,4 @@
-import './Input.scss';
+import './TextInput.scss';
 import { Component, JSX } from 'solid-js';
 
 export type InputTypesEnum = 'input' | 'textarea' | 'color' | 'url';
@@ -22,8 +22,8 @@ const TextInput: Component<TextInputProps> = (props) => {
     };
 
     const rv = as === 'textarea'
-        ? <textarea classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input type={as} placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+        ? <textarea class='custom-input' classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+        : <input class='custom-input' type={as} placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
 
     return rv;
 };
