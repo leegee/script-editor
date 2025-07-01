@@ -2,18 +2,21 @@
 
 .script-lines {
     .script-line {
-        border-radius: 0;
-        border-left: 4pt solid grey;
-        padding-left: 4pt;
-        font-family: 'Courier New', Courier, monospace !important;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 10pt 0;
         display: flex;
         flex-direction: row;
         align-content: flex-start;
-        font-size: 12pt;
+        font-size: 120%;
 
         &.script-line-description {
             @include fonts.italic();
-            margin-left: 1em;
+        }
+
+        &.script-line-dialogue input {
+            font-family: 'Courier New', Courier, monospace !important;
+            width: 100%;
         }
 
         label {
