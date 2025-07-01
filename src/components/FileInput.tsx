@@ -1,6 +1,6 @@
 import './FileInput.scss';
 import { createMemo, JSX } from 'solid-js';
-import { storyApi } from '../lib/story';
+import { storyApi } from '../stores/story';
 import type { EntityMap } from '../lib/types';
 
 interface FileInputProps<

@@ -1,6 +1,6 @@
 import './CharacterList.scss';
 import { Component, createMemo, For, Show } from "solid-js";
-import { storyApi } from "../../lib/story";
+import { storyApi } from "../../stores/story";
 import CharacterCard from "../cards/CharacterCard";
 import CharacterCreator from '../creators/CharacterCreator';
 

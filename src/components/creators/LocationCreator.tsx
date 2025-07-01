@@ -1,6 +1,6 @@
 import './LocationCreator.scss';
 import { createSignal, createEffect, onCleanup } from 'solid-js';
-import { storyApi } from '../../lib/story';
+import { storyApi } from '../../stores/story';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
 import FileInput from '../FileInput';

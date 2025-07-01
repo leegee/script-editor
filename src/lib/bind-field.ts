@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js';
-import { story, storyApi } from './story';
+import { story, storyApi } from '../stores/story';
 import type { EntityMap } from './types';
 import { InputTypesEnum } from '../components/TextInput';
 

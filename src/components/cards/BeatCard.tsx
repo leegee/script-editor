@@ -1,6 +1,6 @@
 import './BeatCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
-import { storyApi } from '../../lib/story';
+import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
 import Card from './Card';
 import TextInput from '../TextInput';

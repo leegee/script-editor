@@ -1,7 +1,7 @@
 import './ActsList.scss';
 import { createMemo, For } from 'solid-js';
 import ActCard from '../cards/ActCard';
-import { storyApi } from '../../lib/story';
+import { storyApi } from '../../stores/story';
 import SceneCreator from '../creators/SceneCreator';
 
 const ActsList = () => {

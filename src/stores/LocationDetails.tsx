@@ -1,7 +1,7 @@
 import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import LocationCard from '../components/cards/LocationCard';
-import { storyApi } from '../stores/story';
+import { storyApi } from './story';
 
 const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();

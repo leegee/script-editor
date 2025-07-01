@@ -12,10 +12,10 @@ import type {
     Character,
     Location,
     EntityMap,
-} from './types';
+} from '../lib/types';
 
-import { normalizeStoryData } from './transforme-tree2normalised';
-import { transformStory } from './transforme-json2ts';
+import { normalizeStoryData } from '../lib/transforme-tree2normalised';
+import { transformStory } from '../lib/transforme-json2ts';
 import rawStoryData from '../../story.json' assert { type: 'json' };
 
 type ParentOptions = {

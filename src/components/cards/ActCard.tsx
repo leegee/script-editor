@@ -1,7 +1,7 @@
 import './ActCard.scss';
 
 import { type Component, Show } from 'solid-js';
-import { storyApi } from '../../lib/story';
+import { storyApi } from '../../stores/story';
 import SceneList from '../lists/SceneList';
 import Card from './Card';
 import TextInput from '../TextInput';

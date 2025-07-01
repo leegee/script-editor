@@ -12,7 +12,7 @@ import { Circle as CircleGeom, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke } from 'ol/style';
 import { Draw, Modify, Snap } from 'ol/interaction';
-import { storyApi } from '../lib/story';
+import { storyApi } from '../stores/story';
 
 interface Geofence {
     type: 'circle' | 'polygon' | null;

@@ -1,6 +1,6 @@
 import { type Component, For, Show, createMemo } from 'solid-js';
 import BeatCard from '../cards/BeatCard';
-import { storyApi, story } from '../../lib/story';
+import { storyApi, story } from '../../stores/story';
 
 interface BeatListProps {
     sceneId: string;

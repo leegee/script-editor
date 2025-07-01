@@ -1,6 +1,6 @@
 import './SceneList.scss';
 import { type Component, createMemo, For, Show } from 'solid-js';
-import { story } from '../../lib/story';
+import { story } from '../../stores/story';
 import SceneCard from '../cards/SceneCard';
 import SceneCreator from '../creators/SceneCreator';
 

@@ -1,5 +1,5 @@
 import './Creator.scss';
-import { storyApi } from "../../lib/story";
+import { storyApi } from "../../stores/story";
 import { createSignal, Show } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';

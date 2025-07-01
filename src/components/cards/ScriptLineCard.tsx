@@ -4,7 +4,7 @@ import Avatar from '../Avatar';
 import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
 import { ScriptLineNormalized, ScriptLineType } from '../../lib/types';
-import { storyApi } from "../../lib/story";
+import { storyApi } from "../../stores/story";
 
 interface ScriptLineCardProps {
     line: ScriptLineNormalized;

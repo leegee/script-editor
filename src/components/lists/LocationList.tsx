@@ -1,6 +1,6 @@
 import { For, Show, createMemo } from 'solid-js';
 import LocationCard from '../cards/LocationCard';
-import { storyApi } from '../../lib/story';
+import { storyApi } from '../../stores/story';
 import LocationCreator from '../creators/LocationCreator';
 
 export default () => {

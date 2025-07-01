@@ -1,5 +1,5 @@
 import './Avatar.scss';
-import { storyApi } from '../lib/story';
+import { storyApi } from '../stores/story';
 import { createSignal, createMemo, Show, For, Component } from 'solid-js';
 import ImageThumbnail from './ImageThumbnail';
 import TextInput from './TextInput';
