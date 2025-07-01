@@ -70,7 +70,7 @@ const NewCharacterModal = () => {
                                 <span class='text'>Image (optional):</span>
                                 <FileInput
                                     entity="characters"
-                                    id={id}
+                                    id={newCharacterId()}
                                     field="avatarImage"
                                 />
                             </label>
