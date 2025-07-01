@@ -9,10 +9,6 @@ type ModalProps = {
 };
 
 const Modal: Component<ModalProps> = (props) => {
-    createEffect(() => {
-        console.log('Modal open:', props.open);
-    });
-
     return (
         <Show when={props.open}>
             <div class="modal-overlay" onClick={props.onClose} />
