@@ -1,8 +1,9 @@
-import './Creator.scss';
+import './LocationCreator.scss';
 import { createSignal, createEffect, onCleanup } from 'solid-js';
 import { storyApi } from '../../lib/story';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
+import FileInput from '../FileInput';
 
 const LocationCreator = () => {
     const [newLocationId, setNewLocationId] = createSignal<string | null>(null);
@@ -71,7 +72,6 @@ const LocationCreator = () => {
                             <TextInput
                                 value={() => name()}
                                 onInput={onNameInput}
-                                onBlur={() => {/* optional: handle blur */ }}
                             />
                         </label>
 
@@ -81,9 +81,30 @@ const LocationCreator = () => {
                                 value={() => description()}
                                 onInput={onDescriptionInput}
                                 as="textarea"
-                                onBlur={() => {/* optional */ }}
                             />
                         </label>
+
+                        <label>
+                            <span class='text'>Image (optional):</span>
+                            <FileInput
+                                entity="locations"
+                                id={newLocationId()}
+                                field="photoUrl"
+                            />
+
+                            {(() => {
+                                const savedLocation = storyApi.getLocation(newLocationId());
+                                if (savedLocation?.photoUrl) {
+                                    return (
+                                        <div class="image-preview">
+                                            <img src={savedLocation.photoUrl} alt="Location photo" />
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })()}
+                        </label>
+
 
                         {/* Add UI for geofence, tags here if you want */}
 
