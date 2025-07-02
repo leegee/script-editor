@@ -3,38 +3,97 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 0.5em 1em;
+    flex-shrink: 0;
+    background: #111;
+    color: #eee;
 }
 
 .home-layout {
     display: flex;
-    min-height: 100vh;
+    flex-grow: 1;
+    min-height: 0;
+    height: 100vh;
+    overflow: hidden;
 
     .panel {
-        flex: 0 0 min(20vw, 40em);
-        min-width: 20vw;
-        max-width: 40em;
+        flex-shrink: 0;
+        width: 0;
+        overflow: hidden;
+        background: #111;
+        color: #eee;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
         padding: 0;
         margin: 0 0.6em;
+        box-sizing: border-box;
+        transition: width 0.3s ease;
         overflow-y: auto;
+
+        &.left {
+            /* Left panel slides in/out by width */
+        }
+
+        &.right {
+            /* Right panel slides in/out by width */
+            text-align: right;
+        }
+
+        &.open {
+            width: min(20vw, 40em);
+            overflow-y: auto;
+            padding: 0.5em 0.8em;
+        }
+
+        &.closed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
 
         header {
             font-size: 10pt;
             margin: 12pt 0;
-        }
-
-        &.right {
-            text-align: right;
+            padding: 0 1em;
         }
     }
 
-}
+    .main-content {
+        flex-grow: 1;
+        background: #121212;
+        color: #eee;
+        overflow-y: auto;
+        overflow-y: auto;
+        padding: 1em;
+        transition: margin 0.3s ease;
+        min-height: 0;
+        overflow: auto;
 
-.main-content {
-    flex: 1;
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+        scrollbar-gutter: stable;
 
-    .acts-list {
-        display: flex;
-        flex-direction: row;
+        &:hover {
+            scrollbar-color: #666 transparent;
+        }
+
+        &::-webkit-scrollbar {
+            width: 8pt;
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 4pt;
+        }
+
+        &:hover::-webkit-scrollbar-thumb {
+            background: #666;
+        }
+
+        &:hover::-webkit-scrollbar {
+            background: #444;
+        }
     }
-
 }

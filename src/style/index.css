@@ -1,6 +1,17 @@
 @import "./IBMPlexMono.fonts.css";
 
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     background-color: #222;
     color: #ddd;
     border: 0;

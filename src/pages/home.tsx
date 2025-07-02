@@ -6,45 +6,51 @@ import CharacterList from '../components/lists/CharacterList';
 import ActCreator from '../components/creators/ActCreator';
 import Switch from '../components/Switch';
 import { uiOptions, setUiOptions } from '../stores/ui';
-import { Show } from 'solid-js';
+import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
 
 export default function Home(props) {
+  const mainClass = createMemo(() => {
+    const left = uiOptions.showLeftSidePanel;
+    const right = uiOptions.showRightSidePanel;
+    if (left && right) return "home-layout both-open";
+    if (left) return "home-layout left-open";
+    if (right) return "home-layout right-open";
+    return "home-layout";
+  });
+
   return (
     <>
       <header class="home-layout-controls">
         <span>
-          <Switch checked={uiOptions.showLeftSidePanel} onUpdate={(checked) => setUiOptions('showLeftSidePanel', checked)} />
-
-          <Switch checked={uiOptions.showRightSidePanel} onUpdate={(checked) => setUiOptions('showRightSidePanel', checked)} />
+          <Switch checked={uiOptions.showLeftSidePanel} onUpdate={checked => setUiOptions('showLeftSidePanel', checked)} />
+          <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
         </span>
       </header>
 
-      <main class="home-layout">
-        <Show when={uiOptions.showLeftSidePanel}>
-          <aside class="panel">
-            <Card class="act-panel" title="Acts" open={true} menuItems={<ActCreator />}>
-              <ActsList />
-            </Card>
-          </aside>
-        </Show>
+      <main class={mainClass()}>
+        {/* Left panel always rendered */}
+        <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
+          <Card class="act-panel" title="Acts" open menuItems={<ActCreator />}>
+            <ActsList />
+          </Card>
+        </aside>
 
         <article class="main-content">
           {props.children}
         </article>
 
-        <Show when={uiOptions.showRightSidePanel}>
-          <aside class="panel right">
-            <Card class="character-panel" title="Characters" open={true} menuItems={<CharacterCreator />}>
-              <CharacterList />
-            </Card>
+        {/* Right panel always rendered */}
+        <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
+          <Card class="character-panel" title="Characters" open menuItems={<CharacterCreator />}>
+            <CharacterList />
+          </Card>
 
-            <Card class="location-panel" title="Location" open={true} menuItems={<LocationCreator />}>
-              <LocationList />
-            </Card>
-          </aside>
-        </Show>
+          <Card class="location-panel" title="Location" open menuItems={<LocationCreator />}>
+            <LocationList />
+          </Card>
+        </aside>
       </main>
     </>
   );
