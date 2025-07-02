@@ -1,6 +1,6 @@
 import './SceneCard.scss';
 import { type Component, Show, createMemo } from 'solid-js';
-import { story, storyApi } from '../../stores/story';
+import { story } from '../../stores/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
 import BeatList from '../lists/BeatList';
@@ -52,9 +52,9 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         </Show> */}
 
                             <Show when={uiOptions.showActMetaData}>
-                                <h4 class="scene-summary">
+                                <div class="scene-summary">
                                     <TextInput as='textarea' placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
-                                </h4>
+                                </div>
 
                                 <h4>Scene Locations</h4>
                                 <LocationCard locationId={scn.locationId} summary={true} />
