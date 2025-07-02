@@ -36,7 +36,6 @@ function createEmptyNormalized() {
 
 class StoryService {
     resetStory() {
-
         setStory(() => (createEmptyNormalized()));
         console.info('Story has been reset.');
     }
