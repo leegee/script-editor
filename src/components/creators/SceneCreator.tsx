@@ -14,6 +14,7 @@ const SceneCreator = (props: SceneCreatorProps) => {
 
     const openModal = () => {
         const id = storyApi.createEntity('scenes', {
+            number: storyApi.getNextInSequence('scenes'),
             title: 'New Scene',
             summary: '',
             characterIds: [],
@@ -51,10 +52,15 @@ const SceneCreator = (props: SceneCreatorProps) => {
                     const summaryField = bindField('scenes', id, 'summary');
                     const locationField = bindField('scenes', id, 'locationId');
                     const durationField = bindField('scenes', id, 'durationSeconds');
-                    const characterIdsField = bindField('scenes', id, 'characterIds');
+                    const numberField = bindField('scenes', id, 'number');
 
                     return (
                         <div>
+                            <label>
+                                <span class="text">Scene Number:</span>
+                                <TextInput value={numberField.value} as='number' />
+                            </label>
+
                             <label>
                                 <span class="text">Title:</span>
                                 <TextInput value={titleField.value} />
@@ -75,16 +81,6 @@ const SceneCreator = (props: SceneCreatorProps) => {
                                 <span class="text">Duration (seconds):</span>
                                 <TextInput value={durationField.value} as="number" />
                             </label>
-
-                            {/* <label>
-                                <span class="text">Character IDs (comma separated):</span>
-                                <TextInput
-                                    value={() => characterIdsField.value().join(', ')}
-                                    onInput={(e) =>
-                                        characterIdsField.set(e.currentTarget.value.split(',').map(s => s.trim()))
-                                    }
-                                />
-                            </label> */}
 
                             <footer class="actions">
                                 <button class="cancel" onClick={cancel}>Cancel</button>

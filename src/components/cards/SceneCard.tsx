@@ -8,29 +8,15 @@ import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
 import { uiOptions } from '../../stores/ui';
+import BeatCreator from '../creators/BeatCreator';
 
-interface SceneCardProps {
+export interface SceneCardProps {
     sceneId: string;
     summary: boolean;
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
     const scene = createMemo(() => story.scenes[props.sceneId]);
-
-    const addNewBeat = () => {
-        storyApi.createEntity(
-            'beats',
-            {
-                title: 'New Beat',
-                scriptLineIds: [],
-            },
-            {
-                parentType: 'scenes',
-                parentId: props.sceneId,
-                parentListField: 'beatIds'
-            }
-        );
-    };
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
@@ -74,8 +60,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                             </Show>
 
                             <BeatList sceneId={scn.id} />
-
-                            <button class='new' onclick={addNewBeat}>Beat</button>
+                            <BeatCreator sceneId={scn.id} />
 
                         </section>
                     </Card>

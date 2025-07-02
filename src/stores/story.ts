@@ -13,6 +13,8 @@ import type {
     Character,
     Location,
     EntityMap,
+    NumberedEntity,
+    EntitiesWithNumber,
 } from '../lib/types';
 
 import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
@@ -108,14 +110,42 @@ class StoryService {
         }
     }
 
-    getNextInSequence<EntityType extends keyof NormalizedStoryData>(
-        entityType: EntityType
+    /**
+     * 
+     * @param entityType 
+     * @param parentOptions `ParentOptions`
+     * @returns the next `number` for the supplied entity, optionally constrained by `parentOptions`.
+     */
+    getNextInSequence<EntityType extends EntitiesWithNumber>(
+        entityType: EntityType,
+        parentOptions?: ParentOptions
     ): number {
-        const entities = Object.values(story[entityType]) as Array<{ number?: number }>;
+        let relevantEntities: Array<{ number?: number }> = [];
 
-        if (entities.length === 0) return 1;
+        if (parentOptions) {
+            const { parentType, parentId, parentListField } = parentOptions;
 
-        const maxNumber = entities.reduce((max, entity) => {
+            const parentEntity = story[parentType][parentId];
+            // no parent, start at 1
+            if (!parentEntity) return 1;
+
+            // Get child IDs list
+            const childIds: string[] = parentEntity[parentListField] ?? [];
+
+            // Expand to actual entities:
+            relevantEntities = childIds
+                .map(id => story[entityType][id])
+                .filter(Boolean);
+        }
+        else {
+            // No parent
+            relevantEntities = Object.values(story[entityType]) as Array<{ number?: number }>;
+        }
+
+        // For the first:
+        if (relevantEntities.length === 0) return 1;
+
+        const maxNumber = relevantEntities.reduce((max, entity) => {
             if (typeof entity.number === 'number') {
                 return Math.max(max, entity.number);
             }
@@ -124,6 +154,7 @@ class StoryService {
 
         return maxNumber + 1;
     }
+
 
     /**
      * 
