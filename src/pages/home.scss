@@ -38,16 +38,16 @@
         transition: width 0.3s ease;
         overflow-y: auto;
 
+        .card-title-text,
+        .card-title-text select {
+            font-size: 10pt;
+        }
+
         // &.left {
         // }
 
         &.right {
             text-align: right;
-
-            .location-card .card-title-text,
-            .character-card .card-title-text select {
-                font-size: 12pt;
-            }
         }
 
         &.open {
