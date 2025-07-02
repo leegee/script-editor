@@ -5,19 +5,9 @@ import { makePersisted } from '@solid-primitives/storage';
 import localforage from "localforage";
 
 import type {
-    NormalizedStoryData,
-    StoryNormalized,
-    ActNormalized,
-    SceneNormalized,
-    BeatNormalized,
-    ScriptLineNormalized,
-    Character,
-    Location,
-    EntityMap,
-    NumberedEntity,
-    EntitiesWithNumber,
-    ScriptLineType,
-    ArrayKeys,
+    NormalizedStoryData, StoryNormalized, ActNormalized, SceneNormalized,
+    BeatNormalized, ScriptLineNormalized, Character, Location, EntityMap,
+    EntitiesWithNumber, ScriptLineType, ArrayKeys,
 } from '../lib/types';
 
 import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
@@ -30,6 +20,16 @@ type ParentOptions = {
     parentType: keyof NormalizedStoryData;
     parentId: string;
     parentListField: string;
+};
+
+const emptyNormalized: NormalizedStoryData = {
+    stories: {},
+    acts: {},
+    scenes: {},
+    beats: {},
+    scriptLines: {},
+    characters: {},
+    locations: {},
 };
 
 class StoryService {
@@ -325,7 +325,7 @@ const normalized: NormalizedStoryData = normalizeStoryTree(
 );
 
 export const [story, setStory] = makePersisted(
-    createStore<NormalizedStoryData>(normalized),
+    createStore<NormalizedStoryData>(emptyNormalized),
     {
         name: "story-data",
         storage: typeof window !== 'undefined' ? localforage : localStorage,
@@ -333,3 +333,16 @@ export const [story, setStory] = makePersisted(
 );
 
 export const storyApi = new StoryService();
+
+async function initializeStory() {
+    // wait for localforage to hydrate (adjust delay if needed)
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const isEmpty = Object.keys(story.stories).length === 0;
+
+    if (isEmpty) {
+        storyApi.loadStoryFromJson(rawStoryData);
+    }
+}
+
+initializeStory();
