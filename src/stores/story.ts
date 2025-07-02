@@ -299,15 +299,18 @@ class StoryService {
             let parentId = options.parentId;
 
             if (!parentId) {
-                const possibleParents = story[options.parentType];
-                for (const [pid, parentEntity] of Object.entries(possibleParents)) {
-                    // TypeScript now knows parentListField is a key with value string[] | undefined
-                    const childList = parentEntity[options.parentListField] as string[] | undefined;
-                    if (childList?.includes(entityId)) {
-                        parentId = pid;
-                        break;
-                    }
-                }
+                // const possibleParents = story[options.parentType];
+                // for (const [pid, parentEntity] of Object.entries(possibleParents)) {
+                //     // TypeScript now knows parentListField is a key with value string[] | undefined
+                //     const childList = parentEntity[options.parentListField] as string[] | undefined;
+                //     if (childList?.includes(entityId)) {
+                //         parentId = pid;
+                //         break;
+                //     }
+                // }
+                const parent = storyApi.findParentEntity(options.parentType, options.parentListField, entityId);
+                parentId = parent.id;
+
             }
 
             if (parentId) {
@@ -325,6 +328,36 @@ class StoryService {
             }
         }
     }
+
+
+    /**
+     * Finds the parent entity and its ID given a child entity ID.
+     * If parentId is provided, it just returns that parent entity directly.
+     *
+     * @param parentType - parent entity type , eg 'scenes'
+     * @param parentListField - The field in the parent that bears children, eg 'beatIds'
+     * @param childId - The ID of the child entity
+     * @returns The parent entity
+     */
+    findParentEntity<
+        ParentType extends keyof NormalizedStoryData,
+        ParentListField extends ArrayKeys<NormalizedStoryData[ParentType][string]>
+    >(
+        parentType: ParentType,
+        parentListField: ParentListField,
+        childId: string
+    ): NormalizedStoryData[ParentType][string] | undefined {
+        const possibleParents = story[parentType];
+
+        for (const [pid, parentEntity] of Object.entries(possibleParents)) {
+            const childList = parentEntity[parentListField] as unknown as string[] | undefined;
+            if (childList?.includes(childId)) {
+                return parentEntity;
+            }
+        }
+        return undefined;
+    }
+
 }
 
 const normalized: NormalizedStoryData = normalizeStoryTree(
