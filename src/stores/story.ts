@@ -22,17 +22,25 @@ type ParentOptions = {
     parentListField: string;
 };
 
-const emptyNormalized: NormalizedStoryData = {
-    stories: {},
-    acts: {},
-    scenes: {},
-    beats: {},
-    scriptLines: {},
-    characters: {},
-    locations: {},
-};
+function createEmptyNormalized() {
+    return {
+        stories: {},
+        acts: {},
+        scenes: {},
+        beats: {},
+        scriptLines: {},
+        characters: {},
+        locations: {},
+    } as NormalizedStoryData;
+}
 
 class StoryService {
+    resetStory() {
+
+        setStory(() => (createEmptyNormalized()));
+        console.info('Story has been reset.');
+    }
+
     loadStoryFromJson(rawData: any) {
         const storyData = storyJsonToTypescript(rawData);
         const normalized: NormalizedStoryData = normalizeStoryTree(storyData);
@@ -325,7 +333,7 @@ const normalized: NormalizedStoryData = normalizeStoryTree(
 );
 
 export const [story, setStory] = makePersisted(
-    createStore<NormalizedStoryData>(emptyNormalized),
+    createStore<NormalizedStoryData>(createEmptyNormalized()),
     {
         name: "story-data",
         storage: typeof window !== 'undefined' ? localforage : localStorage,
@@ -335,7 +343,6 @@ export const [story, setStory] = makePersisted(
 export const storyApi = new StoryService();
 
 async function initializeStory() {
-    // wait for localforage to hydrate (adjust delay if needed)
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const isEmpty = Object.keys(story.stories).length === 0;
@@ -345,4 +352,4 @@ async function initializeStory() {
     }
 }
 
-initializeStory();
+// initializeStory();

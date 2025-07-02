@@ -4,6 +4,7 @@ import Switch from "./components/Switch";
 import { setUiOptions, uiOptions } from "./stores/ui";
 import LoadStoryButton from './components/LoadStoryButton';
 import SaveStoryButton from './components/SaveStoryButton';
+import ResetStoryButton from './components/ResetStoryButton';
 
 export default function () {
     return (<nav class="nav-bar">
@@ -29,6 +30,9 @@ export default function () {
             <li class='spacer'></li>
             <li>
                 <LoadStoryButton />
+            </li>
+            <li>
+                <ResetStoryButton />
             </li>
             <li>
                 <SaveStoryButton />
