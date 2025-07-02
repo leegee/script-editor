@@ -299,18 +299,8 @@ class StoryService {
             let parentId = options.parentId;
 
             if (!parentId) {
-                // const possibleParents = story[options.parentType];
-                // for (const [pid, parentEntity] of Object.entries(possibleParents)) {
-                //     // TypeScript now knows parentListField is a key with value string[] | undefined
-                //     const childList = parentEntity[options.parentListField] as string[] | undefined;
-                //     if (childList?.includes(entityId)) {
-                //         parentId = pid;
-                //         break;
-                //     }
-                // }
                 const parent = storyApi.findParentEntity(options.parentType, options.parentListField, entityId);
                 parentId = parent.id;
-
             }
 
             if (parentId) {
