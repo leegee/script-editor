@@ -23,10 +23,8 @@ export default function Home(props) {
   return (
     <>
       <header class="home-layout-controls">
-        <span>
-          <Switch checked={uiOptions.showLeftSidePanel} onUpdate={checked => setUiOptions('showLeftSidePanel', checked)} />
-          <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
-        </span>
+        <Switch checked={uiOptions.showLeftSidePanel} onUpdate={checked => setUiOptions('showLeftSidePanel', checked)} />
+        <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
       </header>
 
       <main class={mainClass()}>
