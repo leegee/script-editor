@@ -9,6 +9,8 @@ function parseScriptLineType(typeStr: string): ScriptLineType {
         case 'Action': return ScriptLineType.Action;
         case 'Description': return ScriptLineType.Description;
         case 'Parenthetical': return ScriptLineType.Parenthetical;
+        case 'Shot': return ScriptLineType.Shot;
+        case 'Transition': return ScriptLineType.Transition;
         default:
             throw new Error(`Invalid ScriptLineType: ${typeStr}`);
     }
@@ -24,10 +26,10 @@ function transformScriptLine(raw: any): ScriptLine {
     };
 }
 
-function transformBeat(raw: any): Beat {
+function transformBeat(raw: any, index: number): Beat {
     return {
         id: raw.id,
-        number: raw.number,
+        number: raw.number ?? (index + 1),
         title: raw.title,
         summary: raw.summary,
         durationSeconds: raw.durationSeconds,
@@ -35,26 +37,26 @@ function transformBeat(raw: any): Beat {
     };
 }
 
-function transformScene(raw: any): Scene {
+function transformScene(raw: any, index: number): Scene {
     return {
         id: raw.id,
-        number: raw.number,
+        number: raw.number ?? (index + 1),
         title: raw.title,
         summary: raw.summary,
         characterIds: raw.characterIds,
         locationId: raw.locationId,
         durationSeconds: raw.durationSeconds,
-        beats: raw.beats.map(transformBeat),
+        beats: raw.beats.map((b: any, i: number) => transformBeat(b, i)),
     };
 }
 
-function transformAct(raw: any): Act {
+function transformAct(raw: any, index: number): Act {
     return {
         id: raw.id,
-        number: raw.number,
+        number: raw.number ?? (index + 1),
         title: raw.title,
         summary: raw.summary,
-        scenes: raw.scenes.map(transformScene),
+        scenes: raw.scenes.map((s: any, i: number) => transformScene(s, i)),
     };
 }
 
@@ -75,7 +77,6 @@ function transformCharacter(raw: any): Character {
         tags: raw.tags,
         avatarColor: raw.avatarColor,
         avatarImage: raw.avatarImage,
-        // media: raw.media ? raw.media.map(transformMediaLink) : undefined,
         mediaLinkIds: raw.media?.map((m: any) => m.id),
     };
 }
@@ -87,7 +88,6 @@ function transformLocation(raw: any): Location {
         description: raw.description,
         photoUrl: raw.photoUrl,
         tags: raw.tags,
-        // media: raw.media ? raw.media.map(transformMediaLink) : undefined,
         mediaLinkIds: raw.media?.map((m: any) => m.id),
         geofence: raw.geofence ? {
             type: raw.geofence.type,
@@ -107,7 +107,7 @@ export function transformStory(raw: any): Story {
         id: raw.id,
         title: raw.title,
         description: raw.description,
-        acts: raw.acts.map(transformAct),
+        acts: raw.acts.map((a: any, i: number) => transformAct(a, i)),
         characters: raw.characters.map(transformCharacter),
         locations: raw.locations.map(transformLocation),
         tags: raw.tags,
