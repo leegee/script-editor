@@ -27,6 +27,7 @@ function transformScriptLine(raw: any): ScriptLine {
 function transformBeat(raw: any): Beat {
     return {
         id: raw.id,
+        number: raw.number,
         title: raw.title,
         summary: raw.summary,
         durationSeconds: raw.durationSeconds,
@@ -37,6 +38,7 @@ function transformBeat(raw: any): Beat {
 function transformScene(raw: any): Scene {
     return {
         id: raw.id,
+        number: raw.number,
         title: raw.title,
         summary: raw.summary,
         characterIds: raw.characterIds,
@@ -97,6 +99,10 @@ function transformLocation(raw: any): Location {
 }
 
 export function transformStory(raw: any): Story {
+    if (!raw.acts || !Array.isArray(raw.acts)) {
+        throw new Error(`Invalid story data: acts is missing or not an array: ${JSON.stringify(raw, null, 4)}`);
+    }
+
     return {
         id: raw.id,
         title: raw.title,

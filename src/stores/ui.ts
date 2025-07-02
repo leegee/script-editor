@@ -1,3 +1,4 @@
+import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
 
 type UiOptionsType = {
@@ -14,4 +15,12 @@ const defaults: UiOptionsType = {
     showRightSidePanel: true,
 };
 
-export const [uiOptions, setUiOptions] = createStore<UiOptionsType>(defaults);
+export const [uiOptions, setUiOptions] = makePersisted(
+    createStore<UiOptionsType>(defaults),
+    {
+        name: "ui-options",
+        storage: localStorage,
+    }
+);
+
+

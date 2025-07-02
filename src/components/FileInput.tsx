@@ -42,8 +42,6 @@ const FileInput = <
         const target = e.target as HTMLInputElement;
         if (!target.files || target.files.length === 0) return;
 
-        console.log('Props in onChange:', entity, id, field);
-
         try {
             const base64 = await fileToBase64(target.files[0]);
             storyApi.updateEntity(entity, id, field, base64 as EntityMap[EntityType][K]);

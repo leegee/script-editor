@@ -10,12 +10,9 @@ interface SceneListProps {
 
 const SceneList: Component<SceneListProps> = (props) => {
     const scenes = createMemo(() => {
-        console.log('SceneList createMemo running for actId:', props.actId);
         const act = story.acts[props.actId];
-        console.log('act:', act);
         if (!act) return [];
         const scenes = act.sceneIds.map(sceneId => story.scenes[sceneId]).filter(Boolean);
-        console.log('scenes:', scenes);
         return scenes;
     });
 

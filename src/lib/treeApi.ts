@@ -2,8 +2,8 @@ import { createStore } from 'solid-js/store';
 
 import type { Story, Act, Scene, Beat, ScriptLine, Character, Location } from './types';
 import { traverseStoryTree } from './traverse';
-import { normalizeStoryData } from './transforme-tree2normalised';
-import { transformStory } from './transforme-json2ts';
+import { normalizeStoryData } from './transform-tree2normalised';
+import { transformStory } from './transform-json2ts';
 import rawStoryData from '../../story.json' assert { type: 'json' };
 
 const storyData: Story = transformStory(rawStoryData);

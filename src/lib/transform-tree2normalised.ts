@@ -52,6 +52,7 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
 
                     normalized.beats[beat.id] = {
                         id: beat.id,
+                        number: beat.number,
                         title: beat.title,
                         summary: beat.summary,
                         durationSeconds: beat.durationSeconds,
@@ -61,6 +62,7 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
 
                 normalized.scenes[scene.id] = {
                     id: scene.id,
+                    number: scene.number,
                     title: scene.title,
                     summary: scene.summary,
                     characterIds: scene.characterIds,

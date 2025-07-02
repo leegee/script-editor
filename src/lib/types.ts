@@ -59,6 +59,7 @@ export interface ScriptLine {
 
 export interface Beat {
     id: string;
+    number: number;
     title?: string;
     summary?: string;
     durationSeconds?: number;
@@ -67,6 +68,7 @@ export interface Beat {
 
 export interface Scene {
     id: string;
+    number: number;
     title: string;
     summary?: string;
     characterIds: string[];
@@ -108,7 +110,7 @@ export interface ScriptLineNormalized {
 
 export interface BeatNormalized {
     id: string;
-    number: string;
+    number: number;
     title?: string;
     summary?: string;
     durationSeconds?: number;
@@ -117,7 +119,7 @@ export interface BeatNormalized {
 
 export interface SceneNormalized {
     id: string;
-    number: string;
+    number: number;
     title: string;
     summary?: string;
     characterIds: string[];

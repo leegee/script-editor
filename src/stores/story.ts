@@ -1,6 +1,7 @@
-// Store containing the whole story - will be persisted to localstorage and server, but not yet
+// Store containing the whole story
 
 import { createStore } from 'solid-js/store';
+import { makePersisted } from '@solid-primitives/storage';
 
 import type {
     NormalizedStoryData,
@@ -14,9 +15,11 @@ import type {
     EntityMap,
 } from '../lib/types';
 
-import { normalizeStoryData } from '../lib/transforme-tree2normalised';
-import { transformStory } from '../lib/transforme-json2ts';
+import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
+import { transformStory as storyJsonToTypescript } from '../lib/transform-json2ts';
+
 import rawStoryData from '../../story.json' assert { type: 'json' };
+import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
 
 type ParentOptions = {
     parentType: keyof NormalizedStoryData;
@@ -24,13 +27,13 @@ type ParentOptions = {
     parentListField: string;
 };
 
-const storyData = transformStory(rawStoryData);
-
-const normalized: NormalizedStoryData = normalizeStoryData(storyData);
-
-const [story, setStory] = createStore<NormalizedStoryData>(normalized);
-
 class StoryService {
+    loadStoryFromJson(rawData: any) {
+        const storyData = storyJsonToTypescript(rawData);
+        const normalized: NormalizedStoryData = normalizeStoryTree(storyData);
+        setStory(normalized);
+    }
+
     getStory(): StoryNormalized | undefined {
         return Object.values(story.stories)[0];
     }
@@ -90,6 +93,19 @@ class StoryService {
 
     updateActTitle(actId: string, newTitle: string) {
         setStory('acts', actId, 'title', newTitle);
+    }
+
+    asObjectUrl() {
+        try {
+            const tree = denormalizeStoryTree(story);
+            const jsonString = JSON.stringify(tree, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            return url;
+        } catch (error) {
+            console.error('Failed to save story:', error);
+            alert('Failed to save story.');
+        }
     }
 
     /**
@@ -170,6 +186,16 @@ class StoryService {
     }
 }
 
+const normalized: NormalizedStoryData = normalizeStoryTree(
+    storyJsonToTypescript(rawStoryData)
+);
 
-export { story, setStory };
+export const [story, setStory] = makePersisted(
+    createStore<NormalizedStoryData>(normalized),
+    {
+        name: "story-data",
+        storage: localStorage,
+    }
+);
+
 export const storyApi = new StoryService();
