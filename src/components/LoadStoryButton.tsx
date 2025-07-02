@@ -23,7 +23,9 @@ export const LoadStoryButton: Component = () => {
     };
 
     const triggerFileInput = () => {
-        fileInputRef?.click();
+        if (confirm('If you load a new story, all current work will be lost. Continue?')) {
+            fileInputRef?.click();
+        }
     };
 
     return (
