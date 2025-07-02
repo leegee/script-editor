@@ -27,6 +27,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                 title={
                     <>
                         <span class='icon'>🎭</span>
+                        <TextInput as='number' {...bindField('acts', act.id, 'number')} />
                         <TextInput {...bindField('acts', act.id, 'title')} />
                     </>
                 }
@@ -43,9 +44,9 @@ const ActCard: Component<ActCardProps> = (props) => {
                 }
             >
                 <Show when={uiOptions.showActMetaData}>
-                    <p class="act-summary">
-                        <TextInput placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
-                    </p>
+                    <div class="act-summary">
+                        <TextInput as='textarea' placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
+                    </div>
                 </Show>
 
                 <SceneList actId={act.id} />
