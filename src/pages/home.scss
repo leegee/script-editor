@@ -11,7 +11,12 @@
         overflow-y: auto;
 
         header {
-            font-size: 1em;
+            font-size: 10pt;
+            margin: 12pt 0;
+        }
+
+        &.right {
+            text-align: right;
         }
     }
 

@@ -265,22 +265,48 @@ class StoryService {
         }));
     }
 
+    /**
+     * 
+     * @param entityType 
+     * @param entityId 
+     * @param options `ParentOptions` - if `parentId` is absent, it will be found
+     */
     deleteEntity<
         EntityType extends keyof NormalizedStoryData
     >(
         entityType: EntityType,
         entityId: string,
-        options?: ParentOptions
+        options?: Omit<ParentOptions, 'parentId'> & { parentId?: string }
     ) {
         setStory(entityType, entityId as any, undefined); // delete entity
 
-        if (options) {
-            setStory(
-                options.parentType,
-                options.parentId as any,
-                options.parentListField as any,
-                (list = []) => list.filter(id => id !== entityId)
-            );
+        if (options?.parentType && options?.parentListField) {
+            let parentId = options.parentId;
+
+            if (!parentId) {
+                const possibleParents = story[options.parentType];
+                for (const [pid, parentEntity] of Object.entries(possibleParents)) {
+                    const childList = parentEntity[options.parentListField] as string[] | undefined;
+                    if (childList?.includes(entityId)) {
+                        parentId = pid;
+                        break;
+                    }
+                }
+            }
+
+            if (parentId) {
+                setStory(
+                    options.parentType,
+                    parentId as any,
+                    options.parentListField as any,
+                    (list = []) => list.filter(id => id !== entityId)
+                );
+            } else {
+                console.warn(
+                    `deleteEntity: Could not find parentId for entityId=${entityId} in parentType=${options.parentType}.${options.parentListField}`
+                );
+                console.debug(JSON.stringify(story, null, 2))
+            }
         }
     }
 }

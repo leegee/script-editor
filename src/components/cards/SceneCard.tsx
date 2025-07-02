@@ -9,6 +9,7 @@ import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
 import { uiOptions } from '../../stores/ui';
 import BeatCreator from '../creators/BeatCreator';
+import DeleteSceneButton from '../delete-buttons/DeleteSceneButton';
 
 export interface SceneCardProps {
     sceneId: string;
@@ -34,6 +35,13 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                         label={`View details for ${scn.title}`}
                         summary={props.summary}
                         class="scene-card"
+                        menuItems={
+                            <>
+                                <BeatCreator sceneId={scn.id} >New Beat</BeatCreator>
+                                <DeleteSceneButton sceneId={scn.id} />
+                            </>
+                        }
+
                     >
                         <section class="scene-details">
 
@@ -60,7 +68,6 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                             </Show>
 
                             <BeatList sceneId={scn.id} />
-                            <BeatCreator sceneId={scn.id} />
 
                         </section>
                     </Card>

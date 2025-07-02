@@ -12,6 +12,7 @@ interface CardProps {
     class?: string;
     children: JSX.Element;
     headerChildren?: JSX.Element;
+    menuItems?: JSX.Element | JSX.Element[]
 }
 
 const Card: Component<CardProps> = (props) => {
@@ -43,6 +44,7 @@ const Card: Component<CardProps> = (props) => {
                     link={props.summary ? props.link : undefined}
                     label={props.label}
                     toggleOpen={props.summary ? toggleOpen : undefined}
+                    menuItems={props.menuItems}
                 />
             )}
             {isOpen() && <div class="card-content">{props.children}</div>}

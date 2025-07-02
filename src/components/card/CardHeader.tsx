@@ -1,6 +1,6 @@
 import './CardHeader.scss';
 
-import { Component, Show, JSX } from 'solid-js';
+import { Component, Show, JSX, createEffect } from 'solid-js';
 import { A } from '@solidjs/router';
 // import DetailsLink from '../icons/Details';
 import OverflowMenu from '../OverflowMenu';
@@ -10,6 +10,7 @@ interface CharacterHeaderProps {
   link?: string;
   label: string;
   toggleOpen: (e: Event) => void;
+  menuItems?: JSX.Element | JSX.Element[]
 }
 
 const invalidClicktarget = (e) => {
@@ -24,6 +25,7 @@ const invalidClicktarget = (e) => {
 };
 
 const CardHeader: Component<CharacterHeaderProps> = (props) => {
+
   const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (e) => {
     if (invalidClicktarget(e)) return;
 
@@ -56,17 +58,10 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       <OverflowMenu>
         <Show when={props.link}>
           <button>
-            <A
-              href={props.link}
-              // class="details-link"
-              aria-label={props.label}
-            // onClick={e => e.stopPropagation()}
-            >
-              Focus
-            </A>
+            <A href={props.link} aria-label={props.label} > Focus</A>
           </button>
-          <button>Delete</button>
         </Show>
+        {props.menuItems}
       </OverflowMenu>
 
 

@@ -5,7 +5,8 @@ import { bindField } from '../../lib/bind-field';
 import Card from './Card';
 import TextInput from '../TextInput';
 import ScriptLineCard from './ScriptLineCard';
-import { ScriptLineType } from '../../lib/types';
+import BeatCreator from '../creators/BeatCreator';
+import DeleteBeatButton from '../delete-buttons/DeleteBeatButton';
 
 interface BeatCardProps {
     sceneId: string;
@@ -38,6 +39,12 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <>
                         <span class='icon'>➤</span>
                         <TextInput {...bindField('beats', beat().id, 'title')} />
+                    </>
+                }
+                menuItems={
+                    <>
+                        <BeatCreator sceneId={props.sceneId}>New Beat</BeatCreator>
+                        <DeleteBeatButton sceneId={props.sceneId} beatId={beat().id} />
                     </>
                 }
             >

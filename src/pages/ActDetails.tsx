@@ -2,7 +2,6 @@ import { type Component, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import ActCard from '../components/cards/ActCard';
 import { storyApi } from '../stores/story';
-import ActCreator from '../components/creators/ActCreator';
 
 const ActDetails: Component = () => {
     const params = useParams<{ id: string }>();
@@ -24,7 +23,6 @@ const ActDetails: Component = () => {
                         <ActCard actId={act.id} summary={false} />
                     )}
                 </For>
-                <ActCreator />
             </section>
         </section>
     );

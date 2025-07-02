@@ -14,7 +14,7 @@ export default function Home(props) {
       <aside class="panel">
         <header>
           <span>
-            Show <Switch checked={uiOptions.showLeftSidePanel} onUpdate={(checked) => setUiOptions('showLeftSidePanel', checked)} />
+            <Switch checked={uiOptions.showLeftSidePanel} onUpdate={(checked) => setUiOptions('showLeftSidePanel', checked)} />
           </span>
         </header>
         <Show when={uiOptions.showLeftSidePanel}>
@@ -29,10 +29,10 @@ export default function Home(props) {
         {props.children}
       </article>
 
-      <aside class="panel">
+      <aside class="panel right">
         <header>
           <span>
-            Show <Switch checked={uiOptions.showRightSidePanel} onUpdate={(checked) => setUiOptions('showRightSidePanel', checked)} />
+            <Switch checked={uiOptions.showRightSidePanel} onUpdate={(checked) => setUiOptions('showRightSidePanel', checked)} />
           </span>
         </header>
         <Show when={uiOptions.showRightSidePanel}>

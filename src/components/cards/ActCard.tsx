@@ -7,6 +7,8 @@ import SceneList from '../lists/SceneList';
 import Card from './Card';
 import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
+import SceneCreator from '../creators/SceneCreator';
+import DeleteActButton from '../delete-buttons/DeleteActButton';
 
 interface ActCardProps {
     actId: string;
@@ -31,6 +33,12 @@ const ActCard: Component<ActCardProps> = (props) => {
                 label={`View details for Act ${act.number}`}
                 summary={!!summary}
                 class="act-card"
+                menuItems={
+                    <>
+                        <SceneCreator actId={props.actId} />
+                        <DeleteActButton actId={props.actId} />
+                    </>
+                }
             >
                 <Show when={uiOptions.showActMetaData}>
                     <p class="act-summary">
