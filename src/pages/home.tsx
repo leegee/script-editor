@@ -29,7 +29,7 @@ export default function Home(props) {
 
       <main class={mainClass()}>
         <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
-          <Card class="act-panel" title="Acts" link='/act' open menuItems={<ActCreator />}>
+          <Card class="act-panel" title="Acts" link='/act?summary=true' open menuItems={<ActCreator />}>
             <ActDetails summary={true} />
           </Card>
         </aside>
