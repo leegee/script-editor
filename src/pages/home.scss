@@ -96,8 +96,16 @@
             background: #444;
         }
 
-        .acts-list>.card:first-of-type {
+        section>.card:first-of-type {
             margin-top: 0;
+        }
+
+        .card {
+            padding: 1em;
+        }
+
+        .card-content {
+            padding: 1em;
         }
     }
 }

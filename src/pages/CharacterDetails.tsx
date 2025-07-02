@@ -16,7 +16,6 @@ const CharacterDetails: Component = () => {
 
     return (
         <section class="character-details">
-            <h2>Characters</h2>
             <section class="characters-list" role="list" aria-label="Characters List">
                 <For each={characters()}>
                     {(character) => (

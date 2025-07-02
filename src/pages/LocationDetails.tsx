@@ -17,7 +17,6 @@ const LocationDetails: Component = () => {
 
     return (
         <section class="location-details">
-            <h2>Locations</h2>
             <section class="locations-list" role="list" aria-label="Locations">
                 <For each={locations()}>
                     {(loc) => (

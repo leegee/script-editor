@@ -42,17 +42,12 @@ $max-depth: 5;
         box-shadow: 0 0 12pt rgba(0, 0, 0, 0.7);
     }
 
-    .card-title-text {
-        .icon {
-            margin-right: 0.6em;
-        }
-    }
-
     &.summary {
         font-size: 80%;
     }
 
     .card-content {
+
         .description {
             font-size: 1rem;
             color: #444;
