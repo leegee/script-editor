@@ -3,18 +3,18 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 0.5rem;
+    gap: 4pt;
 
     .card-title-text {
-        height: 1.5em;
+        height: 1.9em;
         font-size: 150%;
         position: relative;
-        margin: 0.25em;
+        margin: 0em;
         padding: 0;
+        width: 100%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
