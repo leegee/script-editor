@@ -34,12 +34,10 @@
         transition: width 0.3s ease;
         overflow-y: auto;
 
-        &.left {
-            /* Left panel slides in/out by width */
-        }
+        // &.left {
+        // }
 
         &.right {
-            /* Right panel slides in/out by width */
             text-align: right;
 
             .location-card .card-title-text,
