@@ -21,7 +21,16 @@ article .scene-card .card-title-text {
     }
 
     .scene-summary {
-        margin-left: 0.4em !important;
+        margin: 1em;
+        margin-bottom: 2em;
+        font-size: 140%;
+        font-style: italic;
+        opacity: 0.4;
+
+        &:hover {
+            opacity: 1;
+        }
+
     }
 
     .scene-duration {
@@ -37,26 +46,15 @@ article .scene-card .card-title-text {
         blockquote {
             margin-left: 0;
         }
-    }
 
-    .scene-summary {
-        font-style: italic;
-        opacity: 0.4;
-    }
-
-    .scene-summary:hover {
-        opacity: 1;
-    }
-
-    .scene-location {}
-
-    .scene-script-excerpt {
-        margin-top: 0.625em;
-        padding-left: 0.625em;
-        border-left: 3pt solid #555;
-        border-radius: 0;
-        font-style: italic;
-        color: #999;
-        user-select: text;
+        .scene-script-excerpt {
+            margin-top: 0.625em;
+            padding-left: 0.625em;
+            border-left: 3pt solid #555;
+            border-radius: 0;
+            font-style: italic;
+            color: #999;
+            user-select: text;
+        }
     }
 }

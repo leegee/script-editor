@@ -48,9 +48,9 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     </>
                 }
             >
-                <p class="beat-summary-text">
-                    <TextInput placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
-                </p>
+                <div class="beat-summary">
+                    <TextInput as='textarea' placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
+                </div>
 
                 <section class="script-lines">
                     <For each={scriptLines()}>

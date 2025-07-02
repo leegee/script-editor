@@ -5,16 +5,14 @@
         font-size: 1.2em !important;
     }
 
-    .beat-summary-text {
+    .beat-summary {
         opacity: 90%;
         @include fonts.italic();
-        margin-bottom: 1em;
-        margin-left: 0.4em !important;
-        margin-top: -2pt;
+        margin: 1em;
     }
 
-    .beat-summary-text:hover,
-    .beat-summary-text:focus {
+    .beat-summary:hover,
+    .beat-summary:focus {
         opacity: 1;
     }
 

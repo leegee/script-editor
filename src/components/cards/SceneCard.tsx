@@ -53,7 +53,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
 
                             <Show when={uiOptions.showActMetaData}>
                                 <h4 class="scene-summary">
-                                    <TextInput placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
+                                    <TextInput as='textarea' placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
                                 </h4>
 
                                 <h4>Scene Locations</h4>

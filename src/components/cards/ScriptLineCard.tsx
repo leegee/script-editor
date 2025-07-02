@@ -49,7 +49,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     <Avatar class="character" characterId={line.characterId} />
                 </Show>
 
-                <TextInput {...bindField('scriptLines', line.id, 'text')} />
+                <TextInput as='textarea' {...bindField('scriptLines', line.id, 'text')} />
             </blockquote>
         </div>
     );
