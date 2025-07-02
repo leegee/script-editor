@@ -10,15 +10,22 @@
     font-size: inherit;
     font-family: inherit;
     font-style: inherit;
+
+    &:focus {
+        transition: outline 0.3s ease-in-out;
+        outline: 1pt solid var(--script-cta-bg);
+    }
+
+    &.empty {
+        border-bottom: 1pt dotted #fff5;
+    }
 }
 
-.custom-input:focus {
-    transition: outline 0.3s ease-in-out;
-    outline: 1pt solid var(--script-cta-bg);
-}
 
-.custom-input.empty {
-    border-bottom: 1pt dotted #fff5;
+input[type=color].custom-input,
+input[type=number].custom-input {
+    min-height: 1em;
+    max-width: 2em;
 }
 
 input.custom-input {
