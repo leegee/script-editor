@@ -1,4 +1,3 @@
-import { Component } from 'solid-js';
 import { story, setStory } from './stores/story';
 import { ButtonSelectList } from './ButtonSelectList';
 
@@ -6,7 +5,7 @@ type AddCharacterProps = {
     sceneId: string;
 };
 
-export const AddCharacter: Component<AddCharacterProps> = (props) => {
+export default function (props: AddCharacterProps) {
     const availableCharacters = () =>
         Object.entries(story.characters).filter(
             ([id]) => !story.scenes[props.sceneId].characterIds?.includes(id)
