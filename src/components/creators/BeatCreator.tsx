@@ -10,6 +10,8 @@ export default function (props: BeatCreatorProps) {
     return (
         <button classList={{ 'new': !props.children }} onclick={
             () => storyApi.addNewBeatToScene(props.sceneId)
-        }>{props.children || 'Beat'}</button>
+        }>
+            {props.children || 'Beat'}
+        </button>
     );
 }

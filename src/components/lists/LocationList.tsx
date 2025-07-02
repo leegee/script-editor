@@ -1,7 +1,6 @@
 import { For, Show, createMemo } from 'solid-js';
 import LocationCard from '../cards/LocationCard';
 import { storyApi } from '../../stores/story';
-import LocationCreator from '../creators/LocationCreator';
 
 export default () => {
     const locations = createMemo(() => storyApi.getLocations());
@@ -15,7 +14,6 @@ export default () => {
                             <LocationCard location={location} summary={true} />
                         )}
                     </For>
-                    <LocationCreator />
                 </section>
             </Show>
         </section>

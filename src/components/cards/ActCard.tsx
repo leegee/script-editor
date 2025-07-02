@@ -9,6 +9,7 @@ import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
 import SceneCreator from '../creators/SceneCreator';
 import DeleteActButton from '../delete-buttons/DeleteActButton';
+import ActCreator from '../creators/ActCreator';
 
 interface ActCardProps {
     actId: string;
@@ -35,6 +36,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                 class="act-card"
                 menuItems={
                     <>
+                        <ActCreator />
                         <SceneCreator actId={props.actId} />
                         <DeleteActButton actId={props.actId} />
                     </>

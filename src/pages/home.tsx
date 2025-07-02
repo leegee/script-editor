@@ -7,6 +7,8 @@ import ActCreator from '../components/creators/ActCreator';
 import Switch from '../components/Switch';
 import { uiOptions, setUiOptions } from '../stores/ui';
 import { Show } from 'solid-js';
+import CharacterCreator from '../components/creators/CharacterCreator';
+import LocationCreator from '../components/creators/LocationCreator';
 
 export default function Home(props) {
   return (
@@ -18,9 +20,8 @@ export default function Home(props) {
           </span>
         </header>
         <Show when={uiOptions.showLeftSidePanel}>
-          <Card class="act-panel" title="Acts" open={true}>
+          <Card class="act-panel" title="Acts" open={true} menuItems={<ActCreator />}>
             <ActsList />
-            <ActCreator />
           </Card>
         </Show>
       </aside>
@@ -36,11 +37,11 @@ export default function Home(props) {
           </span>
         </header>
         <Show when={uiOptions.showRightSidePanel}>
-          <Card class="character-panel" title="Characters" open={true}>
+          <Card class="character-panel" title="Characters" open={true} menuItems={<CharacterCreator />}>
             <CharacterList />
           </Card>
 
-          <Card class="location-panel" title="Location" open={true}>
+          <Card class="location-panel" title="Location" open={true} menuItems={<LocationCreator />}>
             <LocationList />
           </Card>
         </Show>

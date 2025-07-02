@@ -32,7 +32,7 @@ const NewCharacterModal = () => {
 
     return (
         <div class="creator-form">
-            <button class='new' onclick={openModal}> Character</button>
+            <button onclick={openModal}> New Character</button>
 
             <Modal title="Create A New Character" open={!!newCharacterId()} onClose={cancel}>
                 {newCharacterId() && (() => {

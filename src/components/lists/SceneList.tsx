@@ -1,8 +1,7 @@
 import './SceneList.scss';
-import { type Component, createMemo, For, Show } from 'solid-js';
+import { type Component, createMemo, For } from 'solid-js';
 import { story } from '../../stores/story';
 import SceneCard from '../cards/SceneCard';
-import SceneCreator from '../creators/SceneCreator';
 
 interface SceneListProps {
     actId: string;
@@ -21,7 +20,6 @@ const SceneList: Component<SceneListProps> = (props) => {
             <For each={scenes()}>
                 {(scene) => <SceneCard sceneId={scene.id} summary={true} />}
             </For>
-            <SceneCreator actId={props.actId} />
         </section>
     );
 };

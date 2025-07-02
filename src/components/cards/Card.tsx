@@ -41,7 +41,7 @@ const Card: Component<CardProps> = (props) => {
             {props.title && (
                 <CardHeader
                     title={props.title}
-                    link={props.summary ? props.link : undefined}
+                    link={props.link}
                     label={props.label}
                     toggleOpen={props.summary ? toggleOpen : undefined}
                     menuItems={props.menuItems}

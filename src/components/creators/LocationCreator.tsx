@@ -1,5 +1,5 @@
 import './LocationCreator.scss';
-import { createSignal, createEffect, onCleanup } from 'solid-js';
+import { createSignal, createEffect, onCleanup, Show } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
@@ -61,59 +61,60 @@ const LocationCreator = () => {
 
     return (
         <div class="creator-form">
-            <button class="new" onclick={openModal}>Location</button>
+            <button onclick={openModal}>New Location</button>
+            <Show when={newLocationId()}>
+                <Modal title='Create A New Location' open={!!newLocationId()} onClose={cancel}>
+                    {newLocationId() && (() => (
+                        <div>
+                            <label>
+                                <span class="text">Name:</span>
+                                <TextInput
+                                    value={() => name()}
+                                    onInput={onNameInput}
+                                />
+                            </label>
 
-            <Modal title='Create A New Location' open={!!newLocationId()} onClose={cancel}>
-                {newLocationId() && (() => (
-                    <div>
-                        <label>
-                            <span class="text">Name:</span>
-                            <TextInput
-                                value={() => name()}
-                                onInput={onNameInput}
-                            />
-                        </label>
+                            <label>
+                                <span class="text">Description:</span>
+                                <TextInput
+                                    value={() => description()}
+                                    onInput={onDescriptionInput}
+                                    as="textarea"
+                                />
+                            </label>
 
-                        <label>
-                            <span class="text">Description:</span>
-                            <TextInput
-                                value={() => description()}
-                                onInput={onDescriptionInput}
-                                as="textarea"
-                            />
-                        </label>
+                            <label>
+                                <span class='text'>Image (optional):</span>
+                                <FileInput
+                                    entity="locations"
+                                    id={newLocationId()}
+                                    field="photoUrl"
+                                />
 
-                        <label>
-                            <span class='text'>Image (optional):</span>
-                            <FileInput
-                                entity="locations"
-                                id={newLocationId()}
-                                field="photoUrl"
-                            />
-
-                            {(() => {
-                                const savedLocation = storyApi.getLocation(newLocationId());
-                                if (savedLocation?.photoUrl) {
-                                    return (
-                                        <div class="image-preview">
-                                            <img src={savedLocation.photoUrl} alt="Location photo" />
-                                        </div>
-                                    );
-                                }
-                                return null;
-                            })()}
-                        </label>
+                                {(() => {
+                                    const savedLocation = storyApi.getLocation(newLocationId());
+                                    if (savedLocation?.photoUrl) {
+                                        return (
+                                            <div class="image-preview">
+                                                <img src={savedLocation.photoUrl} alt="Location photo" />
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()}
+                            </label>
 
 
-                        <Map locationId={newLocationId()} />
+                            <Map locationId={newLocationId()} />
 
-                        <footer class="actions">
-                            <button class="cancel" onClick={cancel}>Cancel</button>
-                            <button class="save" onClick={saveLocation}>Save</button>
-                        </footer>
-                    </div>
-                ))()}
-            </Modal>
+                            <footer class="actions">
+                                <button class="cancel" onClick={cancel}>Cancel</button>
+                                <button class="save" onClick={saveLocation}>Save</button>
+                            </footer>
+                        </div>
+                    ))()}
+                </Modal>
+            </Show>
         </div>
     );
 };

@@ -2,7 +2,6 @@ import './CharacterList.scss';
 import { Component, createMemo, For, Show } from "solid-js";
 import { storyApi } from "../../stores/story";
 import CharacterCard from "../cards/CharacterCard";
-import CharacterCreator from '../creators/CharacterCreator';
 
 type CharacterListProps = {
     characterIds?: string[];
@@ -25,7 +24,6 @@ const CharacterList: Component<CharacterListProps> = (props) => {
                     )}
                 </For>
             </Show>
-            <CharacterCreator />
         </section>
     );
 };

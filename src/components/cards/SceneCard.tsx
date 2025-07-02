@@ -31,7 +31,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                                 <TextInput {...bindField('scenes', scn.id, 'title')} />
                             </>
                         }
-                        link={props.summary ? `/scene/${scn.id}` : undefined}
+                        link={`/scene/${scn.id}`}
                         label={`View details for ${scn.title}`}
                         summary={props.summary}
                         class="scene-card"

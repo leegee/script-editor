@@ -8,6 +8,7 @@ import LocationPinIcon from '../icons/LocationPin';
 import TextInput from '../TextInput';
 import FileInput from '../FileInput';
 import ImageThumbnail from '../ImageThumbnail';
+import DeleteLocationButton from '../delete-buttons/DeleteLocationButton';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -42,7 +43,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
         >
             {(loc) => (
                 <Card
-                    link={props.summary ? `/location/${loc.id}` : undefined}
+                    link={`/location/${loc.id}`}
                     label={`View details for ${loc.name}`}
                     summary={!!props.summary}
                     class="location-card"
@@ -51,8 +52,9 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                             <LocationPinIcon />
                             <TextInput value={() => loc.name} onInput={onNameInput} />
                         </span>
-                    } >
-
+                    }
+                    menuItems={<DeleteLocationButton locationId={location().id} />}
+                >
                     <h5>Description</h5>
                     <div class='location-desc-and-photo'>
                         <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />

@@ -6,6 +6,7 @@ import { storyApi } from '../../stores/story';
 import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
+import DeleteCharacterButton from '../delete-buttons/DeleteCharacterButton';
 
 interface CharacterCardProps {
     summary?: boolean;
@@ -25,11 +26,12 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     return (
         <Show when={character()} fallback={<div class="loading">Loading character...</div>}>
             <Card
-                link={props.summary ? `/character/${character()!.id}` : undefined}
+                link={`/character/${character()!.id}`}
                 label={`View details for ${character()!.name}`}
                 summary={!!props.summary}
                 class="character-card"
                 title={<Avatar characterId={character().id} />}
+                menuItems={<DeleteCharacterButton characterId={character().id} />}
             >
                 <div class='character-content'>
                     <p class="bio">
