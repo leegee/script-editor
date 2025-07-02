@@ -16,6 +16,7 @@ import type {
     NumberedEntity,
     EntitiesWithNumber,
     ScriptLineType,
+    ArrayKeys,
 } from '../lib/types';
 
 import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
@@ -272,11 +273,17 @@ class StoryService {
      * @param options `ParentOptions` - if `parentId` is absent, it will be found
      */
     deleteEntity<
-        EntityType extends keyof NormalizedStoryData
+        EntityType extends keyof NormalizedStoryData,
+        ParentType extends keyof NormalizedStoryData,
+        ParentListField extends ArrayKeys<NormalizedStoryData[ParentType][string]>
     >(
         entityType: EntityType,
         entityId: string,
-        options?: Omit<ParentOptions, 'parentId'> & { parentId?: string }
+        options?: {
+            parentType?: ParentType;
+            parentListField?: ParentListField;
+            parentId?: string;
+        }
     ) {
         setStory(entityType, entityId as any, undefined); // delete entity
 
@@ -286,6 +293,7 @@ class StoryService {
             if (!parentId) {
                 const possibleParents = story[options.parentType];
                 for (const [pid, parentEntity] of Object.entries(possibleParents)) {
+                    // TypeScript now knows parentListField is a key with value string[] | undefined
                     const childList = parentEntity[options.parentListField] as string[] | undefined;
                     if (childList?.includes(entityId)) {
                         parentId = pid;
@@ -303,9 +311,9 @@ class StoryService {
                 );
             } else {
                 console.warn(
-                    `deleteEntity: Could not find parentId for entityId=${entityId} in parentType=${options.parentType}.${options.parentListField}`
+                    `deleteEntity: Could not find parentId for entityId=${entityId} in parentType=${options.parentType}.${String(options.parentListField)}`
                 );
-                console.debug(JSON.stringify(story, null, 2))
+                console.debug(JSON.stringify(story, null, 2));
             }
         }
     }

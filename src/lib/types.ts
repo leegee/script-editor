@@ -1,5 +1,9 @@
 // tree for IO
 
+export type ArrayKeys<T> = {
+    [K in keyof T]: T[K] extends string[] | undefined ? K : never
+}[keyof T];
+
 export enum MediaType {
     Image = 'image',
     Video = 'video',
