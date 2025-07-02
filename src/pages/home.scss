@@ -95,5 +95,9 @@
         &:hover::-webkit-scrollbar {
             background: #444;
         }
+
+        .acts-list>.card:first-of-type {
+            margin-top: 0;
+        }
     }
 }
