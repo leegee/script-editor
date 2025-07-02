@@ -10,7 +10,8 @@ import TextInput from '../TextInput';
 import { uiOptions } from '../../stores/ui';
 import BeatCreator from '../creators/BeatCreator';
 import DeleteSceneButton from '../delete-buttons/DeleteSceneButton';
-import { AddCharacter } from '../../AddCharacter';
+import AddCharacter from '../../AddCharacter';
+import AddLocation from '../../AddLocation';
 
 export interface SceneCardProps {
     sceneId: string;
@@ -57,8 +58,11 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                                     <TextInput as='textarea' placeholder='Scene summary' {...bindField('scenes', scn.id, 'summary')} />
                                 </div>
 
-                                <h4>Scene Locations</h4>
-                                <LocationCard locationId={scn.locationId} summary={true} />
+                                <h4>
+                                    Scene Locations
+                                    <AddLocation sceneId={scn.id} />
+                                </h4>
+                                <LocationCard sceneId={scn.id} locationId={scn.locationId} summary={true} />
 
                                 <h4>
                                     Scene Characters <AddCharacter sceneId={scn.id} />

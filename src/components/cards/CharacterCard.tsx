@@ -7,7 +7,7 @@ import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
 import DeleteCharacterButton from '../delete-buttons/DeleteCharacterButton';
-import UnlinkCharacterScene from '../delete-buttons/UnlinkCharacterScene';
+import RemoveCharacterButton from '../delete-buttons/RemoveCharacterButton';
 
 interface CharacterCardProps {
     summary?: boolean;
@@ -28,7 +28,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     const menuItems = [<DeleteCharacterButton characterId={character().id} />];
 
     if (props.sceneId) {
-        menuItems.push(<UnlinkCharacterScene sceneId={props.sceneId} characterId={character().id} />)
+        menuItems.push(<RemoveCharacterButton sceneId={props.sceneId} characterId={character().id} />)
     }
 
     return (

@@ -170,6 +170,30 @@ class StoryService {
         }
     }
 
+    linkLocationToScene(sceneId: string, locationId: string) {
+        const scene = story.scenes[sceneId];
+        const location = story.locations[locationId];
+
+        if (!scene) {
+            console.warn(`linkLocationToScene: Scene ${sceneId} not found`);
+            return;
+        }
+
+        if (!location) {
+            console.warn(`linkLocationToScene: Location ${locationId} not found`);
+            return;
+        }
+
+        if (scene.locationId === locationId) {
+            console.info(`Location ${locationId} already linked to scene ${sceneId}`);
+            return;
+        }
+
+        setStory('scenes', sceneId, 'locationId', locationId);
+
+        console.info(`Linked location ${locationId} to scene ${sceneId}`);
+    }
+
 
     linkCharacterScene(sceneId: string, characterId: string) {
         const scene = story.scenes[sceneId];
@@ -200,24 +224,74 @@ class StoryService {
         console.info(`Linked character ${characterId} to scene ${sceneId}`);
     }
 
-    unlinkCharacterScene(sceneId: string, characterId: string) {
+    unlinkEntityFromScene(
+        sceneId: string,
+        entityId: string,
+        entityListKey: keyof typeof story.scenes[string]
+    ) {
         const scene = story.scenes[sceneId];
         if (!scene) {
-            console.warn(`unlinkCharacterScene: Scene ${sceneId} not found`);
+            console.warn(`unlinkEntityFromScene: Scene ${sceneId} not found`);
             return;
         }
 
-        // Ought to check it has no ScriptLine :(
+        const value = scene[entityListKey];
 
-        setStory(
-            'scenes',
-            sceneId,
-            'characterIds',
-            (list = []) => list.filter(id => id !== characterId)
-        );
-
-        console.info(`Unlinked character ${characterId} from scene ${sceneId}`);
+        if (Array.isArray(value)) {
+            setStory(
+                'scenes',
+                sceneId,
+                entityListKey,
+                (currentList = []) => Array.isArray(currentList)
+                    ? currentList.filter(id => id !== entityId)
+                    : currentList
+            );
+            console.info(`Unlinked entity ${entityId} from array ${String(entityListKey)} in scene ${sceneId}`);
+        }
+        else if (typeof value === 'string') {
+            if (value === entityId) {
+                setStory('scenes', sceneId, entityListKey, () => '');
+                console.info(`Unlinked entity ${entityId} from string ${String(entityListKey)} in scene ${sceneId}`);
+            }
+        }
+        else {
+            console.warn(
+                `unlinkEntityFromScene: Scene ${sceneId} has neither array nor string for ${String(entityListKey)}`
+            );
+        }
     }
+
+    removeCharacterFromScriptLinesInScene(
+        sceneId: string,
+        characterIdToRemove: string
+    ) {
+        const scene = story.scenes[sceneId];
+        if (!scene) {
+            console.warn(`Scene with id ${sceneId} not found`);
+        }
+
+        // Copy scriptLines record to apply changes immutably
+        const updatedScriptLines = { ...story.scriptLines };
+
+        for (const beatId of scene.beatIds) {
+            const beat = story.beats[beatId];
+            if (!beat) continue;
+
+            for (const scriptLineId of beat.scriptLineIds) {
+                const scriptLine = story.scriptLines[scriptLineId];
+                if (!scriptLine) continue;
+
+                if (scriptLine.characterId === characterIdToRemove) {
+                    // Remove characterId by setting to undefined
+                    updatedScriptLines[scriptLineId] = {
+                        ...scriptLine,
+                        characterId: undefined,
+                    };
+                }
+            }
+        }
+    }
+
 
     /**
      * 
@@ -412,7 +486,7 @@ export const [story, setStory] = makePersisted(
 
 export const storyApi = new StoryService();
 
-async function initializeStory() {
+export async function initializeDefaultStory() {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const isEmpty = Object.keys(story.stories).length === 0;
@@ -422,4 +496,4 @@ async function initializeStory() {
     }
 }
 
-// initializeStory();
+// initializeDefaultStory();

@@ -6,14 +6,15 @@ import Map from '../Map';
 import Card from './Card';
 import LocationPinIcon from '../icons/LocationPin';
 import TextInput from '../TextInput';
-import FileInput from '../FileInput';
 import ImageThumbnail from '../ImageThumbnail';
 import DeleteLocationButton from '../delete-buttons/DeleteLocationButton';
+import RemoveLocationButton from '../delete-buttons/RemoveLocationButton';
 
 type LocationCardProps = {
     summary?: boolean;
     locationId?: string;
     location?: Location;
+    sceneId?: string;
 };
 
 const LocationCard: Component<LocationCardProps> = (props) => {
@@ -35,11 +36,20 @@ const LocationCard: Component<LocationCardProps> = (props) => {
         storyApi.updateEntity('locations', location().id, 'description', val);
     };
 
+    const menuItems = [
+        <DeleteLocationButton locationId={location().id} />
+    ];
+    if (props.sceneId) {
+        menuItems.push(
+            <RemoveLocationButton sceneId={props.sceneId} locationId={location().id} />
+        );
+    }
+
     return (
         <Show
             when={location()}
             keyed
-            fallback={<div class="loading">Loading location...</div>}
+            fallback={<div class="no-content">No Locations</div>}
         >
             {(loc) => (
                 <Card
@@ -53,7 +63,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                             <TextInput value={() => loc.name} onInput={onNameInput} />
                         </span>
                     }
-                    menuItems={<DeleteLocationButton locationId={location().id} />}
+                    menuItems={menuItems}
                 >
                     <h5>Description</h5>
                     <div class='location-desc-and-photo'>

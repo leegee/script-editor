@@ -6,7 +6,7 @@ interface DeleteLocationButtonProps {
 
 export default (props: DeleteLocationButtonProps) => {
     const deleteLocation = () => {
-        if (confirm('Delete this location?')) {
+        if (confirm('Completely delete this location?')) {
             storyApi.deleteEntity('locations', props.locationId);
         }
     };
