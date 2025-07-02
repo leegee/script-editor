@@ -1,5 +1,4 @@
 import './home.scss';
-import ActsList from '../components/lists/ActsList';
 import LocationList from '../components/lists/LocationList';
 import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
@@ -9,6 +8,7 @@ import { uiOptions, setUiOptions } from '../stores/ui';
 import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
+import ActDetails from './ActDetails';
 
 export default function Home(props) {
   const mainClass = createMemo(() => {
@@ -30,10 +30,9 @@ export default function Home(props) {
       </header>
 
       <main class={mainClass()}>
-        {/* Left panel always rendered */}
         <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
           <Card class="act-panel" title="Acts" open menuItems={<ActCreator />}>
-            <ActsList />
+            <ActDetails summary={true} />
           </Card>
         </aside>
 
@@ -41,7 +40,6 @@ export default function Home(props) {
           {props.children}
         </article>
 
-        {/* Right panel always rendered */}
         <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
           <Card class="character-panel" title="Characters" open menuItems={<CharacterCreator />}>
             <CharacterList />

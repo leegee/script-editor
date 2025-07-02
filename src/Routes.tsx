@@ -6,7 +6,6 @@ import CharacterDetails from "./pages/CharacterDetails";
 import LocationDetails from "./pages/LocationDetails";
 import ActDetails from "./pages/ActDetails";
 import SceneDetails from "./pages/SceneDetails";
-import ActsList from "./components/lists/ActsList";
 
 export default function Routes() {
   return (
@@ -19,7 +18,7 @@ export default function Routes() {
       <Route path="/character/:id" component={CharacterDetails} />
       <Route path="/location" component={LocationDetails} />
       <Route path="/location/:id" component={LocationDetails} />
-      <Route path="/act" component={ActsList} />
+      <Route path="/act" component={ActDetails} />
       <Route path="/act/:id" component={ActDetails} />
       <Route path="/scene/:id" component={SceneDetails} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
