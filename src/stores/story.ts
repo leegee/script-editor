@@ -108,6 +108,23 @@ class StoryService {
         }
     }
 
+    getNextInSequence<EntityType extends keyof NormalizedStoryData>(
+        entityType: EntityType
+    ): number {
+        const entities = Object.values(story[entityType]) as Array<{ number?: number }>;
+
+        if (entities.length === 0) return 1;
+
+        const maxNumber = entities.reduce((max, entity) => {
+            if (typeof entity.number === 'number') {
+                return Math.max(max, entity.number);
+            }
+            return max;
+        }, 0);
+
+        return maxNumber + 1;
+    }
+
     /**
      * 
      * @param entityType 

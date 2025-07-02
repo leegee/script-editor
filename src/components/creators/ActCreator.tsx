@@ -10,7 +10,7 @@ const ActCreator = () => {
 
     const openModal = () => {
         const id = storyApi.createEntity('acts', {
-            number: -1,
+            number: storyApi.getNextInSequence('acts'),
             title: 'New Act',
             summary: '',
             sceneIds: [],
