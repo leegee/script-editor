@@ -24,18 +24,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
     });
 
     const addNewScriptLine = () => {
-        storyApi.createEntity(
-            'scriptLines',
-            {
-                text: 'New Script Line',
-                type: 'Dialogue' as ScriptLineType,
-            },
-            {
-                parentType: 'beats',
-                parentId: props.beatId,
-                parentListField: 'scriptLineIds'
-            }
-        );
+        storyApi.addNewScriptLineToBeat(beat().id)
     };
 
     return (

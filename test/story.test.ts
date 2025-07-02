@@ -31,7 +31,7 @@ describe("StoryService CRUD operations", () => {
             expect(story.acts[testActId].title).toBe("Test Act");
 
             // UPDATE
-            storyApi.updateActTitle(testActId, "Updated Act Title");
+            storyApi.updateEntity('acts', testActId, 'title', "Updated Act Title");
             expect(story.acts[testActId].title).toBe("Updated Act Title");
 
             // DELETE

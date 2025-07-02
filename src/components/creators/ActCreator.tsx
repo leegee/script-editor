@@ -9,13 +9,13 @@ const ActCreator = () => {
     const [newActId, setNewActId] = createSignal<string | null>(null);
 
     const openModal = () => {
-        const id = storyApi.createEntity('acts', {
+        const actId = storyApi.createEntity('acts', {
             number: storyApi.getNextInSequence('acts'),
             title: 'New Act',
             summary: '',
             sceneIds: [],
         });
-        setNewActId(id);
+        setNewActId(actId);
     };
 
     const cancel = () => {

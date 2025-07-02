@@ -13,19 +13,7 @@ const SceneCreator = (props: SceneCreatorProps) => {
     const [newSceneId, setNewSceneId] = createSignal<string | null>(null);
 
     const openModal = () => {
-        const id = storyApi.createEntity('scenes', {
-            number: storyApi.getNextInSequence('scenes'),
-            title: 'New Scene',
-            summary: '',
-            characterIds: [],
-            locationId: undefined,
-            durationSeconds: undefined,
-            beatIds: [],
-        }, {
-            parentType: 'acts',
-            parentId: props.actId,
-            parentListField: 'sceneIds',
-        });
+        const id = storyApi.addNewSceneToAct(props.actId);
         setNewSceneId(id);
     };
 

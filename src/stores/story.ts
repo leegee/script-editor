@@ -15,6 +15,7 @@ import type {
     EntityMap,
     NumberedEntity,
     EntitiesWithNumber,
+    ScriptLineType,
 } from '../lib/types';
 
 import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
@@ -93,8 +94,58 @@ class StoryService {
         return story.locations[locationId];
     }
 
-    updateActTitle(actId: string, newTitle: string) {
-        setStory('acts', actId, 'title', newTitle);
+    addNewScriptLineToBeat(beatId: string): string {
+        return this.createEntity(
+            'scriptLines',
+            {
+                text: 'New Script Line',
+                type: 'Dialogue' as ScriptLineType,
+            },
+            {
+                parentType: 'beats',
+                parentId: beatId,
+                parentListField: 'scriptLineIds'
+            }
+        );
+    }
+
+    addNewBeatToScene(sceneId): string {
+        const beatId = this.createEntity(
+            'beats',
+            {
+                title: 'New Beat',
+                scriptLineIds: [],
+                number: this.getNextInSequence('beats'),
+            },
+            {
+                parentType: 'scenes',
+                parentId: sceneId,
+                parentListField: 'beatIds'
+            }
+        );
+
+        this.addNewScriptLineToBeat(beatId);
+        return beatId;
+    }
+
+    addNewSceneToAct(actId: string): string {
+        const sceneId = this.createEntity('scenes', {
+            number: this.getNextInSequence('scenes'),
+            title: 'New Scene',
+            summary: '',
+            characterIds: [],
+            locationId: undefined,
+            durationSeconds: undefined,
+            beatIds: [],
+        }, {
+            parentType: 'acts',
+            parentId: actId,
+            parentListField: 'sceneIds',
+        });
+
+        this.addNewBeatToScene(sceneId);
+
+        return sceneId;
     }
 
     asObjectUrl() {
