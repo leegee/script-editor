@@ -10,6 +10,7 @@ import TextInput from '../TextInput';
 import { uiOptions } from '../../stores/ui';
 import BeatCreator from '../creators/BeatCreator';
 import DeleteSceneButton from '../delete-buttons/DeleteSceneButton';
+import { AddCharacter } from '../../AddCharacter';
 
 export interface SceneCardProps {
     sceneId: string;
@@ -59,9 +60,12 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                                 <h4>Scene Locations</h4>
                                 <LocationCard locationId={scn.locationId} summary={true} />
 
-                                <h4>Scene Characters</h4>
+                                <h4>
+                                    Scene Characters <AddCharacter sceneId={scn.id} />
+                                </h4>
+
                                 <div class="scene-characters">
-                                    <CharacterList characterIds={scn.characterIds} />
+                                    <CharacterList characterIds={scn.characterIds} sceneId={scn.id} />
                                 </div>
 
                                 <h4>Scene Beats</h4>
