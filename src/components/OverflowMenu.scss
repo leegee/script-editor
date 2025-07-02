@@ -1,0 +1,47 @@
+.overflow-menu-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.3em;
+    user-select: none;
+
+    &:hover,
+    &:focus {
+        color: white;
+        outline: none;
+    }
+}
+
+.overflow-menu-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    color: #eee;
+    background-color: #555;
+    border: 1px solid #fff5;
+    box-shadow: 0 2pt 6pt rgba(0, 0, 0, 0.2);
+    border-radius: 4pt;
+    padding: 1em 0;
+    max-width: 15em;
+    width: auto;
+
+    button {
+        width: 100%;
+        padding: 0.3em 1em;
+        background: none;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #eee;
+
+        &:hover,
+        &:focus {
+            color: #eee;
+            outline: none;
+        }
+    }
+}
