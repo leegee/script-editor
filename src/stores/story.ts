@@ -2,6 +2,7 @@
 
 import { createStore } from 'solid-js/store';
 import { makePersisted } from '@solid-primitives/storage';
+import localforage from "localforage";
 
 import type {
     NormalizedStoryData,
@@ -327,7 +328,7 @@ export const [story, setStory] = makePersisted(
     createStore<NormalizedStoryData>(normalized),
     {
         name: "story-data",
-        storage: localStorage,
+        storage: localforage // localStorage,
     }
 );
 

@@ -28,6 +28,7 @@
   "dependencies": {
     "@solid-primitives/storage": "^4.3.3",
     "@solidjs/router": "^0.15.3",
+    "localforage": "^1.10.0",
     "ol": "^10.6.1",
     "solid-js": "^1.9.5"
   }
