@@ -328,7 +328,7 @@ export const [story, setStory] = makePersisted(
     createStore<NormalizedStoryData>(normalized),
     {
         name: "story-data",
-        storage: localforage // localStorage,
+        storage: typeof window !== 'undefined' ? localforage : localStorage,
     }
 );
 
