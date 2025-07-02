@@ -1,8 +1,7 @@
 import './CardHeader.scss';
 
 import { Component, Show, JSX, createEffect } from 'solid-js';
-import { A } from '@solidjs/router';
-// import DetailsLink from '../icons/Details';
+import { useNavigate } from '@solidjs/router';
 import OverflowMenu from '../OverflowMenu';
 
 interface CharacterHeaderProps {
@@ -25,6 +24,7 @@ const invalidClicktarget = (e) => {
 };
 
 const CardHeader: Component<CharacterHeaderProps> = (props) => {
+  const navigate = useNavigate();
 
   const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (e) => {
     if (invalidClicktarget(e)) return;
@@ -57,15 +57,15 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
 
       <OverflowMenu>
         <Show when={props.link}>
-          <button>
-            <A href={props.link} aria-label={props.label} > Focus</A>
+          <button onClick={() => navigate(props.link)} aria-label={props.label} >
+            Focus
           </button>
         </Show>
         {props.menuItems}
       </OverflowMenu>
 
 
-    </header>
+    </header >
   );
 };
 
