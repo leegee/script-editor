@@ -170,6 +170,55 @@ class StoryService {
         }
     }
 
+
+    linkCharacterScene(sceneId: string, characterId: string) {
+        const scene = story.scenes[sceneId];
+        const character = story.characters[characterId];
+
+        if (!scene) {
+            console.warn(`linkCharacterScene: Scene ${sceneId} not found`);
+            return;
+        }
+
+        if (!character) {
+            console.warn(`linkCharacterScene: Character ${characterId} not found`);
+            return;
+        }
+
+        if (scene.characterIds?.includes(characterId)) {
+            console.info(`Character ${characterId} already linked to scene ${sceneId}`);
+            return;
+        }
+
+        setStory(
+            'scenes',
+            sceneId,
+            'characterIds',
+            (list = []) => [...list, characterId]
+        );
+
+        console.info(`Linked character ${characterId} to scene ${sceneId}`);
+    }
+
+    unlinkCharacterScene(sceneId: string, characterId: string) {
+        const scene = story.scenes[sceneId];
+        if (!scene) {
+            console.warn(`unlinkCharacterScene: Scene ${sceneId} not found`);
+            return;
+        }
+
+        // Ought to check it has no ScriptLine :(
+
+        setStory(
+            'scenes',
+            sceneId,
+            'characterIds',
+            (list = []) => list.filter(id => id !== characterId)
+        );
+
+        console.info(`Unlinked character ${characterId} from scene ${sceneId}`);
+    }
+
     /**
      * 
      * @param entityType 
@@ -347,12 +396,11 @@ class StoryService {
         }
         return undefined;
     }
-
 }
 
-const normalized: NormalizedStoryData = normalizeStoryTree(
-    storyJsonToTypescript(rawStoryData)
-);
+// const normalized: NormalizedStoryData = normalizeStoryTree(
+//     storyJsonToTypescript(rawStoryData)
+// );
 
 export const [story, setStory] = makePersisted(
     createStore<NormalizedStoryData>(createEmptyNormalized()),
