@@ -18,7 +18,9 @@ export const SaveStoryButton: Component = () => {
     };
 
     return (
-        <button onClick={handleSaveClick}> Save </button>
+        <button onClick={handleSaveClick}>
+            📂 Save
+        </button>
     );
 };
 

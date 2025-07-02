@@ -8,7 +8,7 @@ import SaveStoryButton from './components/SaveStoryButton';
 export default function () {
     return (<nav class="nav-bar">
         <ul>
-            <li>
+            {/* <li>
                 <A href="/act" class="nav-link">Acts</A>
             </li>
             <li>
@@ -17,7 +17,7 @@ export default function () {
             <li>
                 <A href="/location" class="nav-link">Locations</A>
             </li>
-            <li class='spacer'></li>
+            <li class='spacer'></li> */}
             <li>
                 <label>Act Info</label>
                 <Switch checked={uiOptions.showActMetaData} onUpdate={(checked) => setUiOptions('showActMetaData', checked)} />

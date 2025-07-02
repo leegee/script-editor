@@ -31,7 +31,7 @@ export const LoadStoryButton: Component = () => {
     return (
         <>
             <button onClick={triggerFileInput}>
-                Load
+                💾 Load
             </button>
             <input
                 ref={fileInputRef}

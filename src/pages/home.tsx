@@ -31,7 +31,7 @@ export default function Home(props) {
 
       <main class={mainClass()}>
         <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
-          <Card class="act-panel" title="Acts" open menuItems={<ActCreator />}>
+          <Card class="act-panel" title="Acts" link='/act' open menuItems={<ActCreator />}>
             <ActDetails summary={true} />
           </Card>
         </aside>
@@ -41,11 +41,11 @@ export default function Home(props) {
         </article>
 
         <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
-          <Card class="character-panel" title="Characters" open menuItems={<CharacterCreator />}>
+          <Card class="character-panel" title="Characters" link='/character' open menuItems={<CharacterCreator />}>
             <CharacterList />
           </Card>
 
-          <Card class="location-panel" title="Location" open menuItems={<LocationCreator />}>
+          <Card class="location-panel" title="Location" open link='/location' menuItems={<LocationCreator />}>
             <LocationList />
           </Card>
         </aside>

@@ -1,6 +1,7 @@
 .nav-bar {
     ul {
         display: flex;
+        justify-content: flex-end;
         flex-direction: row;
         list-style: none;
         gap: 0.4em;

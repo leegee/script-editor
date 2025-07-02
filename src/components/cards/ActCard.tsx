@@ -26,8 +26,8 @@ const ActCard: Component<ActCardProps> = (props) => {
             <Card
                 title={
                     <>
-                        <TextInput {...bindField('acts', act.id, 'title')} />
                         <span class='icon'>🎭</span>
+                        <TextInput {...bindField('acts', act.id, 'title')} />
                     </>
                 }
                 link={`/act/${act.id}`}

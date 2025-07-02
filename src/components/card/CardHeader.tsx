@@ -1,7 +1,7 @@
 import './CardHeader.scss';
 
 import { Component, Show, JSX, createEffect } from 'solid-js';
-import { useNavigate } from '@solidjs/router';
+import { A, useNavigate } from '@solidjs/router';
 import OverflowMenu from '../OverflowMenu';
 
 interface CharacterHeaderProps {
@@ -52,7 +52,10 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
       onKeyDown={onKeyDown}
     >
       <h3 class='card-title-text'>
-        {props.title}
+        <Show when={props.link && typeof props.title === 'string'} fallback={props.title}>
+          <button onclick={() => navigate(props.link)}>{props.title}</button>
+        </Show>
+        {/* {props.title} */}
       </h3>
 
       <OverflowMenu>

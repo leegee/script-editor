@@ -1,3 +1,5 @@
+@use '../style/mixins/scrollbars.scss';
+
 .home-layout-controls {
     width: 100%;
     display: flex;
@@ -17,6 +19,7 @@
     overflow: hidden;
 
     .panel {
+        @include scrollbars.fancy(#666, #444);
         flex-shrink: 0;
         width: 0;
         overflow: hidden;
@@ -38,6 +41,11 @@
         &.right {
             /* Right panel slides in/out by width */
             text-align: right;
+
+            .location-card .card-title-text,
+            .character-card .card-title-text select {
+                font-size: 12pt;
+            }
         }
 
         &.open {
@@ -54,8 +62,10 @@
 
         header {
             font-size: 10pt;
-            margin: 12pt 0;
-            padding: 0 1em;
+        }
+
+        .card-content {
+            padding: 2pt;
         }
     }
 
@@ -70,31 +80,7 @@
         min-height: 0;
         overflow: auto;
 
-        scrollbar-width: thin;
-        scrollbar-color: transparent transparent;
-        scrollbar-gutter: stable;
-
-        &:hover {
-            scrollbar-color: #666 transparent;
-        }
-
-        &::-webkit-scrollbar {
-            width: 8pt;
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: transparent;
-            border-radius: 4pt;
-        }
-
-        &:hover::-webkit-scrollbar-thumb {
-            background: #666;
-        }
-
-        &:hover::-webkit-scrollbar {
-            background: #444;
-        }
+        @include scrollbars.fancy(#666, #444);
 
         section>.card:first-of-type {
             margin-top: 0;

@@ -1,0 +1,27 @@
+@mixin fancy($thumb: #666, $track: #444) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    scrollbar-gutter: stable;
+
+    &:hover {
+        scrollbar-color: #{$thumb} transparent;
+    }
+
+    &::-webkit-scrollbar {
+        width: 8pt;
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 4pt;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+        background: #{$thumb};
+    }
+
+    &:hover::-webkit-scrollbar {
+        background: #{$track};
+    }
+}
