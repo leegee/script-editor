@@ -7,11 +7,13 @@ import Card from './Card';
 import { bindField } from '../../lib/bind-field';
 import TextInput from '../TextInput';
 import DeleteCharacterButton from '../delete-buttons/DeleteCharacterButton';
+import UnlinkCharacterScene from '../delete-buttons/UnlinkCharacterScene';
 
 interface CharacterCardProps {
     summary?: boolean;
     character?: Character;
     characterId?: string;
+    sceneId?: string;
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
@@ -23,6 +25,12 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
         return undefined;
     });
 
+    const menuItems = [<DeleteCharacterButton characterId={character().id} />];
+
+    if (props.sceneId) {
+        menuItems.push(<UnlinkCharacterScene sceneId={props.sceneId} characterId={character().id} />)
+    }
+
     return (
         <Show when={character()} fallback={<div class="loading">Loading character...</div>}>
             <Card
@@ -31,7 +39,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 summary={!!props.summary}
                 class="character-card"
                 title={<Avatar characterId={character().id} />}
-                menuItems={<DeleteCharacterButton characterId={character().id} />}
+                menuItems={menuItems}
             >
                 <div class='character-content'>
                     <p class="bio">

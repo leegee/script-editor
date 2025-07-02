@@ -6,7 +6,10 @@ article .scene-card .card-title-text {
 
     h4,
     h5 {
-        opacity: 0.4;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 
     h4:hover,

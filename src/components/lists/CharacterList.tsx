@@ -5,6 +5,7 @@ import CharacterCard from "../cards/CharacterCard";
 
 type CharacterListProps = {
     characterIds?: string[];
+    sceneId?: string;
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
@@ -20,7 +21,7 @@ const CharacterList: Component<CharacterListProps> = (props) => {
             <Show when={characters()} fallback={<div>No characters found</div>}>
                 <For each={getCharactersToShow()}>
                     {(character) => (
-                        <CharacterCard characterId={character.id} summary={true} />
+                        <CharacterCard characterId={character.id} summary={true} sceneId={props.sceneId} />
                     )}
                 </For>
             </Show>

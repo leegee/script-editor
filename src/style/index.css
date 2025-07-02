@@ -54,7 +54,7 @@ h5 {
     letter-spacing: 1pt;
     text-transform: uppercase;
     font-variant: small-caps;
-    margin: 1em;
+    margin: 1em 0;
     position: relative;
     bottom: -2pt;
 }
@@ -92,16 +92,13 @@ button.new {
     display: block;
     margin-left: auto;
     cursor: pointer;
-    padding: 0.5em;
-    margin: 0.5em;
     margin-left: auto;
 }
 
 button.new::before {
     content: '➕';
-    padding-right: 0.3em;
 }
 
 button.new:hover {
-    border: 1pt solid white;
+    color: #eee
 }
