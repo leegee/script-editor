@@ -22,11 +22,11 @@
     right: 0;
     z-index: 1000;
     color: #eee;
-    background-color: #555;
-    border: 1px solid #fff5;
+    background-color: #333;
+    border: 1px solid #eee5;
     box-shadow: 0 2pt 6pt rgba(0, 0, 0, 0.2);
     border-radius: 4pt;
-    padding: 1em 0;
+    padding: 0.3em 0;
     max-width: 15em;
     width: auto;
 
@@ -35,7 +35,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: 0.2em 1em;
+        padding: 0.3em .6em;
         background: none;
         border: none;
         text-align: left;
