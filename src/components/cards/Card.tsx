@@ -49,7 +49,7 @@ const Card = <T extends keyof EntityMap>(props: CardProps<T>) => {
                     title={props.title}
                     link={props.link}
                     label={props.label}
-                    toggleOpen={props.summary ? toggleOpen : undefined}
+                    toggleOpen={props.summary ? toggleOpen : toggleOpen} // hmm
                     menuItems=<>{props.menuItems}</>
                 />
             )}
