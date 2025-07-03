@@ -66,7 +66,7 @@ const Avatar: Component<AvatarProps> = (props) => {
 
                 {/* Select dropdown when NOT isNew */}
                 <Show when={!isNew}>
-                    <select value={selectedId()} onInput={e => setSelectedId((e.target as HTMLSelectElement).value)}>
+                    <select class='character-name' value={selectedId()} onInput={e => setSelectedId((e.target as HTMLSelectElement).value)}>
                         <For each={allCharacters}>
                             {(c) => <option value={c.id}>{c.name}</option>}
                         </For>

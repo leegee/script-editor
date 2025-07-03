@@ -1,6 +1,7 @@
 .character-card {
-    .avatar select {
+    .avatar select.character-name {
         min-width: 50%;
+        width: 100%;
     }
 
     .character-content {
