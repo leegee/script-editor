@@ -7,6 +7,7 @@ interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement |
     as?: InputTypesEnum;
     value?: (() => string | string[] | number);
     placeholder?: string;
+    tooltip?: string;
 }
 
 const TextInput: Component<TextInputProps> = (props) => {
@@ -22,8 +23,8 @@ const TextInput: Component<TextInputProps> = (props) => {
     };
 
     const rv = as === 'textarea'
-        ? <textarea class='custom-input' classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input class='custom-input' type={as} placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+        ? <textarea title={props.tooltip || ''} class='custom-input' classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+        : <input title={props.tooltip || ''} class='custom-input' type={as} placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
 
     return rv;
 };

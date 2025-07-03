@@ -76,7 +76,7 @@ const Avatar: Component<AvatarProps> = (props) => {
                 {/* Editable name input when isNew */}
                 <Show when={isNew && showName && character()}>
                     <em>
-                        <TextInput {...bindField('characters', character()!.id, 'name')} />
+                        <TextInput tooltip='Character Name' {...bindField('characters', character()!.id, 'name')} />
                     </em>
                 </Show>
             </Show>

@@ -29,6 +29,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                     title={
                         <>
                             <span class="icon">🎬 </span>
+                            <TextInput tooltip='Scene number' as='number' {...bindField('scenes', scn().id, 'number')} />
                             <TextInput {...bindField('scenes', scn().id, 'title')} />
                         </>
                     }
