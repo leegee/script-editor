@@ -10,6 +10,11 @@ article .scene-card .card-title-text {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+
+        small {
+            font-size: small;
+            color: #eee7;
+        }
     }
 
     h4:hover,
