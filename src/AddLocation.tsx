@@ -6,6 +6,9 @@ type AddLocationProps = {
     sceneId: string;
 };
 
+/**
+ * Widget to add/replace scene locationId
+ */
 export default function AddLocation(props: AddLocationProps) {
     const availableLocations = () =>
         Object.entries(story.locations).filter(([id]) => {
@@ -25,7 +28,7 @@ export default function AddLocation(props: AddLocationProps) {
         console.info(`Linked location ${locationId} to scene ${props.sceneId}`, story.scenes);
     };
 
-    const handleAdd = ([locationId]: string) => {
+    const handleAdd = (locationId: string) => {
         replaceLocationInScene(locationId);
     };
 

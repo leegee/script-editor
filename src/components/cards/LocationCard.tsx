@@ -20,68 +20,64 @@ type LocationCardProps = {
 const LocationCard: Component<LocationCardProps> = (props) => {
     const location = createMemo<Location | undefined>(() => {
         if (props.location) return props.location;
-        if (props.locationId) {
-            return storyApi.getLocation(props.locationId);
-        }
+        if (props.locationId) return storyApi.getLocation(props.locationId);
         return undefined;
     });
 
     const onNameInput = (e: InputEvent) => {
         const val = (e.target as HTMLInputElement).value;
-        storyApi.updateEntity('locations', location().id, 'name', val);
+        const loc = location();
+        if (loc) storyApi.updateEntity('locations', loc.id, 'name', val);
     };
 
     const onDescriptionInput = (e: InputEvent) => {
         const val = (e.target as HTMLTextAreaElement).value;
-        storyApi.updateEntity('locations', location().id, 'description', val);
+        const loc = location();
+        if (loc) storyApi.updateEntity('locations', loc.id, 'description', val);
     };
 
-    const menuItems = [
-        <DeleteLocationButton locationId={location().id} />
-    ];
-    if (props.sceneId) {
-        menuItems.push(
-            <RemoveLocationButton sceneId={props.sceneId} locationId={location().id} />
-        );
-    }
-
     return (
-        <Show
-            when={location()}
-            keyed
-            fallback={<div class="no-content">No Locations</div>}
-        >
-            {(loc) => (
-                <Card
-                    link={`/location/${loc.id}`}
-                    label={`View details for ${loc.name}`}
-                    summary={!!props.summary}
-                    class="location-card"
-                    title={
-                        <span class='location-heading'>
-                            <LocationPinIcon />
-                            <TextInput value={() => loc.name} onInput={onNameInput} />
-                        </span>
-                    }
-                    menuItems={menuItems}
-                >
-                    <h5>Description</h5>
-                    <div class='location-desc-and-photo'>
-                        <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
-                        <ImageThumbnail entityType='locations' entityId={location().id} field='photoUrl' />
-                    </div>
+        <Show when={location()} keyed fallback={<div class="no-content">No Locations</div>}>
+            {(loc) => {
+                const menuItems = [
+                    <DeleteLocationButton locationId={loc.id} />
+                ];
+                if (props.sceneId) {
+                    menuItems.push(<RemoveLocationButton sceneId={props.sceneId} locationId={loc.id} />);
+                }
 
-                    <Map locationId={loc.id} summary={props.summary} />
-
-                    <Show when={loc.tags?.length}>
-                        <div class="tags">
-                            <For each={loc.tags}>
-                                {(tag) => <span class="tag">{tag}</span>}
-                            </For>
+                return (
+                    <Card
+                        link={`/location/${loc.id}`}
+                        label={`View details for ${loc.name}`}
+                        summary={!!props.summary}
+                        class="location-card"
+                        title={
+                            <span class='location-heading'>
+                                <LocationPinIcon />
+                                <TextInput value={() => loc.name} onInput={onNameInput} />
+                            </span>
+                        }
+                        menuItems={menuItems}
+                    >
+                        <h5>Description</h5>
+                        <div class='location-desc-and-photo'>
+                            <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
+                            <ImageThumbnail entityType='locations' entityId={loc.id} field='photoUrl' />
                         </div>
-                    </Show>
-                </Card>
-            )}
+
+                        <Map locationId={loc.id} summary={props.summary} />
+
+                        <Show when={loc.tags?.length}>
+                            <div class="tags">
+                                <For each={loc.tags}>
+                                    {(tag) => <span class="tag">{tag}</span>}
+                                </For>
+                            </div>
+                        </Show>
+                    </Card>
+                );
+            }}
         </Show>
     );
 };
