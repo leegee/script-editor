@@ -37,7 +37,6 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 class="beat-card"
                 title={
                     <>
-                        <span class='icon'>➤</span>
                         <TextInput as='number' {...bindField('beats', beat().id, 'number')} />
                         <TextInput {...bindField('beats', beat().id, 'title')} />
                     </>
