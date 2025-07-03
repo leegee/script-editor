@@ -7,7 +7,7 @@ interface RemoveLocationButtonProps {
 
 export default (props: RemoveLocationButtonProps) => {
     const removeLocation = () => {
-        if (confirm('This will remove the character and all their script lines.')) {
+        if (confirm('This will remove the character and all associated script lines.')) {
             storyApi.removeCharacterFromScriptLinesInScene(props.sceneId, props.characterId);
             storyApi.unlinkEntityFromScene(props.sceneId, props.characterId, 'characterIds');
         }
