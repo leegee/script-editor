@@ -6,6 +6,8 @@ WIP
 
 ## TODO 
 
+Cards on home.tsx with id=undefined shoudl become non-draggable panels whose cantents cna be dragged but not to move but to copy into the target (ie add location to scene)
+
 Move things
 
 Remove characters

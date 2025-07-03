@@ -8,7 +8,7 @@ interface CharacterHeaderProps {
   title: string | JSX.Element;
   link?: string;
   label: string;
-  toggleOpen: (e: Event) => void;
+  toggleOpen?: (e: Event) => void;
   menuItems?: JSX.Element | JSX.Element[]
 }
 
@@ -27,7 +27,7 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
   const navigate = useNavigate();
 
   const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (e) => {
-    if (invalidClicktarget(e)) return;
+    if (!props.toggleOpen || invalidClicktarget(e)) return;
 
     if (e.key === 'Enter' || e.key === 'Escape') {
       e.preventDefault();
@@ -37,7 +37,7 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
   };
 
   const maybeToggleOpen = (e) => {
-    if (invalidClicktarget(e)) return;
+    if (!props.toggleOpen || invalidClicktarget(e)) return;
     e.preventDefault();
     e.stopPropagation();
     props.toggleOpen(e);

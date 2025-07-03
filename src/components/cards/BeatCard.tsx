@@ -34,7 +34,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
                 entityType='beats'
-                id={beat().id}
+                entityId={beat().id}
                 link={`/scene/${props.sceneId}/beat/${props.beatId}`}
                 label={`View details for Beat ${beat().id}`}
                 summary={props.summary}

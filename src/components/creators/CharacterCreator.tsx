@@ -17,10 +17,7 @@ const NewCharacterModal = () => {
             avatarImage: '',
         });
         setNewCharacterId(_newCharacterId);
-        console.log('updated newCharacterId to', newCharacterId())
     };
-
-    createEffect(() => console.log('newCharacterId createEffect sees', newCharacterId()));
 
     const cancel = () => {
         if (newCharacterId()) {
@@ -38,7 +35,6 @@ const NewCharacterModal = () => {
             <button onClick={handleClick}>New Character</button>
             <Show when={newCharacterId()}>
                 {(id) => {
-                    console.log('Render sees newCharacterId', newCharacterId())
                     const nameField = bindField('characters', id(), 'name');
                     const avatarColorField = bindField('characters', id(), 'avatarColor');
                     const bioField = bindField('characters', id(), 'bio');

@@ -27,7 +27,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
             {(scn) => (
                 <Card
                     entityType='scenes'
-                    id={scn().id}
+                    entityId={scn().id}
                     title={
                         <>
                             <span class="icon">🎬 </span>
