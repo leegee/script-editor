@@ -250,7 +250,7 @@ class StoryService {
         }
         else if (typeof value === 'string') {
             if (value === entityId) {
-                setStory('scenes', sceneId, entityListKey, () => '');
+                setStory('scenes', sceneId, entityListKey, () => undefined);
                 console.info(`Unlinked entity ${entityId} from string ${String(entityListKey)} in scene ${sceneId}`);
             }
         }
@@ -290,6 +290,9 @@ class StoryService {
                 }
             }
         }
+
+        // Batch update
+        // setStory('scriptLines', updatedScriptLines)
     }
 
 
