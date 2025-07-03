@@ -5,6 +5,7 @@ import { setUiOptions, uiOptions } from "./stores/ui";
 import LoadStoryButton from './components/LoadStoryButton';
 import SaveStoryButton from './components/SaveStoryButton';
 import ResetStoryButton from './components/ResetStoryButton';
+import OverflowMenu from './components/OverflowMenu';
 
 export default function () {
     return (<nav class="nav-bar">
@@ -32,10 +33,12 @@ export default function () {
                 <LoadStoryButton />
             </li>
             <li>
-                <ResetStoryButton />
+                <SaveStoryButton />
             </li>
             <li>
-                <SaveStoryButton />
+                <OverflowMenu>
+                    <ResetStoryButton />
+                </OverflowMenu>
             </li>
         </ul>
     </nav>
