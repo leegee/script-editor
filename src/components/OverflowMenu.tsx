@@ -1,9 +1,10 @@
 import './OverflowMenu.scss';
-import { createSignal, onCleanup, JSX } from 'solid-js';
+import { createSignal, onCleanup, JSX, Show } from 'solid-js';
 
 interface OverflowMenuProps {
-    children: JSX.Element;
+    class?: string;
     buttonContent?: JSX.Element;
+    children: JSX.Element;
 }
 
 const OverflowMenu = (props: OverflowMenuProps) => {
@@ -41,7 +42,7 @@ const OverflowMenu = (props: OverflowMenuProps) => {
                 aria-haspopup="true"
                 aria-expanded={open()}
                 onClick={toggleMenu}
-                class="overflow-menu-button"
+                class={` ${props.class ? props.class : 'overflow-menu-button'}`}
             >
                 {props.buttonContent ?? '⋮'}
             </button>
