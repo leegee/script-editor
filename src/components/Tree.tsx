@@ -1,3 +1,4 @@
+import './Tree.scss';
 import { For, Show } from 'solid-js';
 import type {
     StoryNormalized,
@@ -9,7 +10,7 @@ import type {
 import { storyApi } from '../stores/story';
 
 function ScriptLineNode(props: { line: ScriptLineNormalized }) {
-    return <li>🎭 {props.line.text}</li>;
+    return <li> {props.line.text}</li>;
 }
 
 function BeatNode(props: { beat: BeatNormalized }) {
@@ -34,7 +35,7 @@ function SceneNode(props: { scene: SceneNormalized }) {
         <li>
             <strong>Scene #{props.scene.number}: {props.scene.title}</strong>
             <Show when={beats().length > 0}>
-                <ul>
+                <ul class='beats'>
                     <For each={beats()}>
                         {(beat) => <BeatNode beat={beat} />}
                     </For>
@@ -50,7 +51,7 @@ function ActNode(props: { act: ActNormalized }) {
         <li>
             <strong>Act #{props.act.number}: {props.act.title}</strong>
             <Show when={scenes().length > 0}>
-                <ul>
+                <ul class="scenes">
                     <For each={scenes()}>
                         {(scene) => <SceneNode scene={scene} />}
                     </For>
@@ -68,7 +69,7 @@ export default function StoryTree() {
         <div>
             <h2>{story()?.title ?? 'Untitled Story'}</h2>
             <Show when={acts().length > 0} fallback={<p>No acts found</p>}>
-                <ul>
+                <ul class="acts">
                     <For each={acts()}>
                         {(act) => <ActNode act={act} />}
                     </For>

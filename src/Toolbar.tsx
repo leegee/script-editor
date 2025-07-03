@@ -10,16 +10,10 @@ import OverflowMenu from './components/OverflowMenu';
 export default function () {
     return (<nav class="nav-bar">
         <ul>
-            {/* <li>
-                <A href="/act" class="nav-link">Acts</A>
-            </li>
             <li>
-                <A href="/character" class="nav-link">Characters</A>
+                <label>Story Tree</label>
+                <Switch checked={uiOptions.showStoryTree} onUpdate={(checked) => setUiOptions('showStoryTree', checked)} />
             </li>
-            <li>
-                <A href="/location" class="nav-link">Locations</A>
-            </li>
-            <li class='spacer'></li> */}
             <li>
                 <label>Act Info</label>
                 <Switch checked={uiOptions.showActMetaData} onUpdate={(checked) => setUiOptions('showActMetaData', checked)} />

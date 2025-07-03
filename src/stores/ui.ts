@@ -6,6 +6,7 @@ type UiOptionsType = {
     showSceneData: boolean;
     showLeftSidePanel: boolean;
     showRightSidePanel: boolean;
+    showStoryTree: boolean;
 };
 
 const defaults: UiOptionsType = {
@@ -13,6 +14,7 @@ const defaults: UiOptionsType = {
     showSceneData: false,
     showLeftSidePanel: true,
     showRightSidePanel: true,
+    showStoryTree: false,
 };
 
 export const [uiOptions, setUiOptions] = makePersisted(
