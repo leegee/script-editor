@@ -22,9 +22,27 @@ const TextInput: Component<TextInputProps> = (props) => {
         return typeof val === 'string' && val.length === 0;
     };
 
+    const commonProps = {
+        title: props.tooltip || '',
+        class: 'custom-input',
+        classList: { empty: isEmpty() },
+        value: value(),
+    };
+
     const rv = as === 'textarea'
-        ? <textarea title={props.tooltip || ''} class='custom-input' classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
-        : <input title={props.tooltip || ''} class='custom-input' type={as} placeholder={rest.placeholder ?? ''} classList={{ empty: isEmpty() }} value={value()} {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)} />;
+        ? (
+            <textarea
+                {...commonProps}
+                {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            />
+        ) : (
+            <input
+                {...commonProps}
+                type={as}
+                placeholder={rest.placeholder ?? ''}
+                {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
+            />
+        );
 
     return rv;
 };
