@@ -102,7 +102,3 @@ button.new::before {
 button.new:hover {
     color: #eee
 }
-
-.no-content {
-    margin: 1em 0 2em;
-}

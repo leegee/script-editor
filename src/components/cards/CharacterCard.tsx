@@ -39,7 +39,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 summary={!!props.summary}
                 class="character-card"
                 title={<Avatar characterId={character().id} />}
-                menuItems={menuItems}
+                menuItems=<>{menuItems}</>
             >
                 <div class='character-content'>
                     <p class="bio">

@@ -13,19 +13,19 @@
     transform: translate(-50%, -50%);
     background: #333F;
     border: 1pt solid #fff4;
-    border-radius: 0.5rem;
-    padding: 2rem;
+    border-radius: 0.5em;
+    padding: 2em;
     z-index: 11;
     max-width: 500px;
     width: 90%;
 
     .modal-close {
         position: absolute;
-        top: 0.5rem;
-        right: 0.75rem;
+        top: 0.5em;
+        right: 0.75em;
         background: none;
         border: none;
-        font-size: 1.5rem;
+        font-size: 2em;
         cursor: pointer;
     }
 

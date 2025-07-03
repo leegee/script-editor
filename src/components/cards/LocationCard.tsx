@@ -58,7 +58,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                                 <TextInput value={() => loc.name} onInput={onNameInput} />
                             </span>
                         }
-                        menuItems={menuItems}
+                        menuItems=<>{menuItems}</>
                     >
                         <h5>Description</h5>
                         <div class='location-desc-and-photo'>
