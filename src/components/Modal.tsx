@@ -15,10 +15,6 @@ const Modal: Component<ModalProps> = (props) => {
         e.stopPropagation();
     };
 
-    createEffect(() => {
-        console.log('prop open', props.open)
-    })
-
     return (
         <Show when={props.open}>
             <Portal>
