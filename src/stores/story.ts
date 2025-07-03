@@ -292,7 +292,7 @@ class StoryService {
         }
 
         // Batch update
-        // setStory('scriptLines', updatedScriptLines)
+        setStory('scriptLines', updatedScriptLines)
     }
 
 
