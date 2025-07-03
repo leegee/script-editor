@@ -29,7 +29,11 @@ export default function Home(props) {
 
       <main class={mainClass()}>
         <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
-          <Card class="act-panel" title="Acts" link='/act?summary=true' open menuItems={<><ActCreator /></>}>
+          <Card class="act-panel" title="Acts" link='/act?summary=true' open
+            menuItems={<><ActCreator /></>}
+            entityType='acts'
+            id={undefined}
+          >
             <ActDetails summary={true} />
           </Card>
         </aside>
@@ -39,11 +43,19 @@ export default function Home(props) {
         </article>
 
         <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
-          <Card class="character-panel" title="Characters" link='/character' open menuItems={<><CharacterCreator /></>}>
+          <Card class="character-panel" title="Characters" link='/character' open
+            menuItems={<><CharacterCreator /></>}
+            entityType='characters'
+            id={undefined}
+          >
             <CharacterList />
           </Card>
 
-          <Card class="location-panel" title="Location" open link='/location' menuItems={<><LocationCreator /></>}>
+          <Card class="location-panel" title="Location" open link='/location'
+            menuItems={<><LocationCreator /></>}
+            entityType='locations'
+            id={undefined}
+          >
             <LocationList />
           </Card>
         </aside>
