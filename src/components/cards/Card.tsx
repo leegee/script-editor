@@ -2,7 +2,7 @@ import './Card.scss';
 import { type Component, createSignal, JSX } from 'solid-js';
 import CardHeader from '../card/CardHeader';
 
-interface CardProps {
+interface CardProps<T extends keyof EntityMap> {
     title?: string | JSX.Element;
     link?: string;
     label?: string;
@@ -13,7 +13,11 @@ interface CardProps {
     children: JSX.Element;
     headerChildren?: JSX.Element;
     menuItems?: JSX.Element;
+
+    id: string;
+    entityType: T
 }
+
 
 const Card: Component<CardProps> = (props) => {
     const [isOpen, setIsOpen] = createSignal(props.open || !props.summary);
