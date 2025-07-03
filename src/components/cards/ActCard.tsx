@@ -24,6 +24,8 @@ const ActCard: Component<ActCardProps> = (props) => {
     return (
         <Show when={act} fallback={<div class="loading">Loading act...</div>}>
             <Card
+                entityType='acts'
+                id={act.id}
                 title={
                     <>
                         <span class='icon'>🎭</span>

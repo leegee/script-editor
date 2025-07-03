@@ -34,6 +34,8 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     return (
         <Show when={character()} fallback={<div class="loading">Loading character...</div>}>
             <Card
+                entityType='characters'
+                id={character().id}
                 link={`/character/${character()!.id}`}
                 label={`View details for ${character()!.name}`}
                 summary={!!props.summary}

@@ -1,6 +1,7 @@
 import './Card.scss';
 import { type Component, createSignal, JSX } from 'solid-js';
 import CardHeader from '../card/CardHeader';
+import { type EntityMap } from '../../lib/types';
 
 interface CardProps<T extends keyof EntityMap> {
     title?: string | JSX.Element;
@@ -19,7 +20,7 @@ interface CardProps<T extends keyof EntityMap> {
 }
 
 
-const Card: Component<CardProps> = (props) => {
+const Card = <T extends keyof EntityMap>(props: CardProps<T>) => {
     const [isOpen, setIsOpen] = createSignal(props.open || !props.summary);
 
     const toggleOpen = (e: Event) => {

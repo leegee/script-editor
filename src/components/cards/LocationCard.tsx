@@ -48,6 +48,8 @@ const LocationCard: Component<LocationCardProps> = (props) => {
 
                 return (
                     <Card
+                        entityType='locations'
+                        id={loc.id}
                         link={`/location/${loc.id}`}
                         label={`View details for ${loc.name}`}
                         summary={!!props.summary}

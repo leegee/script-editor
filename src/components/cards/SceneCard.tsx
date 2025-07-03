@@ -26,6 +26,8 @@ const SceneCard: Component<SceneCardProps> = (props) => {
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
             {(scn) => (
                 <Card
+                    entityType='scenes'
+                    id={scn().id}
                     title={
                         <>
                             <span class="icon">🎬 </span>
