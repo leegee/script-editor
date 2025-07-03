@@ -37,7 +37,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
     };
 
     return (
-        <Show when={location()} keyed fallback={<div class="no-content">No Locations</div>}>
+        <Show when={location()} keyed fallback={<div class="no-content">No Location Set</div>}>
             {(loc) => {
                 const menuItems = [
                     <DeleteLocationButton locationId={loc.id} />

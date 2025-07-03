@@ -60,12 +60,12 @@ const LocationCreator = () => {
     };
 
     return (
-        <div class="creator-form">
+        <div>
             <button onclick={openModal}>New Location</button>
             <Show when={newLocationId()}>
                 <Modal title='Create A New Location' open={!!newLocationId()} onClose={cancel}>
                     {newLocationId() && (() => (
-                        <div>
+                        <div class="creator-form">
                             <label>
                                 <span class="text">Name:</span>
                                 <TextInput

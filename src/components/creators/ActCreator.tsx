@@ -30,7 +30,7 @@ const ActCreator = () => {
     };
 
     return (
-        <div class="creator-form">
+        <div>
             <button onclick={openModal}>New Act</button>
 
             <Show when={newActId}>
@@ -42,7 +42,7 @@ const ActCreator = () => {
                         const summaryField = bindField('acts', id, 'summary');
 
                         return (
-                            <div>
+                            <div class="creator-form">
                                 <label>
                                     <span class="text">Number:</span>
                                     <TextInput value={numberField.value} as="number" />

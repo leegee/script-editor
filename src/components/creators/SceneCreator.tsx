@@ -1,9 +1,11 @@
 import './Creator.scss';
 import { storyApi } from '../../stores/story';
-import { createSignal } from 'solid-js';
+import { createMemo, createSignal } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
+import AddLocation from '../../AddLocation';
+import LocationCard from '../cards/LocationCard';
 
 interface SceneCreatorProps {
     actId: string;
@@ -29,21 +31,21 @@ const SceneCreator = (props: SceneCreatorProps) => {
     };
 
     return (
-        <div class="creator-form">
+        <div>
             <button onClick={openModal}>New Scene</button>
 
             <Modal title="Create New Scene" open={!!newSceneId()} onClose={cancel}>
                 {newSceneId() && (() => {
-                    const id = newSceneId()!;
+                    const sceneId = newSceneId()!;
 
-                    const titleField = bindField('scenes', id, 'title');
-                    const summaryField = bindField('scenes', id, 'summary');
-                    const locationField = bindField('scenes', id, 'locationId');
-                    const durationField = bindField('scenes', id, 'durationSeconds');
-                    const numberField = bindField('scenes', id, 'number');
+                    const titleField = bindField('scenes', sceneId, 'title');
+                    const summaryField = bindField('scenes', sceneId, 'summary');
+                    const durationField = bindField('scenes', sceneId, 'durationSeconds');
+                    const numberField = bindField('scenes', sceneId, 'number');
+                    const locationId = createMemo<string>(() => storyApi.getLocationForScene(sceneId)?.id);
 
                     return (
-                        <div>
+                        <div class='creator-form'>
                             <label>
                                 <span class="text">Scene Number:</span>
                                 <TextInput value={numberField.value} as='number' />
@@ -59,10 +61,9 @@ const SceneCreator = (props: SceneCreatorProps) => {
                                 <TextInput value={summaryField.value} as="textarea" />
                             </label>
 
-                            <label>
-                                <span class="text">Location ID:</span>
-                                <TextInput value={locationField.value} />
-                                {/* Replace with <select> if you have a list of locations */}
+                            <label class='locations'>
+                                <LocationCard sceneId={sceneId} locationId={locationId()} summary />
+                                <AddLocation sceneId={sceneId} />
                             </label>
 
                             <label>

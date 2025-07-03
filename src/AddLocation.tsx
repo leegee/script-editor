@@ -1,3 +1,4 @@
+import './AddLocation.scss';
 import { Show } from 'solid-js';
 import OverflowMenu from './components/OverflowMenu';
 import { story, setStory } from './stores/story';

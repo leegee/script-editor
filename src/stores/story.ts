@@ -105,12 +105,19 @@ class StoryService {
         return Object.values(story.locations);
     }
 
-    getCharacter(characterId: string): Character | undefined {
-        return story.characters[characterId];
-    }
-
     getLocation(locationId: string): Location | undefined {
         return story.locations[locationId];
+    }
+
+    getLocationForScene(sceneId: string): Location | undefined {
+        const scene = story.scenes[sceneId];
+        if (!scene) return;
+        if (!scene.locationId) return;
+        return story.locations[scene.locationId];
+    }
+
+    getCharacter(characterId: string): Character | undefined {
+        return story.characters[characterId];
     }
 
     addNewScriptLineToBeat(beatId: string): string {
