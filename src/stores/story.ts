@@ -34,6 +34,16 @@ function createEmptyNormalized() {
     } as NormalizedStoryData;
 }
 
+export async function initializeDefaultStory() {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const isEmpty = Object.keys(story.stories).length === 0;
+
+    if (isEmpty) {
+        storyApi.loadStoryFromJson(rawStoryData);
+    }
+}
+
 class StoryService {
     resetStory() {
         setStory(() => (createEmptyNormalized()));
@@ -488,15 +498,3 @@ export const [story, setStory] = makePersisted(
 );
 
 export const storyApi = new StoryService();
-
-export async function initializeDefaultStory() {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const isEmpty = Object.keys(story.stories).length === 0;
-
-    if (isEmpty) {
-        storyApi.loadStoryFromJson(rawStoryData);
-    }
-}
-
-// initializeDefaultStory();
