@@ -32,7 +32,7 @@ export default function Home(props) {
           <Card class="act-panel" title="Acts" link='/act?summary=true' open
             menuItems={<><ActCreator /></>}
             entityType='acts'
-            id={undefined}
+            entityId={undefined}
           >
             <ActDetails summary={true} />
           </Card>
@@ -46,7 +46,7 @@ export default function Home(props) {
           <Card class="character-panel" title="Characters" link='/character' open
             menuItems={<><CharacterCreator /></>}
             entityType='characters'
-            id={undefined}
+            entityId={undefined}
           >
             <CharacterList />
           </Card>
@@ -54,7 +54,7 @@ export default function Home(props) {
           <Card class="location-panel" title="Location" open link='/location'
             menuItems={<><LocationCreator /></>}
             entityType='locations'
-            id={undefined}
+            entityId={undefined}
           >
             <LocationList />
           </Card>

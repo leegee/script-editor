@@ -2,7 +2,6 @@ import './Card.scss';
 import { createSignal, JSX } from 'solid-js';
 import CardHeader from '../card/CardHeader';
 import { type EntityMap } from '../../lib/types';
-import { handleDragEnd, handleDragStart } from '../../lib/drag';
 
 export interface CardProps<T extends keyof EntityMap> {
     title?: string | JSX.Element;
@@ -18,8 +17,6 @@ export interface CardProps<T extends keyof EntityMap> {
 
     entityId: string;
     entityType: T;
-    onDrag?: () => void;
-    onDrop?: () => void;
     accepts?: T[];
 }
 
@@ -46,9 +43,6 @@ const Card = <T extends keyof EntityMap>(props: CardProps<T>) => {
             aria-expanded={isOpen()}
             role="region"
             aria-label={props.label}
-            draggable
-            onDragStart={(e) => handleDragStart(e, props)}
-            onDragEnd={(e) => handleDragEnd(e)}
         >
             {props.title && (
                 <CardHeader
