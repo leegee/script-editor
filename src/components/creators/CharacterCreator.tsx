@@ -4,7 +4,6 @@ import { createSignal, Show } from 'solid-js';
 import { bindField } from '../../lib/bind-field';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
-import FileInput from '../FileInput';
 import ImageThumbnail from '../ImageThumbnail';
 
 const NewCharacterModal = () => {
