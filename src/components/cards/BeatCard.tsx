@@ -1,5 +1,6 @@
 import './BeatCard.scss';
 import { type Component, Show, For, createMemo } from 'solid-js';
+import { useParams } from '@solidjs/router';
 import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
 import Card from './Card';
@@ -15,6 +16,7 @@ interface BeatCardProps {
 }
 
 const BeatCard: Component<BeatCardProps> = (props) => {
+    const params = useParams();
     const beat = createMemo(() => {
         return storyApi.getBeatBySceneIdBeatId(props.sceneId, props.beatId);
     });
@@ -31,16 +33,11 @@ const BeatCard: Component<BeatCardProps> = (props) => {
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
-                // link={`/scene/${props.sceneId}/beat/${props.beatId}`}
+                link={`/scene/${props.sceneId}/beat/${props.beatId}`}
                 label={`View details for Beat ${beat().id}`}
                 summary={props.summary}
                 class="beat-card"
-                title={
-                    <>
-                        <TextInput as='number' {...bindField('beats', beat().id, 'number')} />
-                        <TextInput {...bindField('beats', beat().id, 'title')} />
-                    </>
-                }
+                title={<TextInput {...bindField('beats', beat().id, 'title')} />}
                 menuItems={
                     <>
                         <BeatCreator sceneId={props.sceneId}>New Beat</BeatCreator>

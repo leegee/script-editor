@@ -21,6 +21,7 @@ export default function Routes() {
       <Route path="/act" component={ActDetails} />
       <Route path="/act/:id" component={ActDetails} />
       <Route path="/scene/:id" component={SceneDetails} />
+      <Route path="/scene/:id/beat/:beatId" component={SceneDetails} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Route>
   );
