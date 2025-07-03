@@ -1,41 +1,53 @@
+import { Show } from 'solid-js';
+import OverflowMenu from './components/OverflowMenu';
 import { story, setStory } from './stores/story';
-import { ButtonSelectList } from './ButtonSelectList';
 
 type AddLocationProps = {
     sceneId: string;
 };
 
 export default function AddLocation(props: AddLocationProps) {
-    // In Solid, the store 'story' is probably a reactive object, 
-    // so access values directly (no useState/useEffect)
-
     const availableLocations = () =>
-        Object.entries(story.locations).filter(
-            ([id]) => story.scenes[props.sceneId].locationId !== id
-        );
+        Object.entries(story.locations).filter(([id]) => {
+            const scene = story.scenes[props.sceneId];
+            return scene.locationId !== id;
+        });
 
-    const linkLocationScene = (sceneId: string, locationId: string) => {
-        const scene = story.scenes[sceneId];
+    const replaceLocationInScene = (locationId: string) => {
+        const scene = story.scenes[props.sceneId];
         if (!scene) {
-            console.warn(`linkLocationScene: Scene ${sceneId} not found`);
+            console.warn(`linkLocationScene: Scene ${props.sceneId} not found`);
             return;
         }
 
-        setStory('scenes', sceneId, 'locationId', locationId);
+        setStory('scenes', props.sceneId, 'locationId', locationId);
 
-        console.info(`Linked location ${locationId} to scene ${sceneId}`);
+        console.info(`Linked location ${locationId} to scene ${props.sceneId}`, story.scenes);
     };
 
-    const handleAdd = ([id]: [string, any]) => {
-        linkLocationScene(props.sceneId, id);
+    const handleAdd = ([locationId]: string) => {
+        replaceLocationInScene(locationId);
     };
 
     return (
-        <ButtonSelectList
-            options={availableLocations()}
-            getLabel={([, location]) => location.name}
-            onSelect={handleAdd}
-            buttonLabel="➕ Add Location"
-        />
+        <Show when={availableLocations().length} fallback={
+            <small>No Locations Defined</small>}
+        >
+            <OverflowMenu class='none' buttonContent={<span>↔ Set Location</span>}>
+                <ul class="overflow-menu-list">
+                    {availableLocations().map(([id, location]) => (
+                        <li>
+                            <button
+                                type="button"
+                                class="overflow-menu-item"
+                                onClick={() => handleAdd(location.id)}
+                            >
+                                {location.name}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </OverflowMenu>
+        </Show>
     );
 }
