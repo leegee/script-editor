@@ -30,12 +30,10 @@ const ActDetails: Component<ActDetailsProps> = (props) => {
     });
 
     return (
-        <section class="act-details">
-            <section class="acts-list" role="list" aria-label="Acts List">
-                <For each={acts()}>
-                    {(act) => <ActCard actId={act.id} summary={summaryToUse() ?? false} />}
-                </For>
-            </section>
+        <section class="acts-list" role="list" aria-label="Acts List">
+            <For each={acts()}>
+                {(act) => <ActCard actId={act.id} summary={summaryToUse() ?? false} />}
+            </For>
         </section>
     );
 };
