@@ -6,6 +6,7 @@ import LoadStoryButton from './components/LoadStoryButton';
 import SaveStoryButton from './components/SaveStoryButton';
 import ResetStoryButton from './components/ResetStoryButton';
 import OverflowMenu from './components/OverflowMenu';
+import HomeButton from './components/HomeButton';
 
 export default function () {
     return (<nav class="nav-bar">
@@ -23,6 +24,9 @@ export default function () {
                 <Switch checked={uiOptions.showSceneMetaData} onUpdate={(checked) => setUiOptions('showSceneMetaData', checked)} />
             </li>
             <li class='spacer'></li>
+            <li>
+                <HomeButton />
+            </li>
             <li>
                 <LoadStoryButton />
             </li>
