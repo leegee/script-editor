@@ -66,9 +66,9 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                                 Scene Characters <AddCharacter sceneId={scn().id} />
                             </h4>
 
-                            {/* <div class="scene-characters">
-                                <CharacterList characterIds={scn().characterIds} sceneId={scn().id} />
-                            </div> */}
+                            <div class="scene-characters">
+                                <CharacterList sceneId={scn().id} />
+                            </div>
 
                             <h4>Scene Beats</h4>
                         </Show>

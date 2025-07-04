@@ -8,6 +8,10 @@ type CharacterListProps = {
     sceneId?: undefined;
     actId?: undefined;
 } | {
+    characterIds?: undefined;
+    sceneId: string;
+    actId?: undefined;
+} | {
     characterIds: string[];
     sceneId?: undefined;
     actId?: undefined;
@@ -23,7 +27,13 @@ const CharacterList: Component<CharacterListProps> = (props) => {
             const act = story.acts[props.actId];
             if (!act) return [];
             return storyApi.getCharactersInAct(act);
-        } else {
+        }
+        else if (props.sceneId) {
+            const scene = story.scenes[props.sceneId];
+            if (!scene) return [];
+            return storyApi.getCharactersInScene(scene);
+        }
+        else {
             const allCharacters = createMemo(() => storyApi.getCharacters());
             if (props.characterIds?.length) {
                 return allCharacters()?.filter(c => props.characterIds!.includes(c.id)) ?? [];

@@ -126,7 +126,26 @@ class StoryService {
         );
     }
 
-    // storeApi.ts
+    getCharactersInScene(scene: SceneNormalized): Character[] {
+        const uniqueCharIds = new Set<string>();
+
+        for (const beatId of scene.beatIds) {
+            const beat = story.beats[beatId];
+            if (!beat) continue;
+
+            for (const lineId of beat.scriptLineIds) {
+                const line = story.scriptLines[lineId];
+                if (line?.characterId) {
+                    uniqueCharIds.add(line.characterId);
+                }
+            }
+        }
+
+        return Array.from(uniqueCharIds)
+            .map(id => story.characters[id])
+            .filter((c): c is Character => !!c);
+    }
+
     getCharactersInAct(act: ActNormalized): Character[] {
         const uniqueCharIds = new Set<string>();
 
@@ -134,16 +153,9 @@ class StoryService {
             const scene = story.scenes[sceneId];
             if (!scene) continue;
 
-            for (const beatId of scene.beatIds) {
-                const beat = story.beats[beatId];
-                if (!beat) continue;
-
-                for (const lineId of beat.scriptLineIds) {
-                    const line = story.scriptLines[lineId];
-                    if (line?.characterId) {
-                        uniqueCharIds.add(line.characterId);
-                    }
-                }
+            const charsInScene = this.getCharactersInScene(scene);
+            for (const char of charsInScene) {
+                uniqueCharIds.add(char.id);
             }
         }
 
@@ -245,36 +257,6 @@ class StoryService {
 
         console.info(`Linked location ${locationId} to scene ${sceneId}`);
     }
-
-
-    // linkCharacterScene(sceneId: string, characterId: string) {
-    //     const scene = story.scenes[sceneId];
-    //     const character = story.characters[characterId];
-
-    //     if (!scene) {
-    //         console.warn(`linkCharacterScene: Scene ${sceneId} not found`);
-    //         return;
-    //     }
-
-    //     if (!character) {
-    //         console.warn(`linkCharacterScene: Character ${characterId} not found`);
-    //         return;
-    //     }
-
-    //     if (scene.characterIds?.includes(characterId)) {
-    //         console.info(`Character ${characterId} already linked to scene ${sceneId}`);
-    //         return;
-    //     }
-
-    //     setStory(
-    //         'scenes',
-    //         sceneId,
-    //         'characterIds',
-    //         (list = []) => [...list, characterId]
-    //     );
-
-    //     console.info(`Linked character ${characterId} to scene ${sceneId}`);
-    // }
 
     unlinkEntityFromScene(
         sceneId: string,
