@@ -12,13 +12,13 @@ $max-depth: 5;
 
 
 .card {
-    border: 1pt solid rgba(255, 255, 255, 0.166);
+    border: 1pt solid hsla(0, 0%, 20%, 90%);
+    background-color: hsla(0, 0%, 20%, 20%);
     box-shadow: 0 0 6pt rgba(220, 220, 220, 0.15);
-    padding: 0 0.4em;
-    margin: 0.6em 0 0.4em;
-    transition: box-shadow 0.3s ease;
+    padding: 0 1em 1em;
+    margin: 1em 0.3em 0;
 
-    background-color: hsla(0, 0%, 20%, 0.1);
+    transition: box-shadow 0.3s ease;
 
     // Loop to create nested styles
     @for $i from 1 through $max-depth {
@@ -47,7 +47,6 @@ $max-depth: 5;
     }
 
     .card-content {
-
         .description {
             font-size: 1rem;
             color: #444;

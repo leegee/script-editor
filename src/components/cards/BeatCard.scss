@@ -8,7 +8,7 @@
     .beat-summary {
         opacity: 90%;
         @include fonts.italic();
-        margin: 1em;
+        margin: 1em 0;
     }
 
     .beat-summary:hover,
