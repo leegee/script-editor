@@ -117,6 +117,12 @@
             flex-direction: row;
             flex-wrap: nowrap;
             background-color: transparent;
+
+            >.card:only-child {
+                max-width: 100%;
+                min-width: 100%;
+            }
+
         }
     }
 
