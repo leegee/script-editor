@@ -30,6 +30,12 @@ const BeatCard: Component<BeatCardProps> = (props) => {
         storyApi.addNewScriptLineToBeat(beat().id)
     };
 
+    const handleOnKeyUp = (e: KeyboardEvent) => {
+        if (e.key === "Enter" && (e.ctrlKey || e.shiftKey)) {
+            addNewScriptLine();
+        }
+    }
+
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
@@ -51,7 +57,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <TextInput as='textarea' placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
                 </div>
 
-                <section class="script-lines">
+                <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptLines()}>
                         {(line) => <ScriptLineCard line={line} />}
                     </For>
