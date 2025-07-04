@@ -35,6 +35,15 @@
             width: 100%;
         }
 
+        .delete {
+            opacity: 50%;
+        }
+
+        .delete:hover {
+            opacity: 100%;
+            color: white;
+        }
+
         label {
             select {
                 font-size: 0.875rem;

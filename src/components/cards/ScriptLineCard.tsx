@@ -23,6 +23,11 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
     // Get enum options:
     const lineTypeOptions = Object.values(ScriptLineType);
 
+    const deleteThisLine = () => {
+        storyApi.findParentEntity('beats', 'scriptLineIds', line.id);
+        storyApi.deleteEntity('scriptLines', line.id);
+    }
+
     return (
         <div class='script-line-container'>
             <label>
@@ -61,6 +66,8 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                 </Show>
 
                 <TextInput as='textarea' {...bindField('scriptLines', line.id, 'text')} />
+
+                <button class='delete' onClick={deleteThisLine}>🗑</button>
             </blockquote>
         </div>
     );
