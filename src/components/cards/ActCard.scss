@@ -2,7 +2,7 @@
 
 .act-card {
     .act-summary {
-        margin: 1em;
+        margin: 1em 0;
         padding-bottom: 0.6em;
         @include fonts.italic();
     }

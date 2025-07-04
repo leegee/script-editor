@@ -116,6 +116,16 @@ class StoryService {
         return story.locations[scene.locationId];
     }
 
+    getLocationForAct(actId: string): Location[] | undefined {
+        const act = story.acts[actId];
+        if (!act) return;
+        const sceneIds = story.acts[actId].sceneIds;
+        if (!sceneIds) return;
+        return sceneIds.map(
+            (sId) => story.locations[story.scenes[sId].locationId]
+        );
+    }
+
     getCharacter(characterId: string): Character | undefined {
         return story.characters[characterId];
     }

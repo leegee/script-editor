@@ -10,6 +10,7 @@ import { bindField } from '../../lib/bind-field';
 import SceneCreator from '../creators/SceneCreator';
 import DeleteActButton from '../delete-buttons/DeleteActButton';
 import ActCreator from '../creators/ActCreator';
+import LocationList from '../lists/LocationList';
 
 interface ActCardProps {
     actId: string;
@@ -49,7 +50,12 @@ const ActCard: Component<ActCardProps> = (props) => {
                     <div class="act-summary">
                         <TextInput as='textarea' placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
                     </div>
+
+                    <h4>All Locations in all scenes</h4>
+                    <LocationList entityType='acts' entityId={act.id} />
                 </Show>
+
+                <hr />
 
                 <SceneList actId={act.id} />
 

@@ -1,9 +1,24 @@
 import { For, Show, createMemo } from 'solid-js';
 import LocationCard from '../cards/LocationCard';
 import { storyApi } from '../../stores/story';
+import type { EntityMap } from '../../lib/types';
 
-export default () => {
-    const locations = createMemo(() => storyApi.getLocations());
+type LocationListProps = {
+    entityType: keyof EntityMap;
+    entityId: string;
+} | {
+    entityType?: undefined;
+    entityId?: undefined;
+};
+
+export default (props: LocationListProps) => {
+    const locations = createMemo(() => {
+        if (props.entityType === 'acts') {
+            return storyApi.getLocationForAct(props.entityId)
+        } else {
+            storyApi.getLocations()
+        }
+    });
 
     return (
         <section>
