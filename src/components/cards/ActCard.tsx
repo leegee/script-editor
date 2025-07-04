@@ -11,6 +11,7 @@ import SceneCreator from '../creators/SceneCreator';
 import DeleteActButton from '../delete-buttons/DeleteActButton';
 import ActCreator from '../creators/ActCreator';
 import LocationList from '../lists/LocationList';
+import CharacterList from '../lists/CharacterList';
 
 interface ActCardProps {
     actId: string;
@@ -51,7 +52,10 @@ const ActCard: Component<ActCardProps> = (props) => {
                         <TextInput as='textarea' placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
                     </div>
 
-                    <h4>All Locations in all scenes</h4>
+                    <h4>All characters in all scenes</h4>
+                    <CharacterList actId={act.id} />
+
+                    <h4>All locations in all scenes</h4>
                     <LocationList entityType='acts' entityId={act.id} />
                 </Show>
 

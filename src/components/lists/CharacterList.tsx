@@ -4,21 +4,36 @@ import { storyApi } from "../../stores/story";
 import CharacterCard from "../cards/CharacterCard";
 
 type CharacterListProps = {
-    characterIds?: string[];
-    sceneId?: string;
+    characterIds?: undefined;
+    sceneId?: undefined;
+    actId?: undefined;
+} | {
+    characterIds: string[];
+    sceneId?: undefined;
+    actId?: undefined;
+} | {
+    characterIds?: undefined;
+    sceneId?: undefined;
+    actId: string;
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
-    const characters = createMemo(() => storyApi.getCharacters());
-
-    const getCharactersToShow = () =>
-        props.characterIds?.length
-            ? characters()?.filter(c => props.characterIds!.includes(c.id))
-            : characters();
+    const getCharactersToShow = createMemo(() => {
+        if (props.actId) {
+            return storyApi.getCharactersInAct(props.actId);
+        } else {
+            const allCharacters = createMemo(() => storyApi.getCharacters());
+            if (props.characterIds?.length) {
+                return allCharacters()?.filter(c => props.characterIds!.includes(c.id)) ?? [];
+            } else {
+                return allCharacters() ?? [];
+            }
+        }
+    });
 
     return (
         <section class="character-list">
-            <Show when={characters()} fallback={<div>No characters found</div>}>
+            <Show when={getCharactersToShow().length > 0} fallback={<div>No characters found</div>}>
                 <For each={getCharactersToShow()}>
                     {(character) => (
                         <CharacterCard characterId={character.id} summary={true} sceneId={props.sceneId} />

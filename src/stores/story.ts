@@ -126,6 +126,34 @@ class StoryService {
         );
     }
 
+    getCharactersInAct(actId: string): Character[] {
+        const act = story.acts[actId];
+        if (!act) return [];
+
+        const uniqueCharIds = new Set<string>();
+
+        for (const sceneId of act.sceneIds) {
+            const scene = story.scenes[sceneId];
+            if (!scene) continue;
+
+            for (const beatId of scene.beatIds) {
+                const beat = story.beats[beatId];
+                if (!beat) continue;
+
+                for (const lineId of beat.scriptLineIds) {
+                    const line = story.scriptLines[lineId];
+                    if (line?.characterId) {
+                        uniqueCharIds.add(line.characterId);
+                    }
+                }
+            }
+        }
+
+        return Array.from(uniqueCharIds)
+            .map(id => story.characters[id])
+            .filter((c): c is Character => !!c);
+    }
+
     getCharacter(characterId: string): Character | undefined {
         return story.characters[characterId];
     }
