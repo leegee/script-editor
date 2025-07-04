@@ -29,15 +29,19 @@ input[type=number].custom-input {
 }
 
 input.custom-input {
-    min-height: 1em;
+    min-height: 1.6em;
     max-width: 100%;
 }
 
 textarea.custom-input {
+    border: none;
     border-bottom: 1pt dotted #fff5;
-    min-height: 1em;
+    min-height: 1.6em;
     max-height: 12em;
-    height: auto;
+    height: 1em;
     width: 100%;
     display: flex;
+    resize: vertical;
+    background: transparent;
+    box-sizing: border-box;
 }
