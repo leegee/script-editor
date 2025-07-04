@@ -20,7 +20,7 @@ export default function () {
             </li>
             <li>
                 <label>Scene Info</label>
-                <Switch checked={uiOptions.showSceneData} onUpdate={(checked) => setUiOptions('showSceneData', checked)} />
+                <Switch checked={uiOptions.showSceneMetaData} onUpdate={(checked) => setUiOptions('showSceneData', checked)} />
             </li>
             <li class='spacer'></li>
             <li>
