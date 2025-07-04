@@ -50,6 +50,7 @@ h3 {
 
 h4,
 h5 {
+    color: #eee7;
     font-size: 1em;
     font-weight: bold;
     letter-spacing: 1pt;
@@ -102,4 +103,9 @@ button.new::before {
 
 button.new:hover {
     color: #eee
+}
+
+hr {
+    border-color: #eee5;
+    margin: 1em 0;
 }
