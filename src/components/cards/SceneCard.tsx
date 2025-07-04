@@ -47,7 +47,7 @@ const SceneCard: Component<SceneCardProps> = (props) => {
                     }
                 >
                     <section class="scene-details">
-                        <Show when={uiOptions.showActMetaData}>
+                        <Show when={uiOptions.showSceneMetaData}>
                             <div class="scene-summary">
                                 <TextInput
                                     as="textarea"
