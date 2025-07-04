@@ -11,19 +11,25 @@ interface AvatarProps {
     showName?: boolean;
     class?: string;
     isNew?: boolean;
+    onChange?: (e: Event) => void;
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
     const allCharacters = storyApi.getCharacters();
+    const showName = props.showName ?? true;
+    const isNew = props.isNew ?? false;
+
+    const [showModal, setShowModal] = createSignal(false);
     const [selectedId, setSelectedId] = createSignal(props.characterId ?? allCharacters[0]?.id);
     const character = createMemo(() => {
         const id = selectedId();
         return id ? storyApi.getCharacter(id) : undefined;
     });
 
-    const showName = props.showName ?? true;
-    const isNew = props.isNew ?? false;
-    const [showModal, setShowModal] = createSignal(false);
+    const characterSelectedChanged = (e) => {
+        setSelectedId((e.target as HTMLSelectElement).value);
+        if (props.onChange) props.onChange(e);
+    }
 
     return (
         <aside class={`avatar ${props.class ?? ''}`}>
@@ -66,7 +72,10 @@ const Avatar: Component<AvatarProps> = (props) => {
 
                 {/* Select dropdown when NOT isNew */}
                 <Show when={!isNew}>
-                    <select class='character-name' value={selectedId()} onInput={e => setSelectedId((e.target as HTMLSelectElement).value)}>
+                    <select class='character-name'
+                        value={selectedId()}
+                        onChange={characterSelectedChanged}
+                    >
                         <For each={allCharacters}>
                             {(c) => <option value={c.id}>{c.name}</option>}
                         </For>

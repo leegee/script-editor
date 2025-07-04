@@ -1,6 +1,6 @@
 import './CharacterList.scss';
 import { Component, createMemo, For, Show } from "solid-js";
-import { storyApi } from "../../stores/story";
+import { story, storyApi } from "../../stores/story";
 import CharacterCard from "../cards/CharacterCard";
 
 type CharacterListProps = {
@@ -20,7 +20,9 @@ type CharacterListProps = {
 const CharacterList: Component<CharacterListProps> = (props) => {
     const getCharactersToShow = createMemo(() => {
         if (props.actId) {
-            return storyApi.getCharactersInAct(props.actId);
+            const act = story.acts[props.actId];
+            if (!act) return [];
+            return storyApi.getCharactersInAct(act);
         } else {
             const allCharacters = createMemo(() => storyApi.getCharacters());
             if (props.characterIds?.length) {

@@ -46,7 +46,18 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
 
             <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
                 <Show when={line.type === 'Dialogue'}>
-                    <Avatar class="character" characterId={line.characterId} />
+                    <Avatar class="character"
+                        characterId={line.characterId}
+                        onChange={(e) =>
+                            storyApi.updateEntity(
+                                'scriptLines',
+                                line.id,
+                                'characterId',
+                                (e.currentTarget as HTMLSelectElement).value as string
+                            )
+                        }
+
+                    />
                 </Show>
 
                 <TextInput as='textarea' {...bindField('scriptLines', line.id, 'text')} />

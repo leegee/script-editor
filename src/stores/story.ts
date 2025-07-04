@@ -126,15 +126,17 @@ class StoryService {
         );
     }
 
-    getCharactersInAct(actId: string): Character[] {
-        const act = story.acts[actId];
-        if (!act) return [];
-
+    // storeApi.ts
+    getCharactersInAct(act: ActNormalized): Character[] {
         const uniqueCharIds = new Set<string>();
 
         for (const sceneId of act.sceneIds) {
             const scene = story.scenes[sceneId];
             if (!scene) continue;
+
+            for (const charId of scene.characterIds ?? []) {
+                uniqueCharIds.add(charId);
+            }
 
             for (const beatId of scene.beatIds) {
                 const beat = story.beats[beatId];
