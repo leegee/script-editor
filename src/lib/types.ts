@@ -126,7 +126,6 @@ export interface SceneNormalized {
     number: number;
     title: string;
     summary?: string;
-    characterIds: string[];
     locationId: string;
     durationSeconds?: number;
     beatIds: string[];

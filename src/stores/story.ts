@@ -134,10 +134,6 @@ class StoryService {
             const scene = story.scenes[sceneId];
             if (!scene) continue;
 
-            for (const charId of scene.characterIds ?? []) {
-                uniqueCharIds.add(charId);
-            }
-
             for (const beatId of scene.beatIds) {
                 const beat = story.beats[beatId];
                 if (!beat) continue;
@@ -199,7 +195,6 @@ class StoryService {
             number: this.getNextInSequence('scenes'),
             title: 'New Scene',
             summary: '',
-            characterIds: [],
             locationId: undefined,
             durationSeconds: undefined,
             beatIds: [],
@@ -252,34 +247,34 @@ class StoryService {
     }
 
 
-    linkCharacterScene(sceneId: string, characterId: string) {
-        const scene = story.scenes[sceneId];
-        const character = story.characters[characterId];
+    // linkCharacterScene(sceneId: string, characterId: string) {
+    //     const scene = story.scenes[sceneId];
+    //     const character = story.characters[characterId];
 
-        if (!scene) {
-            console.warn(`linkCharacterScene: Scene ${sceneId} not found`);
-            return;
-        }
+    //     if (!scene) {
+    //         console.warn(`linkCharacterScene: Scene ${sceneId} not found`);
+    //         return;
+    //     }
 
-        if (!character) {
-            console.warn(`linkCharacterScene: Character ${characterId} not found`);
-            return;
-        }
+    //     if (!character) {
+    //         console.warn(`linkCharacterScene: Character ${characterId} not found`);
+    //         return;
+    //     }
 
-        if (scene.characterIds?.includes(characterId)) {
-            console.info(`Character ${characterId} already linked to scene ${sceneId}`);
-            return;
-        }
+    //     if (scene.characterIds?.includes(characterId)) {
+    //         console.info(`Character ${characterId} already linked to scene ${sceneId}`);
+    //         return;
+    //     }
 
-        setStory(
-            'scenes',
-            sceneId,
-            'characterIds',
-            (list = []) => [...list, characterId]
-        );
+    //     setStory(
+    //         'scenes',
+    //         sceneId,
+    //         'characterIds',
+    //         (list = []) => [...list, characterId]
+    //     );
 
-        console.info(`Linked character ${characterId} to scene ${sceneId}`);
-    }
+    //     console.info(`Linked character ${characterId} to scene ${sceneId}`);
+    // }
 
     unlinkEntityFromScene(
         sceneId: string,
