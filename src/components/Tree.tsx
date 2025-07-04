@@ -9,7 +9,6 @@ import type {
     ScriptLineNormalized,
 } from '../lib/types';
 
-// Discriminated union
 type TreeNodeProps =
     | { node: StoryNormalized; type: 'story' }
     | { node: ActNormalized; type: 'act' }
@@ -17,10 +16,8 @@ type TreeNodeProps =
     | { node: BeatNormalized; type: 'beat' }
     | { node: ScriptLineNormalized; type: 'scriptline' };
 
-// Union of valid node types
 type TreeNodeType = TreeNodeProps['type'];
 
-// Child map for better type hints (optional)
 type TreeNodeChildMap = {
     story: ActNormalized;
     act: SceneNormalized;
@@ -29,7 +26,6 @@ type TreeNodeChildMap = {
 };
 
 export function TreeNode(props: TreeNodeProps) {
-    // Label per node type
     const getLabel = () => {
         switch (props.type) {
             case 'story':
@@ -47,7 +43,6 @@ export function TreeNode(props: TreeNodeProps) {
         }
     };
 
-    // Get children and next type
     const getChildren = (): { children: any[]; childType: TreeNodeType | '' } => {
         switch (props.type) {
             case 'story':
