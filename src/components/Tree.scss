@@ -17,3 +17,17 @@
 .node.valid-drop-zone {
     border: 2px solid green;
 }
+
+.drop-zone {
+    height: 8px;
+    margin: 2px 0;
+    background: transparent;
+    transition: background-color 0.2s ease;
+    padding: 1em;
+    border: 1pt dotted #666;
+}
+
+.drop-zone.drag-over {
+    background-color: #3399ff66;
+    border-top: 2px solid #007acc;
+}

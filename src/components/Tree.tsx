@@ -36,6 +36,10 @@ const [draggedType, setDraggedType] = createSignal<TreeNodeType | null>(null);
 const [dragOverNode, setDragOverNode] = createSignal<AnyNodeType | null>(null);
 const [dragOverType, setDragOverType] = createSignal<TreeNodeType | null>(null);
 
+const [hoveredDropZones, setHoveredDropZones] = createSignal<Record<string, number | null>>({});
+
+const [dragOverIndex, setDragOverIndex] = createSignal<number | null>(null);
+
 function canDropHere(dragType: TreeNodeType | null, dropType: TreeNodeType): boolean {
     if (!dragType) return false;
     if (dropType === 'story') return false;
@@ -50,10 +54,7 @@ function canDropHere(dragType: TreeNodeType | null, dropType: TreeNodeType): boo
     return allowedDrops[dropType]?.includes(dragType) ?? false;
 }
 
-
 function handleDragStart(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
-    console.log('dragStart target:', e.target, 'currentTarget:', e.currentTarget, 'node id:', node.id, 'type:', type);
-
     e.dataTransfer?.setData("application/json", JSON.stringify({ id: node.id, type }));
     e.dataTransfer!.effectAllowed = "move";
 
@@ -62,7 +63,7 @@ function handleDragStart(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
     e.stopPropagation();
 }
 
-// Debounced handler receives plain data, no event object
+// Debounced dragOver for nodes (not drop zones)
 const _handleDragOverDebounced = debounce(({ target, currentTarget, node, type }: {
     target: EventTarget | null,
     currentTarget: EventTarget | null,
@@ -71,18 +72,11 @@ const _handleDragOverDebounced = debounce(({ target, currentTarget, node, type }
 }) => {
     if (type === 'story') return;
 
-    // Note: e.preventDefault and e.stopPropagation can't be called here because
-    // event object is not available, so do that earlier in wrapper.
-
-    console.log('dragOver target:', target, 'currentTarget:', currentTarget, 'node id:', node.id, 'type:', type);
-
-    // We can't set dropEffect here either, so do that earlier if needed.
-
     setDragOverNode(node);
     setDragOverType(type);
+    setDragOverIndex(null);
 }, 50);
 
-// Wrapper that captures event data immediately and calls debounced function
 function handleDragOver(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
     if (type === 'story') {
         e.preventDefault();
@@ -93,10 +87,8 @@ function handleDragOver(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
     e.preventDefault();
     e.stopPropagation();
 
-    // Set dropEffect here, where event is still fresh
     e.dataTransfer!.dropEffect = "move";
 
-    // Capture relevant event info synchronously and pass to debounced
     _handleDragOverDebounced({
         target: e.target,
         currentTarget: e.currentTarget,
@@ -108,24 +100,73 @@ function handleDragOver(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
 function handleDragLeave(e: DragEvent) {
     setDragOverNode(null);
     setDragOverType(null);
+    setDragOverIndex(null);
 }
 
-function handleDrop(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
-    console.log('DROP TARGET:', e.target, 'currentTarget:', e.currentTarget, 'node id:', node.id, 'type:', type);
+function handleDropZoneDragOver(e: DragEvent, nodeId: string, index: number) {
     e.preventDefault();
     e.stopPropagation();
-    if (type === 'story') return;
+    e.dataTransfer!.dropEffect = "move";
 
+    setHoveredDropZones((prev) => ({
+        ...prev,
+        [nodeId]: index,
+    }));
+}
+
+function handleDropZoneDragLeave(e: DragEvent, nodeId: string) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setHoveredDropZones((prev) => ({
+        ...prev,
+        [nodeId]: null,
+    }));
+}
+
+function handleDropOnZoneDrop(
+    e: DragEvent,
+    parentNode: AnyNodeType,
+    parentType: TreeNodeType,
+    insertIndex: number
+) {
+    e.preventDefault();
+    e.stopPropagation();
 
     const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
-    console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${type}#${node.id}`);
+    console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
 
-    // TODO: Implement move logic here, e.g. storyApi.moveNode(droppedData, node);
+    // TODO: Implement move logic here, e.g.
+    // storyApi.moveNodeToIndex(droppedData, parentNode, insertIndex);
 
     setDraggedNode(null);
     setDraggedType(null);
     setDragOverNode(null);
     setDragOverType(null);
+    setDragOverIndex(null);
+
+    // Clear the hovered drop zone for this node:
+    setHoveredDropZones(prev => ({
+        ...prev,
+        [parentNode.id]: null,
+    }));
+}
+
+function handleDropOnNode(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
+    console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${type}#${node.id}`);
+
+    // TODO: Implement move logic here, e.g.
+    // storyApi.moveNodeInside(droppedData, node);
+
+    setDraggedNode(null);
+    setDraggedType(null);
+    setDragOverNode(null);
+    setDragOverType(null);
+    setDragOverIndex(null);
 }
 
 export function TreeNode(props: TreeNodeProps) {
@@ -187,7 +228,7 @@ export function TreeNode(props: TreeNodeProps) {
         ? {
             draggable: true,
             onDragStart: (e: DragEvent) => handleDragStart(e, props.node, props.type),
-            onDrop: (e: DragEvent) => handleDrop(e, props.node, props.type),
+            onDrop: (e: DragEvent) => handleDropOnNode(e, props.node, props.type),
             onDragOver: (e: DragEvent) => handleDragOver(e, props.node, props.type),
             onDragLeave: handleDragLeave,
         }
@@ -195,17 +236,30 @@ export function TreeNode(props: TreeNodeProps) {
             draggable: false,
         };
 
+    const hoveredIndex = () => hoveredDropZones()[props.node.id] ?? null;
+
     return (
         <li class={classes()} {...draggableProps}>
             <span>{getLabel()}</span>
             <Show when={children.length > 0 && childType !== ''}>
                 <ul>
+                    <li
+                        class={`drop-zone ${hoveredIndex() === 0 ? 'drag-over' : ''}`}
+                        onDragOver={(e) => handleDropZoneDragOver(e, props.node.id, 0)}
+                        onDragLeave={(e) => handleDropZoneDragLeave(e, props.node.id)}
+                        onDrop={(e) => handleDropOnZoneDrop(e, props.node, props.type, 0)}
+                    />
                     <For each={children}>
-                        {(child) => (
-                            <TreeNode
-                                node={child as any}
-                                type={childType as TreeNodeType}
-                            />
+                        {(child, idx) => (
+                            <>
+                                <TreeNode node={child as any} type={childType as TreeNodeType} />
+                                <li
+                                    class={`drop-zone ${hoveredIndex() === idx() + 1 ? 'drag-over' : ''}`}
+                                    onDragOver={(e) => handleDropZoneDragOver(e, props.node.id, idx() + 1)}
+                                    onDragLeave={(e) => handleDropZoneDragLeave(e, props.node.id)}
+                                    onDrop={(e) => handleDropOnZoneDrop(e, props.node, props.type, idx() + 1)}
+                                />
+                            </>
                         )}
                     </For>
                 </ul>
