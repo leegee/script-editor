@@ -15,8 +15,12 @@ export default (props: LocationListProps) => {
     const locations = createMemo(() => {
         if (props.entityType === 'acts') {
             return storyApi.getLocationForAct(props.entityId)
-        } else {
-            storyApi.getLocations()
+        }
+        else if (props.entityType === 'scenes') {
+            return [storyApi.getLocationForScene(props.entityId)]
+        }
+        else {
+            return storyApi.getLocations();
         }
     });
 
