@@ -165,6 +165,8 @@ export type EntityMap = {
     [K in keyof NormalizedStoryData]: NormalizedStoryData[K] extends Record<string, infer Item> ? Item : never;
 };
 
+export type EntityType = keyof NormalizedStoryData;
+
 export type NumberedEntity = { number: number };
 
 export type EntitiesWithNumber = {

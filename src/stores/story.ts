@@ -8,6 +8,7 @@ import type {
     NormalizedStoryData, StoryNormalized, ActNormalized, SceneNormalized,
     BeatNormalized, ScriptLineNormalized, Character, Location, EntityMap,
     EntitiesWithNumber, ScriptLineType, ArrayKeys,
+    EntityType,
 } from '../lib/types';
 
 import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
@@ -384,9 +385,7 @@ class StoryService {
      * @param options 
      * @returns 
      */
-    createEntity<
-        EntityType extends keyof NormalizedStoryData
-    >(
+    createEntity(
         entityType: EntityType,
         data: Partial<NormalizedStoryData[EntityType][string]> & { id?: string },
         options?: ParentOptions
@@ -413,21 +412,18 @@ class StoryService {
         return newId;
     }
 
-    getEntity<EntityType extends keyof EntityMap>(
-        entityType: EntityType,
-        entityId: string
-    ): EntityMap[EntityType] | undefined {
+    getEntity(entityType: EntityType, entityId: string): EntityMap[EntityType] | undefined {
         return story[entityType][entityId] as unknown as EntityMap[EntityType];
     }
 
     updateEntity<
-        EntityType extends keyof EntityMap,
-        K extends keyof EntityMap[EntityType]
+        ET extends keyof EntityMap,
+        K extends keyof EntityMap[ET]
     >(
-        entityType: EntityType,
+        entityType: ET,
         entityId: string,
         field: K,
-        newValue: EntityMap[EntityType][K]
+        newValue: EntityMap[ET][K]
     ) {
         setStory(entityType, entityId as any, prev => ({
             ...prev,
@@ -442,7 +438,6 @@ class StoryService {
      * @param options `ParentOptions` - if `parentId` is absent, it will be found
      */
     deleteEntity<
-        EntityType extends keyof NormalizedStoryData,
         ParentType extends keyof NormalizedStoryData,
         ParentListField extends ArrayKeys<NormalizedStoryData[ParentType][string]>
     >(
