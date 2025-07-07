@@ -75,7 +75,6 @@ export interface Scene {
     number: number;
     title: string;
     summary?: string;
-    characterIds: string[];
     locationId: string;
     durationSeconds?: number;
     beats: Beat[];

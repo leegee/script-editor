@@ -43,7 +43,6 @@ function transformScene(raw: any, index: number): Scene {
         number: raw.number ?? (index + 1),
         title: raw.title,
         summary: raw.summary,
-        characterIds: raw.characterIds,
         locationId: raw.locationId,
         durationSeconds: raw.durationSeconds,
         beats: raw.beats.map((b: any, i: number) => transformBeat(b, i)),

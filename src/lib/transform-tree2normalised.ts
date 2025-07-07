@@ -65,7 +65,6 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
                     number: scene.number,
                     title: scene.title,
                     summary: scene.summary,
-                    characterIds: scene.characterIds,
                     locationId: scene.locationId,
                     durationSeconds: scene.durationSeconds,
                     beatIds,
