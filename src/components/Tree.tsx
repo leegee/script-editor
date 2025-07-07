@@ -1,5 +1,5 @@
 import './Tree.scss';
-import { For, Show, createSignal } from 'solid-js';
+import { For, Show, batch, createSignal } from 'solid-js';
 import debounce from 'debounce';
 
 import { storyApi } from '../stores/story';
@@ -78,7 +78,6 @@ function handleDragStart(e: DragEvent, node: AnyNodeType, type: TreeNodeType, pa
     e.stopPropagation();
 }
 
-// Debounced dragOver for nodes (not drop zones)
 const _handleDragOverDebounced = debounce(({ target, currentTarget, node, type }: {
     target: EventTarget | null,
     currentTarget: EventTarget | null,
@@ -86,10 +85,11 @@ const _handleDragOverDebounced = debounce(({ target, currentTarget, node, type }
     type: TreeNodeType
 }) => {
     if (type === 'story') return;
-
-    setDragOverNode(node);
-    setDragOverType(type);
-    setDragOverIndex(null);
+    batch(() => {
+        setDragOverNode(node);
+        setDragOverType(type);
+        setDragOverIndex(null);
+    });
 }, 50);
 
 function handleDragOver(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
@@ -151,6 +151,7 @@ function handleDropOnZoneDrop(
     const droppedData: DragData = JSON.parse(e.dataTransfer?.getData("application/json")!);
     console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
     storyApi.moveEntity({
+        location: "onto",
         dropped: droppedData,
         onto: {
             type: parentType,
@@ -179,6 +180,7 @@ function handleDropOnNode(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
     const droppedData: DragData = JSON.parse(e.dataTransfer?.getData("application/json")!);
     console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${type}#${node.id}`);
     storyApi.moveEntity({
+        location: "into",
         dropped: droppedData,
         onto: {
             type,
