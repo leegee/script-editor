@@ -12,12 +12,19 @@ import type {
     NormalizedStoryData,
 } from '../lib/types';
 
+type DragData = {
+    id: string;
+    type: TreeNodeType;
+    parentId: string | null;
+    parentType: TreeNodeType | null;
+};
+
 type TreeNodeProps =
-    | { node: StoryNormalized; type: 'story' }
-    | { node: ActNormalized; type: 'act' }
-    | { node: SceneNormalized; type: 'scene' }
-    | { node: BeatNormalized; type: 'beat' }
-    | { node: ScriptLineNormalized; type: 'scriptline' };
+    | { node: StoryNormalized; type: 'story'; parentId?: string; parentType?: TreeNodeType }
+    | { node: ActNormalized; type: 'act'; parentId?: string; parentType?: TreeNodeType }
+    | { node: SceneNormalized; type: 'scene'; parentId?: string; parentType?: TreeNodeType }
+    | { node: BeatNormalized; type: 'beat'; parentId?: string; parentType?: TreeNodeType }
+    | { node: ScriptLineNormalized; type: 'scriptline'; parentId?: string; parentType?: TreeNodeType };
 
 export type TreeNodeType = TreeNodeProps['type'];
 
@@ -54,8 +61,16 @@ function canDropHere(dragType: TreeNodeType | null, dropType: TreeNodeType): boo
     return allowedDrops[dropType]?.includes(dragType) ?? false;
 }
 
-function handleDragStart(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
-    e.dataTransfer?.setData("application/json", JSON.stringify({ id: node.id, type }));
+function handleDragStart(e: DragEvent, node: AnyNodeType, type: TreeNodeType, parentId?: string, parentType?: TreeNodeType) {
+    e.dataTransfer?.setData(
+        "application/json",
+        JSON.stringify({
+            id: node.id,
+            type,
+            parentId: parentId ?? null,
+            parentType: parentType ?? null,
+        })
+    );
     e.dataTransfer!.effectAllowed = "move";
 
     setDraggedNode(node);
@@ -133,14 +148,14 @@ function handleDropOnZoneDrop(
     e.preventDefault();
     e.stopPropagation();
 
-    const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
-    // console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
+    const droppedData: DragData = JSON.parse(e.dataTransfer?.getData("application/json")!);
+    console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
     storyApi.moveEntity({
         dropped: droppedData,
         onto: {
             type: parentType,
             id: parentNode.id,
-            insertIndex
+            insertIndex,
         }
     });
 
@@ -161,7 +176,7 @@ function handleDropOnNode(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
     e.preventDefault();
     e.stopPropagation();
 
-    const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
+    const droppedData: DragData = JSON.parse(e.dataTransfer?.getData("application/json")!);
     console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${type}#${node.id}`);
     storyApi.moveEntity({
         dropped: droppedData,
@@ -239,7 +254,7 @@ export function TreeNode(props: TreeNodeProps) {
     const draggableProps = isDraggable
         ? {
             draggable: true,
-            onDragStart: (e: DragEvent) => handleDragStart(e, props.node, props.type),
+            onDragStart: (e: DragEvent) => handleDragStart(e, props.node, props.type, props.parentId, props.parentType),
             onDrop: (e: DragEvent) => handleDropOnNode(e, props.node, props.type),
             onDragOver: (e: DragEvent) => handleDragOver(e, props.node, props.type),
             onDragLeave: handleDragLeave,
@@ -264,7 +279,12 @@ export function TreeNode(props: TreeNodeProps) {
                     <For each={children}>
                         {(child, idx) => (
                             <>
-                                <TreeNode node={child as any} type={childType as TreeNodeType} />
+                                <TreeNode
+                                    node={child as any}
+                                    type={childType as TreeNodeType}
+                                    parentId={props.node.id}
+                                    parentType={props.type}
+                                />
                                 <li
                                     class={`drop-zone ${hoveredIndex() === idx() + 1 ? 'drag-over' : ''}`}
                                     onDragOver={(e) => handleDropZoneDragOver(e, props.node.id, idx() + 1)}
