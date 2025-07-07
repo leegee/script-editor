@@ -10,8 +10,8 @@ export function denormalizeStoryTree(normalized: NormalizedStoryData): Story {
             const scene = normalized.scenes[sceneId];
             const beats = scene.beatIds.map(beatId => {
                 const beat = normalized.beats[beatId];
-                const scriptLines = beat.scriptLineIds.map(slId => normalized.scriptLines[slId]);
-                return { ...beat, scriptLines };
+                const scriptlines = beat.scriptLineIds.map(slId => normalized.scriptlines[slId]);
+                return { ...beat, scriptlines };
             });
             return { ...scene, beats };
         });

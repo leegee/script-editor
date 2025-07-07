@@ -147,21 +147,21 @@ describe("StoryService CRUD operations", () => {
             });
 
             // CREATE
-            testScriptLineId = storyApi.createEntity("scriptLines", { text: "This is a script line." }, {
+            testScriptLineId = storyApi.createEntity("scriptlines", { text: "This is a script line." }, {
                 parentType: "beats",
                 parentId: testBeatId,
                 parentListField: "scriptLineIds",
             });
-            expect(story.scriptLines[testScriptLineId]).toBeTruthy();
+            expect(story.scriptlines[testScriptLineId]).toBeTruthy();
             expect(story.beats[testBeatId].scriptLineIds.includes(testScriptLineId)).toBe(true);
 
             // DELETE
-            storyApi.deleteEntity("scriptLines", testScriptLineId, {
+            storyApi.deleteEntity("scriptlines", testScriptLineId, {
                 parentType: "beats",
                 parentId: testBeatId,
                 parentListField: "scriptLineIds",
             });
-            expect(story.scriptLines[testScriptLineId]).toBeUndefined();
+            expect(story.scriptlines[testScriptLineId]).toBeUndefined();
             expect(story.beats[testBeatId].scriptLineIds.includes(testScriptLineId)).toBe(false);
 
             // Cleanup

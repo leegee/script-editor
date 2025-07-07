@@ -29,7 +29,7 @@ function createEmptyNormalized() {
         acts: {},
         scenes: {},
         beats: {},
-        scriptLines: {},
+        scriptlines: {},
         characters: {},
         locations: {},
     } as NormalizedStoryData;
@@ -94,7 +94,7 @@ class StoryService {
         const beat = story.beats[beatId];
         if (!beat) return [];
         return beat.scriptLineIds
-            .map(lineId => story.scriptLines[lineId])
+            .map(lineId => story.scriptlines[lineId])
             .filter(Boolean) as ScriptLineNormalized[];
     }
 
@@ -135,7 +135,7 @@ class StoryService {
             if (!beat) continue;
 
             for (const lineId of beat.scriptLineIds) {
-                const line = story.scriptLines[lineId];
+                const line = story.scriptlines[lineId];
                 if (line?.characterId) {
                     uniqueCharIds.add(line.characterId);
                 }
@@ -171,7 +171,7 @@ class StoryService {
 
     addNewScriptLineToBeat(beatId: string): string {
         return this.createEntity(
-            'scriptLines',
+            'scriptlines',
             {
                 text: 'New Script Line',
                 type: 'Dialogue' as ScriptLineType,
@@ -305,15 +305,15 @@ class StoryService {
             console.warn(`Scene with id ${sceneId} not found`);
         }
 
-        // Copy scriptLines record to apply changes immutably
-        const updatedScriptLines = { ...story.scriptLines };
+        // Copy scriptlines record to apply changes immutably
+        const updatedScriptLines = { ...story.scriptlines };
 
         for (const beatId of scene.beatIds) {
             const beat = story.beats[beatId];
             if (!beat) continue;
 
             for (const scriptLineId of beat.scriptLineIds) {
-                const scriptLine = story.scriptLines[scriptLineId];
+                const scriptLine = story.scriptlines[scriptLineId];
                 if (!scriptLine) continue;
 
                 if (scriptLine.characterId === characterIdToRemove) {
@@ -327,7 +327,7 @@ class StoryService {
         }
 
         // Batch update
-        setStory('scriptLines', updatedScriptLines)
+        setStory('scriptlines', updatedScriptLines)
     }
 
 

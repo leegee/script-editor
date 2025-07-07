@@ -67,7 +67,7 @@ export interface Beat {
     title?: string;
     summary?: string;
     durationSeconds?: number;
-    scriptLines: ScriptLine[];
+    scriptlines: ScriptLine[];
 }
 
 export interface Scene {
@@ -156,7 +156,7 @@ export interface NormalizedStoryData {
     acts: Record<string, ActNormalized>;
     scenes: Record<string, SceneNormalized>;
     beats: Record<string, BeatNormalized>;
-    scriptLines: Record<string, ScriptLineNormalized>;
+    scriptlines: Record<string, ScriptLineNormalized>;
     characters: Record<string, Character>;
     locations: Record<string, Location>;
 }

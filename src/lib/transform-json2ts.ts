@@ -33,7 +33,7 @@ function transformBeat(raw: any, index: number): Beat {
         title: raw.title,
         summary: raw.summary,
         durationSeconds: raw.durationSeconds,
-        scriptLines: raw.scriptLines.map(transformScriptLine),
+        scriptlines: raw.scriptlines.map(transformScriptLine),
     };
 }
 

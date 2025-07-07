@@ -28,7 +28,7 @@ describe('StoryService saving and loading', () => {
             acts: {},
             scenes: {},
             beats: {},
-            scriptLines: {},
+            scriptlines: {},
             characters: {},
             locations: {},
         });

@@ -14,13 +14,13 @@ function ScriptLineNode(props: { line: ScriptLineNormalized }) {
 }
 
 function BeatNode(props: { beat: BeatNormalized }) {
-    const scriptLines = () => storyApi.getScriptLinesByBeatId(props.beat.id);
+    const scriptlines = () => storyApi.getScriptLinesByBeatId(props.beat.id);
     return (
         <li>
             <strong>Beat #{props.beat.number}</strong>
-            <Show when={scriptLines().length > 0}>
+            <Show when={scriptlines().length > 0}>
                 <ul>
-                    <For each={scriptLines()}>
+                    <For each={scriptlines()}>
                         {(line) => <ScriptLineNode line={line} />}
                     </For>
                 </ul>

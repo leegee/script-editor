@@ -99,7 +99,7 @@
                             "title": "The Wind",
                             "summary": "The wind rustles through the trees.",
                             "durationSeconds": 30,
-                            "scriptLines": [
+                            "scriptlines": [
                                 {
                                     "id": "line-1",
                                     "type": "Description",
@@ -111,7 +111,7 @@
                             "id": "beat-2",
                             "title": "Alice Speaks",
                             "durationSeconds": 60,
-                            "scriptLines": [
+                            "scriptlines": [
                                 {
                                     "id": "line-2",
                                     "type": "Dialogue",
@@ -144,7 +144,7 @@
                             "id": "beat-3",
                             "title": "Crystal Glow",
                             "durationSeconds": 40,
-                            "scriptLines": [
+                            "scriptlines": [
                                 {
                                     "id": "line-3",
                                     "type": "Description",
@@ -156,7 +156,7 @@
                             "id": "beat-4",
                             "title": "Ben’s Fear",
                             "durationSeconds": 50,
-                            "scriptLines": [
+                            "scriptlines": [
                                 {
                                     "id": "line-4",
                                     "type": "Dialogue",

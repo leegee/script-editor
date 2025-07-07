@@ -14,8 +14,8 @@ export function traverseStoryTree<T>(
         node.scenes.forEach(child => traverseStoryTree(child, visitor));
     } else if ('beats' in node) {
         node.beats.forEach(child => traverseStoryTree(child, visitor));
-    } else if ('scriptLines' in node) {
-        node.scriptLines.forEach(child => traverseStoryTree(child, visitor));
+    } else if ('scriptlines' in node) {
+        node.scriptlines.forEach(child => traverseStoryTree(child, visitor));
     } else if ('children' in node && Array.isArray(node.children)) {
         node.children.forEach(child => traverseStoryTree(child, visitor));
     }

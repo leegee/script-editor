@@ -21,7 +21,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
         return storyApi.getBeatBySceneIdBeatId(props.sceneId, props.beatId);
     });
 
-    const scriptLines = createMemo(() => {
+    const scriptlines = createMemo(() => {
         if (!beat()) return [];
         return storyApi.getScriptLinesByBeatId(beat().id);
     });
@@ -58,7 +58,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 </div>
 
                 <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
-                    <For each={scriptLines()}>
+                    <For each={scriptlines()}>
                         {(line) => <ScriptLineCard line={line} />}
                     </For>
 

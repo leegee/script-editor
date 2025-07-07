@@ -11,7 +11,7 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
         acts: {},
         scenes: {},
         beats: {},
-        scriptLines: {},
+        scriptlines: {},
         characters: {},
         locations: {},
     };
@@ -38,10 +38,10 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
                     beatIds.push(beat.id);
 
                     const scriptLineIds: string[] = [];
-                    for (const sl of beat.scriptLines) {
+                    for (const sl of beat.scriptlines) {
                         scriptLineIds.push(sl.id);
 
-                        normalized.scriptLines[sl.id] = {
+                        normalized.scriptlines[sl.id] = {
                             id: sl.id,
                             type: sl.type,
                             characterId: sl.characterId,

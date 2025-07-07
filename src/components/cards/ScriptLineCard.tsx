@@ -25,7 +25,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
 
     const deleteThisLine = () => {
         storyApi.findParentEntity('beats', 'scriptLineIds', line.id);
-        storyApi.deleteEntity('scriptLines', line.id);
+        storyApi.deleteEntity('scriptlines', line.id);
     }
 
     return (
@@ -36,7 +36,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     value={line.type}
                     onChange={(e) =>
                         storyApi.updateEntity(
-                            'scriptLines',
+                            'scriptlines',
                             line.id,
                             'type',
                             e.currentTarget.value as ScriptLineType
@@ -55,7 +55,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                         characterId={line.characterId}
                         onChange={(e) =>
                             storyApi.updateEntity(
-                                'scriptLines',
+                                'scriptlines',
                                 line.id,
                                 'characterId',
                                 (e.currentTarget as HTMLSelectElement).value as string
@@ -65,7 +65,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     />
                 </Show>
 
-                <TextInput as='textarea' {...bindField('scriptLines', line.id, 'text')} />
+                <TextInput as='textarea' {...bindField('scriptlines', line.id, 'text')} />
 
                 <button class='delete' onClick={deleteThisLine}>🗑</button>
             </blockquote>
