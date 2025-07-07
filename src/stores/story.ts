@@ -15,6 +15,7 @@ import { transformStory as storyJsonToTypescript } from '../lib/transform-json2t
 
 import rawStoryData from '../../story.json' assert { type: 'json' };
 import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
+import { TreeNodeType } from '../components/Tree';
 
 type ParentOptions = {
     parentType: keyof NormalizedStoryData;
@@ -479,7 +480,6 @@ class StoryService {
         }
     }
 
-
     /**
      * Finds the parent entity and its ID given a child entity ID.
      * If parentId is provided, it just returns that parent entity directly.
@@ -507,6 +507,17 @@ class StoryService {
         }
         return undefined;
     }
+
+    moveEntity({ dropped, onto }: {
+        dropped: { id: string, type: TreeNodeType },
+        onto: { id: string, type: TreeNodeType, insertIndex?: number }
+    }) {
+        console.log('dropped', dropped, 'onto', onto);
+        if (dropped.type === 'scriptline') {
+
+        }
+    }
+
 }
 
 // const normalized: NormalizedStoryData = normalizeStoryTree(

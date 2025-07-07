@@ -1,33 +1,57 @@
-.node {
-    width: 100%;
-    border: 1pt solid #aaaa;
-    padding: 1em;
-    margin: 0;
-}
+.story-tree {
+    ul {
+        list-style: none;
+        margin: 0.3em;
+        padding: 0 0.3em;
+    }
 
-.node.dragged {
-    opacity: 0.5;
-    border: 2px dashed red;
-}
+    .node {
+        width: 100%;
+        border: 1pt solid transparent;
+        padding: 0.1em 0.3em;
+        margin: 0;
 
-.node.drag-over {
-    background-color: #def;
-}
+        .dragged {
+            opacity: 0.5;
+            border: 1pt dashed red;
+        }
 
-.node.valid-drop-zone {
-    border: 2px solid green;
-}
+        .drag-over {
+            background-color: #def;
+        }
 
-.drop-zone {
-    height: 8px;
-    margin: 2px 0;
-    background: transparent;
-    transition: background-color 0.2s ease;
-    padding: 1em;
-    border: 1pt dotted #666;
-}
+        .valid-drop-zone {
+            border: 1pt solid green;
+        }
 
-.drop-zone.drag-over {
-    background-color: #3399ff66;
-    border-top: 2px solid #007acc;
+        .scriptline {
+            background: #555;
+        }
+
+        .beat {
+            background: #444;
+        }
+
+        .scene {
+            background: #333;
+        }
+
+        .act {
+            background: #222;
+        }
+    }
+
+    .drop-zone {
+        height: 0.6em;
+        margin: 0;
+        padding: 0;
+        // background: blue;
+        transition: background-color 0.2s ease;
+        border: 1pt dotted transparent;
+    }
+
+    .drop-zone.drag-over {
+        background-color: #3399ff66;
+        border-top: 1pt solid #007acc;
+    }
 }

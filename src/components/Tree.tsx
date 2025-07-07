@@ -19,7 +19,7 @@ type TreeNodeProps =
     | { node: BeatNormalized; type: 'beat' }
     | { node: ScriptLineNormalized; type: 'scriptline' };
 
-type TreeNodeType = TreeNodeProps['type'];
+export type TreeNodeType = TreeNodeProps['type'];
 
 type TreeNodeChildMap = {
     story: ActNormalized;
@@ -134,10 +134,15 @@ function handleDropOnZoneDrop(
     e.stopPropagation();
 
     const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
-    console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
-
-    // TODO: Implement move logic here, e.g.
-    // storyApi.moveNodeToIndex(droppedData, parentNode, insertIndex);
+    // console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${parentType}#${parentNode.id} at index ${insertIndex}`);
+    storyApi.moveEntity({
+        dropped: droppedData,
+        onto: {
+            type: parentType,
+            id: parentNode.id,
+            insertIndex
+        }
+    });
 
     setDraggedNode(null);
     setDraggedType(null);
@@ -158,6 +163,13 @@ function handleDropOnNode(e: DragEvent, node: AnyNodeType, type: TreeNodeType) {
 
     const droppedData = JSON.parse(e.dataTransfer?.getData("application/json")!);
     console.log(`Dropped ${droppedData.type}#${droppedData.id} on ${type}#${node.id}`);
+    storyApi.moveEntity({
+        dropped: droppedData,
+        onto: {
+            type,
+            id: node.id
+        }
+    })
 
     // TODO: Implement move logic here, e.g.
     // storyApi.moveNodeInside(droppedData, node);
