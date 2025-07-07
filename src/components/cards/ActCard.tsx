@@ -52,10 +52,10 @@ const ActCard: Component<ActCardProps> = (props) => {
                         <TextInput as='textarea' placeholder='Act summary' {...bindField('acts', act.id, 'summary')} />
                     </div>
 
-                    <h4>All characters in all scenes</h4>
+                    <h4>Characters present</h4>
                     <CharacterList actId={act.id} />
 
-                    <h4>All locations in all scenes</h4>
+                    <h4>Locations used</h4>
                     <LocationList entityType='acts' entityId={act.id} />
                 </Show>
 
