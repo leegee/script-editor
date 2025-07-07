@@ -449,7 +449,8 @@ class StoryService {
             parentId?: string;
         }
     ) {
-        setStory(entityType, entityId as any, undefined); // delete entity
+        const deletedEntity = story[entityType]?.[entityId];
+        setStory(entityType, entityId as any, undefined);
 
         if (options?.parentType && options?.parentListField) {
             let parentId = options.parentId;
@@ -473,6 +474,8 @@ class StoryService {
                 console.debug(JSON.stringify(story, null, 2));
             }
         }
+
+        return deletedEntity;
     }
 
     /**
@@ -508,9 +511,7 @@ class StoryService {
         onto: { id: string, type: TreeNodeType, insertIndex?: number }
     }) {
         console.log('dropped', dropped, 'onto', onto);
-        if (dropped.type === 'scriptline') {
-
-        }
+        this.deleteEntity
     }
 
 }
