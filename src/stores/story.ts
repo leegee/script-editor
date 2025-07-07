@@ -506,13 +506,32 @@ class StoryService {
         return undefined;
     }
 
-    moveEntity({ dropped, onto }: {
-        dropped: { id: string, type: TreeNodeType },
-        onto: { id: string, type: TreeNodeType, insertIndex?: number }
-    }) {
-        console.log('dropped', dropped, 'onto', onto);
-        this.deleteEntity
-    }
+    // moveEntity({ dropped, onto }: {
+    //     dropped: { id: string, type: TreeNodeType },
+    //     onto: { id: string, type: TreeNodeType, insertIndex?: number }
+    // }) {
+    //     console.log('dropped', dropped, 'onto', onto);
+    //     const entity = this.deleteEntity(dropped.type as EntityType, dropped.id);
+
+    //     if (!entity) {
+    //         console.warn('Could not find entity to move!');
+    //         return;
+    //     }
+
+    //     setStory(
+    //         onto.type,
+    //         onto.id,
+    //         'children', //  ie arentListField 
+    //         (list = []) => {
+    //             const copy = [...list];
+    //             const index = onto.insertIndex ?? copy.length;
+    //             copy.splice(index, 0, dropped.id as string);
+    //             return copy;
+    //         }
+    //     );
+
+    //     setStory(dropped.type as EntityType, dropped.id, entity);
+    // }
 
 }
 
