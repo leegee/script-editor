@@ -329,8 +329,17 @@ class StoryService {
         } else {
             entity[field] = value;
         }
+    }
 
-        // Optional: trigger updates or save changes here
+    getBeatBySceneIdBeatId(sceneId: string, beatId: string): BeatNormalized | undefined {
+        const scene = story.scenes?.[sceneId];
+        if (!scene) return undefined;
+
+        // Check if beatId belongs to the scene
+        if (!scene.beatIds?.includes(beatId)) return undefined;
+
+        // Return the beat if it exists
+        return story.beats?.[beatId];
     }
 
 }
