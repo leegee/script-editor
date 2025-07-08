@@ -3,8 +3,12 @@
 // --------------------------------------------
 // 🔑 Utility: Get keys of array fields
 // --------------------------------------------
-export type ArrayKeys<T> = {
-    [K in keyof T]: T[K] extends string[] | undefined ? K : never;
+// export type ArrayKeys<T> = {
+//     [K in keyof T]: T[K] extends string[] | undefined ? K : never;
+// }[keyof T];
+
+type ArrayKeys<T> = {
+    [K in keyof T]: T[K] extends Array<any> ? K : never
 }[keyof T];
 
 // --------------------------------------------

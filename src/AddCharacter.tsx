@@ -1,6 +1,5 @@
 import { createResource, Show, For } from 'solid-js';
 import OverflowMenu from './components/OverflowMenu';
-import { storyApi } from './stores/story'; // your StoryService singleton
 
 type AddCharacterProps = {
     sceneId: string;
