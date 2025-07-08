@@ -1,6 +1,6 @@
 // Store containing the whole story
 
-import { createStore } from 'solid-js/store';
+import { createStore, type SetStoreFunction } from 'solid-js/store';
 import { makePersisted } from '@solid-primitives/storage';
 import localforage from 'localforage';
 
@@ -42,84 +42,93 @@ function createEmptyNormalized(): NormalizedStoryData {
     };
 }
 
-export const [story, setStory] = makePersisted(
-    createStore<NormalizedStoryData>(createEmptyNormalized()),
-    {
-        name: 'story',
-        storage: localforage,
-    }
-);
-
 export async function initializeDefaultStory() {
     // small delay so persistence store is ready
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const isEmpty = Object.keys(story.stories).length === 0;
+    const isEmpty = Object.keys(this.story.stories).length === 0;
     if (isEmpty) {
         storyApi.loadStoryFromJson(rawStoryData);
     }
 }
 
 class StoryService {
+    story: NormalizedStoryData;
+    setStory: SetStoreFunction<NormalizedStoryData>;
+
+    constructor() {
+        const [story, setStory] = makePersisted(
+            createStore<NormalizedStoryData>(createEmptyNormalized()),
+            {
+                name: 'story',
+                storage: localforage,
+            }
+        );
+
+        this.story = story;
+        this.setStory = setStory;
+    }
+
+
     resetStory() {
-        setStory(() => createEmptyNormalized());
+        this.setStory(() => createEmptyNormalized());
         console.info('Story has been reset.');
     }
 
     loadStoryFromJson(rawData: any) {
         const storyData = storyJsonToTypescript(rawData);
         const normalized = normalizeStoryTree(storyData);
-        setStory(normalized);
+        this.setStory(normalized);
     }
 
     getStory(): StoryNormalized | undefined {
-        return Object.values(story.stories)[0];
+        return Object.values(this.story.stories)[0];
     }
 
     getAct(actId: string): ActNormalized | undefined {
-        return story.acts[actId];
+        return this.story.acts[actId];
     }
 
     getActs(): ActNormalized[] {
-        return Object.values(story.acts).sort((a, b) => a.number - b.number);
+        return Object.values(this.story.acts).sort((a, b) => a.number - b.number);
     }
 
     getScenesByActId(actId: string): SceneNormalized[] {
-        const act = story.acts[actId];
-        return act?.sceneIds.map(id => story.scenes[id]).filter(Boolean) ?? [];
+        const act = this.story.acts[actId];
+        return act?.sceneIds.map(id => this.story.scenes[id]).filter(Boolean) ?? [];
     }
 
     getScene(sceneId: string): SceneNormalized | undefined {
-        return story.scenes[sceneId];
+        return this.story.scenes[sceneId];
     }
 
     getBeatsBySceneId(sceneId: string): BeatNormalized[] {
-        const scene = story.scenes[sceneId];
-        return scene?.beatIds.map(id => story.beats[id]).filter(Boolean) ?? [];
+        const scene = this.story.scenes[sceneId];
+        return scene?.beatIds.map(id => this.story.beats[id]).filter(Boolean) ?? [];
     }
 
     getScriptLinesByBeatId(beatId: string): ScriptLineNormalized[] {
-        const beat = story.beats[beatId];
-        return beat?.scriptLineIds.map(id => story.scriptlines[id]).filter(Boolean) ?? [];
+        const beat = this.story.beats[beatId];
+        return beat?.scriptLineIds.map(id => this.story.scriptlines[id]).filter(Boolean) ?? [];
     }
 
     getCharacters(): Character[] {
-        return Object.values(story.characters);
+        return Object.values(this.story.characters);
     }
 
     getCharacter(characterId: string): Character | undefined {
-        return story.characters[characterId];
+        return this.story.characters[characterId];
     }
 
     getLocations(): Location[] {
-        return Object.values(story.locations);
+        return Object.values(this.story.locations);
     }
 
     getLocation(locationId: string): Location | undefined {
-        return story.locations[locationId];
+        return this.story.locations[locationId];
     }
     getLocationForAct(actId: string): Location[] {
-        const act = story.acts[actId];
+        const act = this.story.acts[actId];
         if (!act) return [];
 
         const locationsSet = new Set<Location>();
@@ -135,34 +144,34 @@ class StoryService {
     }
 
     getLocationForScene(sceneId: string): Location | undefined {
-        const scene = story.scenes[sceneId];
-        return scene?.locationId ? story.locations[scene.locationId] : undefined;
+        const scene = this.story.scenes[sceneId];
+        return scene?.locationId ? this.story.locations[scene.locationId] : undefined;
     }
 
     getCharactersInScene(scene: SceneNormalized): Character[] {
         const uniqueCharIds = new Set<string>();
         for (const beatId of scene.beatIds) {
-            const beat = story.beats[beatId];
+            const beat = this.story.beats[beatId];
             if (!beat) continue;
             for (const lineId of beat.scriptLineIds) {
-                const line = story.scriptlines[lineId];
+                const line = this.story.scriptlines[lineId];
                 if (line?.characterId) uniqueCharIds.add(line.characterId);
             }
         }
         return Array.from(uniqueCharIds)
-            .map(id => story.characters[id])
+            .map(id => this.story.characters[id])
             .filter((c): c is Character => !!c);
     }
 
     getCharactersInAct(act: ActNormalized): Character[] {
         const uniqueCharIds = new Set<string>();
         for (const sceneId of act.sceneIds) {
-            const scene = story.scenes[sceneId];
+            const scene = this.story.scenes[sceneId];
             if (!scene) continue;
             this.getCharactersInScene(scene).forEach(char => uniqueCharIds.add(char.id));
         }
         return Array.from(uniqueCharIds)
-            .map(id => story.characters[id])
+            .map(id => this.story.characters[id])
             .filter((c): c is Character => !!c);
     }
 
@@ -203,7 +212,7 @@ class StoryService {
 
     asObjectUrl(): string | undefined {
         try {
-            const tree = denormalizeStoryTree(story);
+            const tree = denormalizeStoryTree(this.story);
             const jsonString = JSON.stringify(tree, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             return URL.createObjectURL(blob);
@@ -215,44 +224,44 @@ class StoryService {
     }
 
     linkLocationToScene(sceneId: string, locationId: string) {
-        const scene = story.scenes[sceneId];
+        const scene = this.story.scenes[sceneId];
         if (!scene) return console.warn(`Scene ${sceneId} not found`);
-        if (!story.locations[locationId]) return console.warn(`Location ${locationId} not found`);
+        if (!this.story.locations[locationId]) return console.warn(`Location ${locationId} not found`);
 
         if (scene.locationId === locationId) return;
-        setStory('scenes', sceneId, 'locationId', locationId);
+        this.setStory('scenes', sceneId, 'locationId', locationId);
     }
 
     unlinkEntityFromScene(sceneId: string, entityId: string, entityListKey: keyof SceneNormalized) {
-        const scene = story.scenes[sceneId];
+        const scene = this.story.scenes[sceneId];
         if (!scene) return;
 
         const value = scene[entityListKey];
         if (Array.isArray(value)) {
-            setStory('scenes', sceneId, entityListKey, (list = []) =>
+            this.setStory('scenes', sceneId, entityListKey, (list = []) =>
                 (list as []).filter(id => id !== entityId)
             );
         } else if (value === entityId) {
-            setStory('scenes', sceneId, entityListKey, () => undefined);
+            this.setStory('scenes', sceneId, entityListKey, () => undefined);
         }
     }
 
     removeCharacterFromScriptLinesInScene(sceneId: string, characterId: string) {
-        const scene = story.scenes[sceneId];
+        const scene = this.story.scenes[sceneId];
         if (!scene) return;
 
-        const updated = { ...story.scriptlines };
+        const updated = { ...this.story.scriptlines };
         for (const beatId of scene.beatIds) {
-            const beat = story.beats[beatId];
+            const beat = this.story.beats[beatId];
             if (!beat) continue;
             for (const lineId of beat.scriptLineIds) {
-                const line = story.scriptlines[lineId];
+                const line = this.story.scriptlines[lineId];
                 if (line?.characterId === characterId) {
                     updated[lineId] = { ...line, characterId: undefined };
                 }
             }
         }
-        setStory('scriptlines', updated);
+        this.setStory('scriptlines', updated);
     }
 
     getNextInSequence<Entity extends EntitiesWithNumber>(
@@ -261,13 +270,13 @@ class StoryService {
     ): number {
         let relevant: { number?: number }[] = [];
         if (parentOptions) {
-            const parent = story[parentOptions.parentType][parentOptions.parentId];
+            const parent = this.story[parentOptions.parentType][parentOptions.parentId];
             if (!parent) return 1;
 
             const childIds: string[] = (parent[parentOptions.parentListField] ?? []) as string[];
-            relevant = childIds.map(id => story[entityType][id]).filter(Boolean);
+            relevant = childIds.map(id => this.story[entityType][id]).filter(Boolean);
         } else {
-            relevant = Object.values(story[entityType]);
+            relevant = Object.values(this.story[entityType]);
         }
 
         const numbers = relevant
@@ -282,11 +291,11 @@ class StoryService {
         parentOptions?: ParentOptions
     ): string {
         const id = crypto.randomUUID();
-        setStory(entityType, id as any, { id, ...(data as any) });
+        this.setStory(entityType, id as any, { id, ...(data as any) });
 
         if (parentOptions) {
             const { parentType, parentId, parentListField } = parentOptions;
-            setStory(
+            this.setStory(
                 parentType,
                 parentId as any,
                 parentListField as any,
@@ -301,7 +310,7 @@ class StoryService {
         entityType: EntityType,
         entityId: string
     ): EntityMap[EntityType] | undefined {
-        const collection = story[entityType] as Record<string, EntityMap[EntityType]>;
+        const collection = this.story[entityType] as Record<string, EntityMap[EntityType]>;
         if (!collection) return undefined;
         return collection[entityId];
     }
@@ -312,7 +321,7 @@ class StoryService {
         field: FieldType,
         value: EntityMap[EntityType][FieldType] | undefined
     ): void {
-        const collection = story?.[entityType] as Record<string, EntityMap[EntityType]> | undefined;
+        const collection = this.story?.[entityType] as Record<string, EntityMap[EntityType]> | undefined;
         if (!collection) {
             console.warn(`No collection found for entity type: ${entityType}`);
             return; // no such collection, exit early
@@ -332,14 +341,14 @@ class StoryService {
     }
 
     getBeatBySceneIdBeatId(sceneId: string, beatId: string): BeatNormalized | undefined {
-        const scene = story.scenes?.[sceneId];
+        const scene = this.story.scenes?.[sceneId];
         if (!scene) return undefined;
 
         // Check if beatId belongs to the scene
         if (!scene.beatIds?.includes(beatId)) return undefined;
 
         // Return the beat if it exists
-        return story.beats?.[beatId];
+        return this.story.beats?.[beatId];
     }
 
 }

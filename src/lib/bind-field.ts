@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js';
-import { story, storyApi } from '../stores/story';
+import { storyApi } from '../stores/story';
 import type { EntityMap } from './types';
 
 export function bindField<T extends keyof EntityMap>(
@@ -9,7 +9,7 @@ export function bindField<T extends keyof EntityMap>(
     useOnBlur = true,
 ) {
     const value = createMemo(() => {
-        const entityObj = story[entity][id] as EntityMap[T] | undefined;
+        const entityObj = storyApi.story[entity][id] as EntityMap[T] | undefined;
         return entityObj?.[field] ?? '';
     });
 
