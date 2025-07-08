@@ -42,11 +42,9 @@ function createEmptyNormalized(): NormalizedStoryData {
     };
 }
 
-export async function initializeDefaultStory() {
-    // small delay so persistence store is ready
+export async function initializeDefaultStory(storyApi: StoryService) {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const isEmpty = Object.keys(this.story.stories).length === 0;
+    const isEmpty = Object.keys(storyApi.story.stories).length === 0;
     if (isEmpty) {
         storyApi.loadStoryFromJson(rawStoryData);
     }
@@ -98,13 +96,25 @@ class StoryService {
         return act?.sceneIds.map(id => this.story.scenes[id]).filter(Boolean) ?? [];
     }
 
+    setScriptLine(scriptLineId: string, scriptLine: ScriptLineNormalized) {
+        this.setStory('scriptlines', scriptLineId, scriptLine);
+    }
+
     getScene(sceneId: string): SceneNormalized | undefined {
         return this.story.scenes[sceneId];
+    }
+
+    setScene(sceneId: string, scene: SceneNormalized) {
+        this.setStory('scenes', sceneId, scene);
     }
 
     getBeatsBySceneId(sceneId: string): BeatNormalized[] {
         const scene = this.story.scenes[sceneId];
         return scene?.beatIds.map(id => this.story.beats[id]).filter(Boolean) ?? [];
+    }
+
+    setBeat(beatId: string, beat: BeatNormalized) {
+        this.setStory('beats', beatId, beat);
     }
 
     getScriptLinesByBeatId(beatId: string): ScriptLineNormalized[] {
@@ -120,13 +130,100 @@ class StoryService {
         return this.story.characters[characterId];
     }
 
-    getLocations(): Location[] {
-        return Object.values(this.story.locations);
+    getCharactersInActById(actId: string) {
+        const act = this.story.acts[actId];
+        if (!act) return [];
+        return this.getCharactersInAct(act);
+    }
+
+    getCharactersInSceneById(sceneId: string) {
+        const scene = this.story.scenes[sceneId];
+        if (!scene) return [];
+        return this.getCharactersInScene(scene.id);
+    }
+
+
+    getCharactersNotInScene(sceneId: string): Character[] {
+        const inScene = new Set(this.getCharactersInScene(sceneId).map(c => c.id));
+
+        return Object.values(this.story.characters)
+            .filter(c => !inScene.has(c.id));
+    }
+
+
+    linkCharacterToScene(sceneId: string, characterId: string) {
+        const scene = this.story.scenes[sceneId];
+        if (!scene) throw new Error("Scene not found");
+
+        // Check if character already linked via scriptlines
+        const charactersInScene = this.getCharactersInScene(sceneId).map(c => c.id);
+        if (charactersInScene.includes(characterId)) return;
+
+        // Choose a beat to add the scriptline (e.g. first beat, or create a new beat)
+        let beatId = scene.beatIds[0];
+        let beat = this.story.beats[beatId];
+
+        if (!beat) {
+            // create a new beat
+            beatId = crypto.randomUUID();
+            beat = {
+                id: beatId,
+                number: 1, // assign as needed
+                scriptLineIds: []
+            };
+            this.setBeat(beatId, beat);
+            scene.beatIds.push(beatId);
+        }
+
+        // Create a new scriptline with characterId
+        const scriptLineId = crypto.randomUUID();
+        const newScriptLine: ScriptLineNormalized = {
+            id: scriptLineId,
+            type: 'Dialogue' as ScriptLineType,
+            characterId,
+            text: "",
+        };
+
+        this.setScriptLine(scriptLineId, newScriptLine);
+
+        // Add the scriptline to the beat
+        beat.scriptLineIds.push(scriptLineId);
+        this.setBeat(beatId, beat);
+
+        // Update the scene with new beats if changed
+        this.setScene(sceneId, scene);
+    }
+
+    unlinkCharacterFromScene(sceneId: string, characterId: string) {
+        const scene = this.story.scenes[sceneId];
+        if (!scene) return;
+
+        for (const beatId of scene.beatIds) {
+            const beat = this.story.beats[beatId];
+            if (!beat) continue;
+
+            // Filter out scriptlines referencing the characterId
+            const newScriptLineIds = beat.scriptLineIds.filter(scriptLineId => {
+                const scriptLine = this.story.scriptlines[scriptLineId];
+                return scriptLine?.characterId !== characterId;
+            });
+
+            // If any scriptlines were removed, update the beat
+            if (newScriptLineIds.length !== beat.scriptLineIds.length) {
+                beat.scriptLineIds = newScriptLineIds;
+                this.setBeat(beatId, beat);
+            }
+        }
+    }
+
+    getLocations(): [string, Location][] {
+        return Object.entries(this.story.locations);
     }
 
     getLocation(locationId: string): Location | undefined {
         return this.story.locations[locationId];
     }
+
     getLocationForAct(actId: string): Location[] {
         const act = this.story.acts[actId];
         if (!act) return [];
@@ -148,19 +245,42 @@ class StoryService {
         return scene?.locationId ? this.story.locations[scene.locationId] : undefined;
     }
 
-    getCharactersInScene(scene: SceneNormalized): Character[] {
-        const uniqueCharIds = new Set<string>();
+    replaceLocationInScene(sceneId: string, locationId: string): Location | undefined {
+        const scene = this.story.scenes[sceneId];
+        if (!scene) {
+            console.warn(`Scene ${sceneId} not found`);
+            return undefined;
+        }
+
+        this.setStory('scenes', sceneId, 'locationId', locationId);
+
+        return this.story.locations[locationId];
+    }
+
+    getCharactersInScene(sceneId: string): Character[] {
+        const scene = this.story.scenes[sceneId];
+        if (!scene) return [];
+
+        const characterIds = new Set<string>();
+
+        // Iterate all beats of the scene
         for (const beatId of scene.beatIds) {
             const beat = this.story.beats[beatId];
             if (!beat) continue;
-            for (const lineId of beat.scriptLineIds) {
-                const line = this.story.scriptlines[lineId];
-                if (line?.characterId) uniqueCharIds.add(line.characterId);
+
+            // Iterate all scriptlines in the beat
+            for (const scriptLineId of beat.scriptLineIds) {
+                const scriptLine = this.story.scriptlines[scriptLineId];
+                if (scriptLine?.characterId) {
+                    characterIds.add(scriptLine.characterId);
+                }
             }
         }
-        return Array.from(uniqueCharIds)
+
+        // Map IDs to characters
+        return Array.from(characterIds)
             .map(id => this.story.characters[id])
-            .filter((c): c is Character => !!c);
+            .filter(Boolean) as Character[];
     }
 
     getCharactersInAct(act: ActNormalized): Character[] {
@@ -168,7 +288,7 @@ class StoryService {
         for (const sceneId of act.sceneIds) {
             const scene = this.story.scenes[sceneId];
             if (!scene) continue;
-            this.getCharactersInScene(scene).forEach(char => uniqueCharIds.add(char.id));
+            this.getCharactersInScene(sceneId).forEach(char => uniqueCharIds.add(char.id));
         }
         return Array.from(uniqueCharIds)
             .map(id => this.story.characters[id])
@@ -354,3 +474,4 @@ class StoryService {
 }
 
 export const storyApi = new StoryService();
+initializeDefaultStory(storyApi);

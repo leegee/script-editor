@@ -114,6 +114,12 @@ export interface Story {
     updatedAt?: string;
 }
 
+export interface Scene2Character {
+    id?: number;
+    sceneId: string;
+    characterId: string;
+}
+
 // --------------------------------------------
 // 🔄 Normalized version for DAO / Store
 // --------------------------------------------
@@ -127,7 +133,13 @@ export interface BeatNormalized extends Omit<Beat, 'scriptlines'> {
     scriptLineIds: string[];
 }
 
-export interface SceneNormalized extends Omit<Scene, 'beats'> {
+export interface SceneNormalized {
+    id: string;
+    number: number;
+    title: string;
+    summary: string;
+    locationId?: string;
+    durationSeconds?: number;
     beatIds: string[];
 }
 

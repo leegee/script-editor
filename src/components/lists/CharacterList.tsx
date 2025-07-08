@@ -24,23 +24,16 @@ type CharacterListProps = {
 const CharacterList: Component<CharacterListProps> = (props) => {
     const getCharactersToShow = createMemo(() => {
         if (props.actId) {
-            const act = storyApi.story.acts[props.actId];
-            if (!act) return [];
-            return storyApi.getCharactersInAct(act);
+            return storyApi.getCharactersInActById(props.actId);
         }
-        else if (props.sceneId) {
-            const scene = storyApi.story.scenes[props.sceneId];
-            if (!scene) return [];
-            return storyApi.getCharactersInScene(scene);
+        if (props.sceneId) {
+            return storyApi.getCharactersInSceneById(props.sceneId);
         }
-        else {
-            const allCharacters = createMemo(() => storyApi.getCharacters());
-            if (props.characterIds?.length) {
-                return allCharacters()?.filter(c => props.characterIds!.includes(c.id)) ?? [];
-            } else {
-                return allCharacters() ?? [];
-            }
+        const allCharacters = storyApi.getCharacters();
+        if (props.characterIds?.length) {
+            return allCharacters.filter(c => props.characterIds!.includes(c.id));
         }
+        return allCharacters;
     });
 
     return (

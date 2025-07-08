@@ -1,6 +1,6 @@
 import './SceneList.scss';
 import { type Component, createMemo, For } from 'solid-js';
-import { story } from '../../stores/story';
+import { storyApi } from '../../stores/story';
 import SceneCard from '../cards/SceneCard';
 
 interface SceneListProps {
@@ -8,12 +8,7 @@ interface SceneListProps {
 }
 
 const SceneList: Component<SceneListProps> = (props) => {
-    const scenes = createMemo(() => {
-        const act = story.acts[props.actId];
-        if (!act) return [];
-        const scenes = act.sceneIds.map(sceneId => story.scenes[sceneId]).filter(Boolean);
-        return scenes;
-    });
+    const scenes = createMemo(() => storyApi.getScenesByActId(props.actId));
 
     return (
         <section class="scene-list" role="list" aria-label="Scenes List">
