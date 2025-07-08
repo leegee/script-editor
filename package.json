@@ -30,6 +30,7 @@
     "@solid-primitives/storage": "^4.3.3",
     "@solidjs/router": "^0.15.3",
     "debounce": "^2.2.0",
+    "dexie": "^4.0.11",
     "localforage": "^1.10.0",
     "ol": "^10.6.1",
     "solid-dnd": "^0.0.0-0",

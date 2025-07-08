@@ -1,5 +1,5 @@
 import { type Component, For, createMemo } from "solid-js";
-import { useParams, useSearchParams, type RouteSectionProps } from "@solidjs/router";
+import { useSearchParams, type RouteSectionProps } from "@solidjs/router";
 import ActCard from "../components/cards/ActCard";
 import { storyApi } from "../stores/story";
 

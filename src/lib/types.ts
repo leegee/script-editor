@@ -1,9 +1,15 @@
-// tree for IO
+// src/types/story.ts
 
+// --------------------------------------------
+// 🔑 Utility: Get keys of array fields
+// --------------------------------------------
 export type ArrayKeys<T> = {
-    [K in keyof T]: T[K] extends string[] | undefined ? K : never
+    [K in keyof T]: T[K] extends string[] | undefined ? K : never;
 }[keyof T];
 
+// --------------------------------------------
+// 📸 Enums
+// --------------------------------------------
 export enum MediaType {
     Image = 'image',
     Video = 'video',
@@ -16,9 +22,12 @@ export enum ScriptLineType {
     Description = 'Description',
     Parenthetical = 'Parenthetical',
     Shot = 'Shot',
-    Transition = 'Transition'
+    Transition = 'Transition',
 }
 
+// --------------------------------------------
+// 🎞️ Media Link
+// --------------------------------------------
 export interface MediaLink {
     id: string;
     type: MediaType;
@@ -26,6 +35,9 @@ export interface MediaLink {
     description?: string;
 }
 
+// --------------------------------------------
+// 🧑 Characters & Locations
+// --------------------------------------------
 export interface Character {
     id: string;
     name: string;
@@ -52,10 +64,12 @@ export interface Location {
     };
 }
 
+// --------------------------------------------
+// 🎬 Script Line & Beats
+// --------------------------------------------
 export interface ScriptLine {
     id: string;
     type: ScriptLineType;
-    // type: string;
     characterId?: string;
     text: string;
     timestampSeconds?: number;
@@ -100,56 +114,36 @@ export interface Story {
     updatedAt?: string;
 }
 
+// --------------------------------------------
+// 🔄 Normalized version for DAO / Store
+// --------------------------------------------
 
-// Normalized entities for DAO below
-
-export interface ScriptLineNormalized {
-    id: string;
-    type: ScriptLineType;
-    characterId?: string;
-    text: string;
-    timestampSeconds?: number;
+// Normalize deep arrays as ID arrays
+export interface ScriptLineNormalized extends Omit<ScriptLine, 'id'> {
+    id: string; // keep explicit
 }
 
-export interface BeatNormalized {
-    id: string;
-    number: number;
-    title?: string;
-    summary?: string;
-    durationSeconds?: number;
+export interface BeatNormalized extends Omit<Beat, 'scriptlines'> {
     scriptLineIds: string[];
 }
 
-export interface SceneNormalized {
-    id: string;
-    number: number;
-    title: string;
-    summary?: string;
-    locationId: string;
-    durationSeconds?: number;
+export interface SceneNormalized extends Omit<Scene, 'beats'> {
     beatIds: string[];
 }
 
-export interface ActNormalized {
-    id: string;
-    number: number;
-    title: string;
-    summary?: string;
+export interface ActNormalized extends Omit<Act, 'scenes'> {
     sceneIds: string[];
 }
 
-export interface StoryNormalized {
-    id: string;
-    title: string;
-    description?: string;
+export interface StoryNormalized extends Omit<Story, 'acts' | 'characters' | 'locations'> {
     actIds: string[];
     characterIds: string[];
     locationIds: string[];
-    tags?: string[];
-    createdAt?: string;
-    updatedAt?: string;
 }
 
+// --------------------------------------------
+// 🗂️ Normalized store shape
+// --------------------------------------------
 export interface NormalizedStoryData {
     stories: Record<string, StoryNormalized>;
     acts: Record<string, ActNormalized>;
@@ -160,6 +154,9 @@ export interface NormalizedStoryData {
     locations: Record<string, Location>;
 }
 
+// --------------------------------------------
+// 🧩 Helpers for generic keys
+// --------------------------------------------
 export type EntityMap = {
     [K in keyof NormalizedStoryData]: NormalizedStoryData[K] extends Record<string, infer Item> ? Item : never;
 };
@@ -169,5 +166,5 @@ export type EntityType = keyof NormalizedStoryData;
 export type NumberedEntity = { number: number };
 
 export type EntitiesWithNumber = {
-    [K in keyof NormalizedStoryData]: NormalizedStoryData[K][string] extends NumberedEntity ? K : never
+    [K in keyof NormalizedStoryData]: EntityMap[K] extends NumberedEntity ? K : never;
 }[keyof NormalizedStoryData];
