@@ -20,7 +20,7 @@ export interface SceneCardProps {
 
 const SceneCard: Component<SceneCardProps> = (props) => {
     // Memo to get the reactive scene object by ID
-    const scene = createMemo(() => storyApi.getScene[props.sceneId]);
+    const scene = createMemo(() => storyApi.getScene(props.sceneId));
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
