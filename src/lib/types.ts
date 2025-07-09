@@ -100,32 +100,6 @@ export interface Story {
 
 }
 
-export interface ScriptLineNormalized extends Omit<ScriptLine, 'id'> {
-    id: string; // keep explicit
-}
-
-export interface BeatNormalized extends Omit<Beat, 'scriptlines'> {
-    scriptLineIds: string[];
-}
-
-export interface SceneNormalized {
-    id: string;
-    number: number;
-    title: string;
-    summary: string;
-    locationId: string;
-    durationSeconds?: number;
-    beatIds: string[];
-}
-
-export interface ActNormalized extends Omit<Act, 'scenes'> {
-    sceneIds: string[];
-}
-
-export interface StoryNormalized extends Omit<Story, 'acts' | 'characters' | 'locations'> {
-    actIds: string[];
-}
-
 export interface NormalizedStoryData {
     stories: Record<string, Story>;
     acts: Record<string, Act>;

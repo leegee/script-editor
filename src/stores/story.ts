@@ -1,7 +1,7 @@
 // Store containing the whole story
 
 import { db, type StoryDexie } from '../stores/db';
-import type { EntityMap } from '../lib/types';
+import type { EntityMap, NormalizedStoryData } from '../lib/types';
 import { normalizeStoryData } from '../lib/transform-tree2normalised';
 import Dexie from 'dexie';
 import * as ActMethods from './StoryService/actions/acts';
@@ -197,7 +197,20 @@ export class StoryService {
         await this.getTable(type).delete(id);
     }
 
-    // Export the entire story tree as a JSON object URL
+    async findParentEntity(
+        entityType: keyof NormalizedStoryData,  // eg 'beats'
+        arrayKey: string,                       // eg 'scriptLineIds'
+        childId: string
+    ): Promise<EntityMap[keyof EntityMap] | undefined> {
+        const table = db[entityType] as Dexie.Table<any, string>;
+        const entities = await table.toArray();
+
+        return entities.find(entity => {
+            const arr = entity[arrayKey];
+            return Array.isArray(arr) && arr.includes(childId);
+        });
+    }
+
     async asObjectUrl(): Promise<string | undefined> {
         try {
             const stories = await this.db.story.toArray();

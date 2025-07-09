@@ -5,11 +5,10 @@ import CharacterList from '../components/lists/CharacterList';
 import ActCreator from '../components/creators/ActCreator';
 import Switch from '../components/Switch';
 import { uiOptions, setUiOptions } from '../stores/ui';
-import { createMemo, createSignal, Show } from 'solid-js';
+import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
 import ActDetails from './ActDetails';
-import StoryTree from '../components/Tree';
 
 export default function Home(props) {
   const mainClass = createMemo(() => {
@@ -40,9 +39,6 @@ export default function Home(props) {
         </aside>
 
         <article class="main-content">
-          <Show when={uiOptions.showStoryTree}>
-            <StoryTree />
-          </Show>
           {props.children}
         </article>
 

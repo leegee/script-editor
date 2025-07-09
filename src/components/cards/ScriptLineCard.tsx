@@ -3,11 +3,11 @@ import { type Component, Show } from 'solid-js';
 import Avatar from '../Avatar';
 import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
-import { ScriptLineNormalized, ScriptLineType } from '../../lib/types';
+import { ScriptLine, ScriptLineType } from '../../lib/types';
 import { storyApi } from "../../stores/story";
 
 interface ScriptLineCardProps {
-    line: ScriptLineNormalized;
+    line: ScriptLine;
 }
 
 // const labelMap: Record<ScriptLineType, string> = {
