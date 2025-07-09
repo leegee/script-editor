@@ -1,5 +1,5 @@
 import './CharacterCard.scss';
-import { type Component, Show, For, createMemo } from 'solid-js';
+import { type Component, Show, For, createResource } from 'solid-js';
 import type { Character } from '../../lib/types';
 import Avatar from '../Avatar';
 import { storyApi } from '../../stores/story';
@@ -17,7 +17,7 @@ interface CharacterCardProps {
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
-    const character = createMemo<Character | undefined>(() => {
+    const [character] = createResource<Character | undefined>(() => {
         if (props.character) return props.character;
         if (props.characterId) {
             return storyApi.getCharacter(props.characterId);
