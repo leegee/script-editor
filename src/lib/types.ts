@@ -94,18 +94,10 @@ export interface Story {
     title: string;
     description: string;
     actIds: string[];
-    characterIds: string[];
-    locationIds: string[];
     tags: string[];
     createdAt: string;
     updatedAt: string;
 
-}
-
-export interface Scene2Character {
-    id?: number;
-    sceneId: string;
-    characterId: string;
 }
 
 export interface ScriptLineNormalized extends Omit<ScriptLine, 'id'> {
@@ -121,7 +113,7 @@ export interface SceneNormalized {
     number: number;
     title: string;
     summary: string;
-    locationId?: string;
+    locationId: string;
     durationSeconds?: number;
     beatIds: string[];
 }
@@ -132,8 +124,6 @@ export interface ActNormalized extends Omit<Act, 'scenes'> {
 
 export interface StoryNormalized extends Omit<Story, 'acts' | 'characters' | 'locations'> {
     actIds: string[];
-    characterIds: string[];
-    locationIds: string[];
 }
 
 export interface NormalizedStoryData {
@@ -184,7 +174,7 @@ export interface SceneTree {
     title: string;
     summary: string;
     locationId: string;
-    durationSeconds: number;
+    durationSeconds?: number;
     beats: BeatTree[];
 }
 
@@ -193,6 +183,6 @@ export interface BeatTree {
     number: number;
     title: string;
     summary: string;
-    durationSeconds: number;
+    durationSeconds?: number;
     scriptlines: ScriptLine[];
 }

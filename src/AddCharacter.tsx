@@ -1,20 +1,20 @@
 import { createResource, Show, For } from 'solid-js';
 import OverflowMenu from './components/OverflowMenu';
+import { storyApi } from './stores/story';
 
 type AddCharacterProps = {
     sceneId: string;
 };
 
 export default function AddCharacter(props: AddCharacterProps) {
-    // Load characters NOT in the scene
     const [availableCharacters, { refetch }] = createResource(
         () => props.sceneId,
-        (sceneId) => this.getCharactersNotInScene(sceneId)
+        (sceneId) => storyApi.getCharactersNotInScene(sceneId)
     );
 
     const handleAdd = async (characterId: string) => {
-        await this.linkCharacterToScene(props.sceneId, characterId);
-        refetch(); // update available characters
+        await storyApi.linkCharacterToScene(props.sceneId, characterId);
+        refetch();
     };
 
     return (
@@ -30,12 +30,12 @@ export default function AddCharacter(props: AddCharacterProps) {
                     >
                         <ul class="overflow-menu-list">
                             <For each={characters()}>
-                                {([id, character]) => (
+                                {(character) => (
                                     <li>
                                         <button
                                             type="button"
                                             class="overflow-menu-item"
-                                            onClick={() => handleAdd(id)}
+                                            onClick={() => handleAdd(character.id)}
                                         >
                                             {character.name}
                                         </button>

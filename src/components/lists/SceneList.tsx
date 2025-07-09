@@ -10,11 +10,7 @@ interface SceneListProps {
 const SceneList: Component<SceneListProps> = (props) => {
     const [scenes] = createResource(
         () => props.actId,
-        async (actId) => {
-            const result = await storyApi.getScenesByActId(actId);
-            console.log('Fetched scenes:', result);
-            return result;
-        }
+        async (actId) => await storyApi.getScenesByActId(actId)
     );
 
     return (

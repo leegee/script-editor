@@ -4,20 +4,23 @@ import { db, type StoryDexie } from '../stores/db';
 import type { EntityMap } from '../lib/types';
 import { normalizeStoryData } from '../lib/transform-tree2normalised';
 import Dexie from 'dexie';
-import * as actMethods from './StoryService/actions/acts';
-import * as sceneMethods from './StoryService/actions/scenes';
-import * as beatMethods from './StoryService/actions/beats';
-import * as characterMethods from './StoryService/actions/characters';
-import * as locationMethods from './StoryService/actions/locations';
+import * as ActMethods from './StoryService/actions/acts';
+import * as SceneMethods from './StoryService/actions/scenes';
+import * as BeatMethods from './StoryService/actions/beats';
+import * as ScriptlineMethods from './StoryService/actions/scriptlines';
+import * as CharacterMethods from './StoryService/actions/characters';
+import * as LocationMethods from './StoryService/actions/locations';
 import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
 
-type actMethods = typeof actMethods;
-type sceneMethods = typeof sceneMethods;
-type beatMethods = typeof beatMethods;
-type characterMethods = typeof characterMethods;
-type locationMethods = typeof locationMethods;
+type ActMethods = typeof ActMethods;
+type SceneMethods = typeof SceneMethods;
+type BeatMethods = typeof BeatMethods;
+type ScriptlineMethods = typeof ScriptlineMethods
+type CharacterMethods = typeof CharacterMethods;
+type LocationMethods = typeof LocationMethods;
 
-export interface StoryService extends actMethods, sceneMethods, beatMethods, characterMethods, locationMethods {
+export interface StoryService
+    extends ActMethods, SceneMethods, BeatMethods, ScriptlineMethods, CharacterMethods, LocationMethods {
     db: StoryDexie;
 }
 
@@ -43,30 +46,35 @@ export class StoryService {
     db = db;
 
     constructor() {
-        Object.assign(StoryService.prototype, actMethods);
-        Object.assign(StoryService.prototype, characterMethods);
-        Object.assign(StoryService.prototype, locationMethods);
-        Object.assign(StoryService.prototype, sceneMethods);
-        Object.assign(StoryService.prototype, beatMethods);
+        Object.assign(StoryService.prototype, ActMethods);
+        Object.assign(StoryService.prototype, CharacterMethods);
+        Object.assign(StoryService.prototype, LocationMethods);
+        Object.assign(StoryService.prototype, SceneMethods);
+        Object.assign(StoryService.prototype, BeatMethods);
+        Object.assign(StoryService.prototype, ScriptlineMethods);
 
         // Bind all methods to "this" instance
-        for (const key of Object.keys(actMethods)) {
+        for (const key of Object.keys(ActMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(characterMethods)) {
+        for (const key of Object.keys(CharacterMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(locationMethods)) {
+        for (const key of Object.keys(LocationMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(sceneMethods)) {
+        for (const key of Object.keys(SceneMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(beatMethods)) {
+        for (const key of Object.keys(BeatMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(ScriptlineMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
@@ -228,9 +236,9 @@ export class StoryService {
 
 }
 
-Object.assign(StoryService.prototype, actMethods);
-Object.assign(StoryService.prototype, characterMethods);
-Object.assign(StoryService.prototype, locationMethods);
-Object.assign(StoryService.prototype, sceneMethods);
+Object.assign(StoryService.prototype, ActMethods);
+Object.assign(StoryService.prototype, CharacterMethods);
+Object.assign(StoryService.prototype, LocationMethods);
+Object.assign(StoryService.prototype, SceneMethods);
 
 export const storyApi = new StoryService();

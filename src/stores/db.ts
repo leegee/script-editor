@@ -29,7 +29,7 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
             scenes: '&id, *beatIds',
             beats: '&id, &sceneId, *scriptLineIds',
             scriptlines: '&id, beatId',
-            characters: '&id',
+            characters: '&id, sceneId',
             locations: '&id'
         });
     }

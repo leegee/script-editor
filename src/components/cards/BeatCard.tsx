@@ -24,7 +24,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
     const [scriptlines] = createResource(() => {
         if (!beat()) return [];
         // Property 'getScriptLinesByBeatId' does not exist on type 'StoryService'.ts(2339)
-        return storyApi.getScriptLinesByBeatId(beat().id);
+        return storyApi.getScriptlinesByBeatId(beat().id);
     });
 
     const addNewScriptLine = () => {

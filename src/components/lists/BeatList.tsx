@@ -7,10 +7,10 @@ interface BeatListProps {
 }
 
 const BeatList: Component<BeatListProps> = (props) => {
-    const [beats] = createResource(() => storyApi.getBeatsBySceneId(props.sceneId));
+    const [beats] = createResource(props.sceneId, (sceneId) => storyApi.getBeatsBySceneId(sceneId));
 
     return (
-        <Show when={beats().length > 0} fallback={<p>No beats found.</p>}>
+        <Show when={beats() && beats().length > 0} fallback={<p>No beats found.</p>}>
             <section class="beat-list" role="list" aria-label="Beats List">
                 <For each={beats()}>
                     {(beat) => (
