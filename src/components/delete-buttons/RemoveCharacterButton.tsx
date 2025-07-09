@@ -1,18 +1,17 @@
 import { storyApi } from "../../stores/story"
 
-interface RemoveLocationButtonProps {
+interface RemoveCharacterButtonProps {
     sceneId: string;
     characterId: string;
 }
 
-export default (props: RemoveLocationButtonProps) => {
-    const removeLocation = () => {
+export default (props: RemoveCharacterButtonProps) => {
+    const removeCharacter = () => {
         if (confirm('This will remove the character and all associated script lines.')) {
-            storyApi.removeCharacterFromScriptLinesInScene(props.sceneId, props.characterId);
-            storyApi.unlinkEntityFromScene(props.sceneId, props.characterId, 'characterIds');
+            storyApi.removeCharacterFromScene(props.sceneId, props.characterId);
         }
     };
     return (
-        <button class='remove' onclick={removeLocation}>Remove</button>
+        <button class='remove' onclick={removeCharacter}>Remove</button>
     )
 }

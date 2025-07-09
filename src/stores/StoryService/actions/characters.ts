@@ -39,3 +39,20 @@ export async function getCharactersByStoryId(
 ): Promise<Character[]> {
     return await this.db.characters.where('storyId').equals(storyId).toArray();
 }
+
+export async function removeCharacterFromScene(sceneId: string, characterId: string): Promise<void> {
+    const scene = await this.db.scenes.get(sceneId);
+    if (!scene) {
+        console.warn(`Scene with id ${sceneId} not found.`);
+        return;
+    }
+
+    const existing = scene.characterIds ?? [];
+
+    const listWithoutChar = existing.filter(id => id !== characterId);
+
+    await this.db.scenes.put({
+        ...scene,
+        characterIds: listWithoutChar,
+    });
+}

@@ -2,6 +2,13 @@
 import type { StoryService } from '../../story';
 import type { Character, Location, Scene } from '../../../lib/types';
 
+export async function getScene(
+    this: StoryService,
+    sceneId: string
+): Promise<Scene | undefined> {
+    return this.db.scenes.get(sceneId);
+}
+
 export async function getCharactersInSceneById(
     this: StoryService,
     sceneId: string
@@ -17,12 +24,15 @@ export async function getScenesByActId(
     actId: string
 ): Promise<Scene[]> {
     const acts = await this.db.acts.where('id').equals(actId).toArray();
-    const sceneIds = [...new Set(acts.map(s => s.sceneIds).filter(Boolean))];
 
-    return this.db.scenes
-        .where('id')
-        .anyOf(sceneIds)
-        .toArray();
+    const sceneIds = acts
+        .map(s => s.sceneIds)
+        .filter(Boolean)
+        .flat();
+
+    const uniqueSceneIds = [...new Set(sceneIds)];
+
+    return this.db.scenes.where('id').anyOf(uniqueSceneIds).toArray();
 }
 
 

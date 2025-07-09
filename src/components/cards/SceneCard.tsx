@@ -1,5 +1,5 @@
 import './SceneCard.scss';
-import { type Component, Show, createMemo } from 'solid-js';
+import { type Component, Show, createResource } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
@@ -19,8 +19,7 @@ export interface SceneCardProps {
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    // Memo to get the reactive scene object by ID
-    const scene = createMemo(() => storyApi.getScene(props.sceneId));
+    const [scene] = createResource(() => storyApi.getScene(props.sceneId));
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>

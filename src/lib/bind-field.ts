@@ -15,7 +15,6 @@ export function bindField<T extends keyof EntityMap>(
         if (!id) return;
         const entityObj = await storyApi.getEntity(entity, id);
         setValue((entityObj?.[field] ?? '') as string);
-        console.log('bindField set', entity + '#' + id, 'field =', field, "value =", entityObj?.[field])
     });
 
     async function doTheUpdate(newValue: string) {

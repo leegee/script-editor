@@ -1,13 +1,13 @@
-import { type Component, For, Show, createMemo } from 'solid-js';
+import { type Component, For, Show, createResource } from 'solid-js';
 import BeatCard from '../cards/BeatCard';
-import { storyApi, story } from '../../stores/story';
+import { storyApi } from '../../stores/story';
 
 interface BeatListProps {
     sceneId: string;
 }
 
 const BeatList: Component<BeatListProps> = (props) => {
-    const beats = createMemo(() => storyApi.getBeatsBySceneId(props.sceneId));
+    const [beats] = createResource(() => storyApi.getBeatsBySceneId(props.sceneId));
 
     return (
         <Show when={beats().length > 0} fallback={<p>No beats found.</p>}>

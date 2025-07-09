@@ -26,9 +26,7 @@ const ActCard: Component<ActCardProps> = (props) => {
         () => props.act ? null : props.actId,  // no fetch if act is provided
         async (id) => {
             if (!id) return undefined;
-            const a = await storyApi.getAct(id);
-            console.log('Fetched act:', a);
-            return a;
+            return await storyApi.getAct(id);
         }
     );
 

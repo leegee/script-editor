@@ -17,10 +17,6 @@ const TextInput: Component<TextInputProps> = (props) => {
         throw new TypeError('.value should be a getter: value()');
     }
 
-    createEffect(() => {
-        console.log('TextInput value:', props.value());
-    });
-
     const isEmpty = () => {
         const val = props.value();
         return typeof val === 'string' && val.length === 0;

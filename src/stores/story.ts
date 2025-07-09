@@ -6,16 +6,18 @@ import { normalizeStoryData } from '../lib/transform-tree2normalised';
 import Dexie from 'dexie';
 import * as actMethods from './StoryService/actions/acts';
 import * as sceneMethods from './StoryService/actions/scenes';
-import * as CharacterMethods from './StoryService/actions/characters';
-import * as LocationMethods from './StoryService/actions/locations';
+import * as beatMethods from './StoryService/actions/beats';
+import * as characterMethods from './StoryService/actions/characters';
+import * as locationMethods from './StoryService/actions/locations';
 import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
 
-type ActMethods = typeof actMethods;
-type SceneMethods = typeof sceneMethods;
-type CharacterMethods = typeof CharacterMethods;
-type LocationMethods = typeof LocationMethods;
+type actMethods = typeof actMethods;
+type sceneMethods = typeof sceneMethods;
+type beatMethods = typeof beatMethods;
+type characterMethods = typeof characterMethods;
+type locationMethods = typeof locationMethods;
 
-export interface StoryService extends ActMethods, SceneMethods, CharacterMethods, LocationMethods {
+export interface StoryService extends actMethods, sceneMethods, beatMethods, characterMethods, locationMethods {
     db: StoryDexie;
 }
 
@@ -37,33 +39,34 @@ export const ParentMap = {
 } as const;
 
 
-function makeUpdate<T, K extends keyof T>(key: K, value: T[K]): Partial<T> {
-    return { [key]: value } as unknown as Partial<T>;
-}
-
 export class StoryService {
     db = db;
 
     constructor() {
         Object.assign(StoryService.prototype, actMethods);
-        Object.assign(StoryService.prototype, CharacterMethods);
-        Object.assign(StoryService.prototype, LocationMethods);
+        Object.assign(StoryService.prototype, characterMethods);
+        Object.assign(StoryService.prototype, locationMethods);
         Object.assign(StoryService.prototype, sceneMethods);
+        Object.assign(StoryService.prototype, beatMethods);
 
-        // Bind all methods to this
+        // Bind all methods to "this" instance
         for (const key of Object.keys(actMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(CharacterMethods)) {
+        for (const key of Object.keys(characterMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
-        for (const key of Object.keys(LocationMethods)) {
+        for (const key of Object.keys(locationMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
         for (const key of Object.keys(sceneMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(beatMethods)) {
             // @ts-ignore
             this[key] = this[key].bind(this);
         }
@@ -226,8 +229,8 @@ export class StoryService {
 }
 
 Object.assign(StoryService.prototype, actMethods);
-Object.assign(StoryService.prototype, CharacterMethods);
-Object.assign(StoryService.prototype, LocationMethods);
+Object.assign(StoryService.prototype, characterMethods);
+Object.assign(StoryService.prototype, locationMethods);
 Object.assign(StoryService.prototype, sceneMethods);
 
 export const storyApi = new StoryService();

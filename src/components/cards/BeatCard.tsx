@@ -1,5 +1,5 @@
 import './BeatCard.scss';
-import { type Component, Show, For, createMemo } from 'solid-js';
+import { type Component, Show, For, createResource } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
@@ -17,16 +17,18 @@ interface BeatCardProps {
 
 const BeatCard: Component<BeatCardProps> = (props) => {
     const params = useParams();
-    const beat = createMemo(() => {
-        return storyApi.getBeatsBySceneId(props.sceneId, props.beatId);
+    const [beat] = createResource(() => {
+        return storyApi.getBeat(props.beatId);
     });
 
-    const scriptlines = createMemo(() => {
+    const [scriptlines] = createResource(() => {
         if (!beat()) return [];
+        // Property 'getScriptLinesByBeatId' does not exist on type 'StoryService'.ts(2339)
         return storyApi.getScriptLinesByBeatId(beat().id);
     });
 
     const addNewScriptLine = () => {
+        // Property 'addNewScriptLineToBeat' does not exist on type 'StoryService'.ts(2339)
         storyApi.addNewScriptLineToBeat(beat().id)
     };
 

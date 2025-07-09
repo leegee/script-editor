@@ -11,7 +11,9 @@ const SceneList: Component<SceneListProps> = (props) => {
     const [scenes] = createResource(
         () => props.actId,
         async (actId) => {
-            return await storyApi.getScenesByActId(actId);
+            const result = await storyApi.getScenesByActId(actId);
+            console.log('Fetched scenes:', result);
+            return result;
         }
     );
 
@@ -19,7 +21,9 @@ const SceneList: Component<SceneListProps> = (props) => {
         <section class="scene-list" role="list" aria-label="Scenes List">
             <Show when={scenes()} fallback={<div>Loading scenes...</div>}>
                 <For each={scenes()}>
-                    {(scene) => <SceneCard sceneId={scene.id} summary={true} />}
+                    {(scene) => <>
+                        <SceneCard sceneId={scene.id} summary={true} />
+                    </>}
                 </For>
             </Show>
         </section>
