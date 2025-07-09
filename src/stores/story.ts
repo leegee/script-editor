@@ -1,373 +1,233 @@
 // Store containing the whole story
 
-import { createStore, produce, type SetStoreFunction } from 'solid-js/store';
-import { makePersisted } from '@solid-primitives/storage';
-import localforage from 'localforage';
-
-import type {
-    NormalizedStoryData,
-    StoryNormalized,
-    ActNormalized,
-    SceneNormalized,
-    BeatNormalized,
-    ScriptLineNormalized,
-    Character,
-    Location,
-    ScriptLineType,
-    EntityMap,
-    ArrayKeys
-} from '../lib/types';
-
-import { normalizeStoryData as normalizeStoryTree } from '../lib/transform-tree2normalised';
-import { transformStory as storyJsonToTypescript } from '../lib/transform-json2ts';
-import rawStoryData from '../../story.json' assert { type: 'json' };
+import { db, type StoryDexie } from '../stores/db';
+import type { EntityMap } from '../lib/types';
+import { normalizeStoryData } from '../lib/transform-tree2normalised';
+import Dexie from 'dexie';
+import * as actMethods from './StoryService/actions/acts';
+import * as sceneMethods from './StoryService/actions/scenes';
+import * as CharacterMethods from './StoryService/actions/characters';
+import * as LocationMethods from './StoryService/actions/locations';
 import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
 
-export interface ParentOptions<T extends keyof NormalizedStoryData> {
+type ActMethods = typeof actMethods;
+type SceneMethods = typeof sceneMethods;
+type CharacterMethods = typeof CharacterMethods;
+type LocationMethods = typeof LocationMethods;
+
+export interface StoryService extends ActMethods, SceneMethods, CharacterMethods, LocationMethods {
+    db: StoryDexie;
+}
+
+type ParentOptions<T extends keyof EntityMap> = {
     parentType: T;
     parentId: string;
-    parentListField: ArrayKeys<NormalizedStoryData[T][string]>;
+    parentListField: Extract<keyof EntityMap[T], string>;
+};
+
+// To document who owns whom, and where:
+export const ParentMap = {
+    acts: { parentType: 'story', parentListField: 'actIds' },
+    scenes: { parentType: 'acts', parentListField: 'sceneIds' },
+    beats: { parentType: 'scenes', parentListField: 'beatIds' },
+    scriptlines: { parentType: 'beats', parentListField: 'scriptLineIds' },
+    characters: { parentType: 'story', parentListField: 'characterIds' },
+    locations: { parentType: 'story', parentListField: 'locationIds' },
+    story: undefined // root has no parent
+} as const;
+
+
+function makeUpdate<T, K extends keyof T>(key: K, value: T[K]): Partial<T> {
+    return { [key]: value } as unknown as Partial<T>;
 }
 
-function createEmptyNormalized(): NormalizedStoryData {
-    return {
-        stories: {},
-        acts: {},
-        scenes: {},
-        beats: {},
-        scriptlines: {},
-        characters: {},
-        locations: {},
-    };
-}
-
-export async function initializeDefaultStory(storyApi: StoryService) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const isEmpty = Object.keys(storyApi.story.stories).length === 0;
-    if (isEmpty) {
-        storyApi.loadStoryFromJson(rawStoryData);
-    }
-}
-
-class StoryService {
-    story: NormalizedStoryData;
-    setStory: SetStoreFunction<NormalizedStoryData>;
+export class StoryService {
+    db = db;
 
     constructor() {
-        const [story, setStory] = makePersisted(
-            createStore<NormalizedStoryData>(createEmptyNormalized()),
-            {
-                name: 'story',
-                storage: localforage,
+        Object.assign(StoryService.prototype, actMethods);
+        Object.assign(StoryService.prototype, CharacterMethods);
+        Object.assign(StoryService.prototype, LocationMethods);
+        Object.assign(StoryService.prototype, sceneMethods);
+
+        // Bind all methods to this
+        for (const key of Object.keys(actMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(CharacterMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(LocationMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(sceneMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+    }
+
+    async loadStoryFromJson(rawJata): Promise<void> {
+        console.log('Raw tree data:', rawJata);
+
+        const normalized = normalizeStoryData(rawJata);
+        console.log('Normalized data:', normalized);
+
+        // Transaction to clear all tables and bulk insert
+        await this.db.transaction('rw', this.db.tables, async () => {
+            // Clear
+            for (const table of this.db.tables) {
+                await table.clear();
             }
-        );
 
-        this.story = story;
-        this.setStory = setStory;
+            // Bulk insert: convert each map to array
+            await Promise.all([
+                await db.story.bulkPut(Object.values(normalized.stories)),
+                await db.acts.bulkPut(Object.values(normalized.acts)),
+                await db.scenes.bulkPut(Object.values(normalized.scenes)),
+                await db.beats.bulkPut(Object.values(normalized.beats)),
+                await db.scriptlines.bulkPut(Object.values(normalized.scriptlines)),
+                await db.characters.bulkPut(Object.values(normalized.characters)),
+                await db.locations.bulkPut(Object.values(normalized.locations)),
+            ]);
+        });
+
+        console.log('Story loaded into Dexie successfully!');
     }
 
-    resetStory() {
-        this.setStory(() => createEmptyNormalized());
-        console.info('Story has been reset.');
-    }
+    private async updateParentList<T extends keyof EntityMap>(
+        type: T,
+        childId: string,
+        parentId: string,
+        mode: 'add' | 'remove'
+    ): Promise<void> {
+        const parentMeta = ParentMap[type as string];
+        if (!parentMeta) return;
 
-    loadStoryFromJson(rawData: any) {
-        const storyData = storyJsonToTypescript(rawData);
-        const normalized = normalizeStoryTree(storyData);
-        this.setStory(normalized);
-    }
+        const { parentType, parentListField } = parentMeta;
 
-    getStory(): StoryNormalized | undefined {
-        return Object.values(this.story.stories)[0];
-    }
+        const parentTable = this.getTable(parentType as keyof EntityMap);
+        const parent = await parentTable.get(parentId);
 
-    getAct(actId: string): ActNormalized | undefined {
-        return this.story.acts[actId];
-    }
-
-    getActs(): ActNormalized[] {
-        return Object.values(this.story.acts).sort((a, b) => a.number - b.number);
-    }
-
-    getScenesByActId(actId: string): SceneNormalized[] {
-        const act = this.story.acts[actId];
-        return act?.sceneIds.map(id => this.story.scenes[id]).filter(Boolean) ?? [];
-    }
-
-    getScene(sceneId: string): SceneNormalized | undefined {
-        return this.story.scenes[sceneId];
-    }
-
-    setScene(sceneId: string, scene: SceneNormalized) {
-        this.setStory('scenes', sceneId, scene);
-    }
-
-    getBeatsBySceneId(sceneId: string): BeatNormalized[] {
-        const scene = this.story.scenes[sceneId];
-        return scene?.beatIds.map(id => this.story.beats[id]).filter(Boolean) ?? [];
-    }
-
-    getBeatBySceneIdBeatId(sceneId: string, beatId: string) {
-        const scene = this.db.story.scenes[sceneId];
-        return scene?.beatIds.map(id => this.story.beats[id]).filter(Boolean) ?? [];
-    }
-
-    setBeat(beatId: string, beat: BeatNormalized) {
-        this.setStory('beats', beatId, beat);
-    }
-
-    setScriptLine(scriptLineId: string, scriptLine: ScriptLineNormalized) {
-        this.setStory('scriptlines', scriptLineId, scriptLine);
-    }
-
-    getScriptLinesByBeatId(beatId: string): ScriptLineNormalized[] {
-        const beat = this.story.beats[beatId];
-        return beat?.scriptLineIds.map(id => this.story.scriptlines[id]).filter(Boolean) ?? [];
-    }
-
-    getCharacters(): Character[] {
-        return Object.values(this.story.characters);
-    }
-
-    getCharacter(characterId: string): Character | undefined {
-        return this.story.characters[characterId];
-    }
-
-    getCharactersInActById(actId: string) {
-        const act = this.story.acts[actId];
-        if (!act) return [];
-        return this.getCharactersInAct(act);
-    }
-
-    getCharactersInSceneById(sceneId: string) {
-        const scene = this.story.scenes[sceneId];
-        if (!scene) return [];
-        return this.getCharactersInScene(scene.id);
-    }
-
-    getCharactersNotInScene(sceneId: string): Character[] {
-        const inScene = new Set(this.getCharactersInScene(sceneId).map(c => c.id));
-        return Object.values(this.story.characters).filter(c => !inScene.has(c.id));
-    }
-
-    linkCharacterToScene(sceneId: string, characterId: string) {
-        const scene = this.story.scenes[sceneId];
-        if (!scene) throw new Error("Scene not found");
-
-        const charactersInScene = this.getCharactersInScene(sceneId).map(c => c.id);
-        if (charactersInScene.includes(characterId)) return;
-
-        let beatId = scene.beatIds[0];
-        let beat = this.story.beats[beatId];
-
-        if (!beat) {
-            beatId = crypto.randomUUID();
-            beat = {
-                id: beatId,
-                number: 1,
-                scriptLineIds: []
-            };
-            this.setBeat(beatId, beat);
-            scene.beatIds.push(beatId);
+        if (!parent) {
+            console.warn(`Parent ${parentType} with id ${parentId} not found.`);
+            return;
         }
 
-        const scriptLineId = crypto.randomUUID();
-        const newScriptLine: ScriptLineNormalized = {
-            id: scriptLineId,
-            type: 'Dialogue' as ScriptLineType,
-            characterId,
-            text: "",
+        const list = (parent[parentListField] as string[]) || [];
+
+        const newList =
+            mode === 'add'
+                ? list.includes(childId) ? list : [...list, childId]
+                : list.filter(id => id !== childId);
+
+        const updatedParent = {
+            ...parent,
+            [parentListField]: newList
         };
 
-        this.setScriptLine(scriptLineId, newScriptLine);
-        beat.scriptLineIds.push(scriptLineId);
-        this.setBeat(beatId, beat);
-        this.setScene(sceneId, scene);
+        await parentTable.put(updatedParent);
     }
 
-    unlinkCharacterFromScene(sceneId: string, characterId: string) {
-        const scene = this.story.scenes[sceneId];
-        if (!scene) return;
-
-        for (const beatId of scene.beatIds) {
-            const beat = this.story.beats[beatId];
-            if (!beat) continue;
-
-            const newScriptLineIds = beat.scriptLineIds.filter(scriptLineId => {
-                const scriptLine = this.story.scriptlines[scriptLineId];
-                return scriptLine?.characterId !== characterId;
-            });
-
-            if (newScriptLineIds.length !== beat.scriptLineIds.length) {
-                beat.scriptLineIds = newScriptLineIds;
-                this.setBeat(beatId, beat);
-            }
-        }
+    private getTable<T extends keyof EntityMap>(type: T): Dexie.Table<EntityMap[T], string> {
+        return this.db[type] as Dexie.Table<EntityMap[T], string>;
     }
 
-    getLocations(): [string, Location][] {
-        return Object.entries(this.story.locations);
-    }
-
-    getLocation(locationId: string): Location | undefined {
-        return this.story.locations[locationId];
-    }
-
-    getLocationForAct(actId: string): Location[] {
-        const act = this.story.acts[actId];
-        if (!act) return [];
-
-        const locationsSet = new Set<Location>();
-        for (const sceneId of act.sceneIds) {
-            const location = this.getLocationForScene(sceneId);
-            if (location) {
-                locationsSet.add(location);
-            }
-        }
-        return Array.from(locationsSet);
-    }
-
-    getLocationForScene(sceneId: string): Location | undefined {
-        const scene = this.story.scenes[sceneId];
-        return scene?.locationId ? this.story.locations[scene.locationId] : undefined;
-    }
-
-    replaceLocationInScene(sceneId: string, locationId: string): Location | undefined {
-        const scene = this.story.scenes[sceneId];
-        if (!scene) {
-            console.warn(`Scene ${sceneId} not found`);
-            return undefined;
-        }
-
-        this.setStory('scenes', sceneId, 'locationId', locationId);
-        return this.story.locations[locationId];
-    }
-
-    getCharactersInScene(sceneId: string): Character[] {
-        const scene = this.story.scenes[sceneId];
-        if (!scene) return [];
-
-        const characterIds = new Set<string>();
-        for (const beatId of scene.beatIds) {
-            const beat = this.story.beats[beatId];
-            if (!beat) continue;
-
-            for (const scriptLineId of beat.scriptLineIds) {
-                const scriptLine = this.story.scriptlines[scriptLineId];
-                if (scriptLine?.characterId) {
-                    characterIds.add(scriptLine.characterId);
-                }
-            }
-        }
-        return Array.from(characterIds)
-            .map(id => this.story.characters[id])
-            .filter(Boolean) as Character[];
-    }
-
-    getCharactersInAct(act: ActNormalized): Character[] {
-        const uniqueCharIds = new Set<string>();
-        for (const sceneId of act.sceneIds) {
-            const scene = this.story.scenes[sceneId];
-            if (!scene) continue;
-            this.getCharactersInScene(sceneId).forEach(char => uniqueCharIds.add(char.id));
-        }
-        return Array.from(uniqueCharIds)
-            .map(id => this.story.characters[id])
-            .filter((c): c is Character => !!c);
-    }
-
-    addNewScriptLineToBeat(beatId: string): string {
-        return this.createEntity(
-            'scriptlines',
-            { text: 'New Script Line', type: 'Dialogue' as ScriptLineType },
-            { parentType: 'beats', parentId: beatId, parentListField: 'scriptLineIds' }
-        );
-    }
-
-    addNewBeatToScene(sceneId: string): string {
-        const beatId = this.createEntity(
-            'beats',
-            { title: 'New Beat', scriptLineIds: [], number: this.getNextInSequence('beats') },
-            { parentType: 'scenes', parentId: sceneId, parentListField: 'beatIds' }
-        );
-        this.addNewScriptLineToBeat(beatId);
-        return beatId;
-    }
-
-    addNewSceneToAct(actId: string): string {
-        const sceneId = this.createEntity(
-            'scenes',
-            {
-                number: this.getNextInSequence('scenes'),
-                title: 'New Scene',
-                summary: '',
-                locationId: undefined,
-                durationSeconds: undefined,
-                beatIds: [],
-            },
-            { parentType: 'acts', parentId: actId, parentListField: 'sceneIds' }
-        );
-        this.addNewBeatToScene(sceneId);
-        return sceneId;
-    }
-
-    getNextInSequence(type: keyof EntityMap): number {
-        const items = Object.values(this.story[type]);
-        return items.length ? Math.max(...items.map(i => (i as any).number || 0)) + 1 : 1;
-    }
-
-
-    createEntity<T extends keyof NormalizedStoryData>(
+    async createEntity<T extends keyof EntityMap>(
         type: T,
-        entity: Partial<NormalizedStoryData[T][string]>,
-        options?: ParentOptions<T>
-    ) {
-        const id = crypto.randomUUID();
-        this.setStory(type, id, { id, ...entity });
+        entity: EntityMap[T],
+        parentId?: string
+    ): Promise<EntityMap[T]> {
+        await this.getTable(type).add(entity);
 
-        if (options) {
-            const { parentType, parentId, parentListField } = options;
-            this.setStory(
-                parentType,
-                parentId,
-                parentListField,
-                (list: string[] = []) => [...list, id]
-            );
+        if (parentId) {
+            await this.updateParentList(type, entity.id, parentId, 'add');
         }
 
-        return id;
+        return entity;
     }
 
-    deleteEntity<T extends keyof EntityMap>(
+    async getEntity<T extends keyof EntityMap>(
+        type: T,
+        id: string
+    ): Promise<EntityMap[T] | undefined> {
+        return await this.getTable(type).get(id);
+    }
+
+    async setEntity<T extends keyof EntityMap>(type: T, entity: EntityMap[T]): Promise<void> {
+        await this.getTable(type).put(entity);
+    }
+
+    async updateEntity<T extends keyof EntityMap>(
+        type: T,
+        entity: EntityMap[T]
+    ): Promise<void> {
+        await this.getTable(type).put(entity);
+    }
+
+    async updateEntityField<T extends keyof EntityMap, K extends keyof EntityMap[T]>(
         type: T,
         id: string,
-        options?: ParentOptions
-    ): void {
-        // Remove the entity itself
-        this.setStory(type, id, undefined);
+        key: K,
+        value: EntityMap[T][K]
+    ): Promise<void> {
+        const table = this.getTable(type);
+        const entity = await table.get(id);
+        if (!entity) throw new Error(`Entity ${id} not found in ${type}`);
 
-        // If there’s a parent reference, remove the ID from its list
-        if (options) {
-            const { parentType, parentId, parentListField } = options;
-
-            this.setStory(parentType, parentId, parentListField, (list: string[] = []) =>
-                list.filter(itemId => itemId !== id)
-            );
-        }
+        const updatedEntity = { ...entity, [key]: value };
+        console.log('updateEntityField', entity, key, value)
+        await table.put(updatedEntity);
     }
 
-    asObjectUrl(): string | undefined {
+    async deleteEntity<T extends keyof EntityMap>(type: T, id: string): Promise<void> {
+        await this.getTable(type).delete(id);
+    }
+
+    // Export the entire story tree as a JSON object URL
+    async asObjectUrl(): Promise<string | undefined> {
         try {
-            const tree = denormalizeStoryTree(this.story);
+            const stories = await this.db.story.toArray();
+            const acts = await this.db.acts.toArray();
+            const scenes = await this.db.scenes.toArray();
+            const beats = await this.db.beats.toArray();
+            const scriptlines = await this.db.scriptlines.toArray();
+            const characters = await this.db.characters.toArray();
+            const locations = await this.db.locations.toArray();
+
+            // Assume single story for now:
+            const story = stories[0];
+
+            // 3. Use your denormalizer to build the tree
+            const tree = denormalizeStoryTree({
+                story,
+                acts,
+                scenes,
+                beats,
+                scriptlines,
+                characters,
+                locations,
+            });
+
+            // Serialize the tree to a JSON, and finally a Blob URL.
             const jsonString = JSON.stringify(tree, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             return URL.createObjectURL(blob);
+
         } catch (error) {
             console.error('Failed to export story:', error);
             alert('Failed to export story.');
             return undefined;
         }
     }
+
 }
+
+Object.assign(StoryService.prototype, actMethods);
+Object.assign(StoryService.prototype, CharacterMethods);
+Object.assign(StoryService.prototype, LocationMethods);
+Object.assign(StoryService.prototype, sceneMethods);
 
 export const storyApi = new StoryService();

@@ -35,7 +35,7 @@ const ImageThumbnail = <EntityType extends keyof EntityMap, FieldType extends ke
     }
 
     const handleDelete = () => {
-        storyApi.updateEntity(
+        storyApi.updateEntityField(
             props.entityType,
             props.entityId,
             props.field,

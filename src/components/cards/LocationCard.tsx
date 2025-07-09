@@ -1,5 +1,5 @@
 import './LocationCard.scss';
-import { type Component, Show, For, createMemo } from 'solid-js';
+import { type Component, Show, For, createMemo, createResource } from 'solid-js';
 import type { Location } from '../../lib/types';
 import { storyApi } from '../../stores/story';
 import Map from '../Map';
@@ -18,22 +18,22 @@ type LocationCardProps = {
 };
 
 const LocationCard: Component<LocationCardProps> = (props) => {
-    const location = createMemo<Location | undefined>(() => {
+    const [location] = createResource<Location | undefined>(async () => {
         if (props.location) return props.location;
-        if (props.locationId) return storyApi.getLocation(props.locationId);
+        if (props.locationId) return await storyApi.getLocation(props.locationId);
         return undefined;
     });
 
     const onNameInput = (e: InputEvent) => {
         const val = (e.target as HTMLInputElement).value;
         const loc = location();
-        if (loc) storyApi.updateEntity('locations', loc.id, 'name', val);
+        if (loc) storyApi.updateEntityField('locations', loc.id, 'name', val);
     };
 
     const onDescriptionInput = (e: InputEvent) => {
         const val = (e.target as HTMLTextAreaElement).value;
         const loc = location();
-        if (loc) storyApi.updateEntity('locations', loc.id, 'description', val);
+        if (loc) storyApi.updateEntityField('locations', loc.id, 'description', val);
     };
 
     return (
@@ -60,7 +60,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                                 <TextInput value={() => loc.name} onInput={onNameInput} />
                             </span>
                         }
-                        menuItems=<>{menuItems}</>
+                        menuItems={menuItems}
                     >
                         <h5>Description</h5>
                         <div class='location-desc-and-photo'>

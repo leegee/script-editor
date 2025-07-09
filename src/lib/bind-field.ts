@@ -1,31 +1,48 @@
-import { createMemo } from 'solid-js';
-import { storyApi } from '../stores/story';
-import type { EntityMap } from './types';
+import { createSignal, createEffect } from "solid-js";
+import { EntityMap } from "./types";
+import { storyApi } from "../stores/story";
 
 export function bindField<T extends keyof EntityMap>(
     entity: T,
     id: string,
     field: keyof EntityMap[T],
-    useOnBlur = true,
+    useOnBlur = true
 ) {
-    const value = createMemo(() => {
-        const entityObj = storyApi.story[entity][id] as EntityMap[T] | undefined;
-        return entityObj?.[field] ?? '';
+    const [value, setValue] = createSignal<string>('');
+
+    // When entity/id/field change, fetch initial value and set signal
+    createEffect(async () => {
+        if (!id) return;
+        const entityObj = await storyApi.getEntity(entity, id);
+        setValue((entityObj?.[field] ?? '') as string);
+        console.log('bindField set', entity + '#' + id, 'field =', field, "value =", entityObj?.[field])
     });
 
-    function handleUpdate(event: Event) {
-        const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-        const newValue = target.value;
-        storyApi.updateEntity(entity, id, field, newValue as EntityMap[T][keyof EntityMap[T]]);
+    async function doTheUpdate(newValue: string) {
+        if (newValue.trim() !== '') {
+            await storyApi.updateEntityField(entity, id, field, newValue.trim() as EntityMap[T][keyof EntityMap[T]]);
+        }
     }
 
-    const noop = (_event: Event) => { };
-    const onInput = useOnBlur ? noop : handleUpdate;
-    const onBlur = useOnBlur ? handleUpdate : noop;
+    const handleInput = (e: Event) => {
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+        setValue(target.value);
+        if (!useOnBlur) {
+            doTheUpdate(target.value);
+        }
+    };
+
+    const handleBlur = (e: Event) => {
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+        setValue(target.value);
+        if (useOnBlur) {
+            doTheUpdate(value());
+        }
+    };
 
     return {
         value,
-        onInput,
-        onBlur,
+        onInput: handleInput,
+        onBlur: handleBlur,
     };
 }

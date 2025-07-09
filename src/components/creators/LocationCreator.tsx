@@ -47,7 +47,7 @@ const LocationCreator = () => {
         const val = (e.target as HTMLInputElement).value;
         setName(val);
         if (newLocationId()) {
-            storyApi.updateEntity('locations', newLocationId()!, 'name', val);
+            storyApi.updateEntityField('locations', newLocationId()!, 'name', val);
         }
     };
 
@@ -55,7 +55,7 @@ const LocationCreator = () => {
         const val = (e.target as HTMLTextAreaElement).value;
         setDescription(val);
         if (newLocationId()) {
-            storyApi.updateEntity('locations', newLocationId()!, 'description', val);
+            storyApi.updateEntityField('locations', newLocationId()!, 'description', val);
         }
     };
 

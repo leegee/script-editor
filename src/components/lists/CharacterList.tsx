@@ -1,45 +1,37 @@
 import './CharacterList.scss';
-import { Component, createMemo, For, Show } from "solid-js";
+import { Component, createResource, For, Show } from "solid-js";
 import { storyApi } from "../../stores/story";
 import CharacterCard from "../cards/CharacterCard";
 
 type CharacterListProps = {
-    characterIds?: undefined;
-    sceneId?: undefined;
-    actId?: undefined;
-} | {
-    characterIds?: undefined;
-    sceneId: string;
-    actId?: undefined;
-} | {
-    characterIds: string[];
-    sceneId?: undefined;
-    actId?: undefined;
-} | {
-    characterIds?: undefined;
-    sceneId?: undefined;
-    actId: string;
+    characterIds?: string[];
+    sceneId?: string;
+    actId?: string;
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
-    const getCharactersToShow = createMemo(() => {
-        if (props.actId) {
-            return storyApi.getCharactersInActById(props.actId);
+    const [characters] = createResource(
+        () => [props.actId, props.sceneId, props.characterIds], // always an array
+        async () => {
+            if (props.actId) {
+                return await storyApi.getCharactersInActById(props.actId);
+            }
+            if (props.sceneId) {
+                return await storyApi.getCharactersInSceneById(props.sceneId);
+            }
+
+            const allCharacters = await storyApi.getCharacters();
+            if (props.characterIds?.length) {
+                return allCharacters.filter(c => props.characterIds!.includes(c.id));
+            }
+            return allCharacters;
         }
-        if (props.sceneId) {
-            return storyApi.getCharactersInSceneById(props.sceneId);
-        }
-        const allCharacters = storyApi.getCharacters();
-        if (props.characterIds?.length) {
-            return allCharacters.filter(c => props.characterIds!.includes(c.id));
-        }
-        return allCharacters;
-    });
+    );
 
     return (
         <section class="character-list">
-            <Show when={getCharactersToShow().length > 0} fallback={<div>No characters found</div>}>
-                <For each={getCharactersToShow()}>
+            <Show when={characters()?.length} fallback={<div>No characters found</div>}>
+                <For each={characters()}>
                     {(character) => (
                         <CharacterCard characterId={character.id} summary={true} sceneId={props.sceneId} />
                     )}

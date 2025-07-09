@@ -1,4 +1,4 @@
-import { type Component, For, createMemo } from "solid-js";
+import { type Component, For, Show, createMemo, createResource } from "solid-js";
 import { useSearchParams, type RouteSectionProps } from "@solidjs/router";
 import ActCard from "../components/cards/ActCard";
 import { storyApi } from "../stores/story";
@@ -12,30 +12,31 @@ type ActDetailsProps = ActDetailsOwnProps & Partial<RouteSectionProps>;
 
 const ActDetails: Component<ActDetailsProps> = (props) => {
     const [searchParams] = useSearchParams();
-
     const idToUse = () => props.id ?? props.params?.id;
+    const summaryToUse = () =>
+        typeof props.summary === "boolean" ? props.summary : searchParams.summary === "true";
 
-    const summaryToUse = () => {
-        if (typeof props.summary === "boolean") return props.summary;
-        return searchParams.summary === "true";
-    };
+    if (idToUse()) {
+        const [singleAct] = createResource(idToUse, storyApi.getAct);
 
-    const acts = createMemo(() => {
-        const id = idToUse();
-        if (id) {
-            const act = storyApi.getAct(id);
-            return act ? [act] : [];
-        }
-        return storyApi.getActs();
-    });
+        return (
+            <section class="acts-list" role="list" aria-label="Act Detail">
+                <Show when={singleAct()} fallback={<div>Loading act...</div>}>
+                    {(act) => <ActCard actId={act().id} summary={summaryToUse()} />}
+                </Show>
+            </section>
+        );
+    } else {
+        const [allActs] = createResource(() => storyApi.getActs());
 
-    return (
-        <section class="acts-list" role="list" aria-label="Acts List">
-            <For each={acts()}>
-                {(act) => <ActCard actId={act.id} summary={summaryToUse() ?? false} />}
-            </For>
-        </section>
-    );
+        return (
+            <section class="acts-list" role="list" aria-label="Acts List">
+                <For each={allActs() ?? []}>
+                    {(act) => <ActCard act={act} summary={summaryToUse()} />}
+                </For>
+            </section>
+        );
+    }
 };
 
 export default ActDetails;

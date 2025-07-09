@@ -9,14 +9,15 @@ import ImageThumbnail from '../ImageThumbnail';
 const NewCharacterModal = () => {
     const [newCharacterId, setNewCharacterId] = createSignal<string | null>(null);
 
-    const handleClick = () => {
-        const _newCharacterId = storyApi.createEntity('characters', {
+    const handleClick = async () => {
+        const _newCharacterId = await storyApi.createEntity('characters', {
+            id: undefined,
             name: 'New Character',
             bio: '',
             avatarColor: 'red',
             avatarImage: '',
         });
-        setNewCharacterId(_newCharacterId);
+        setNewCharacterId(_newCharacterId.id);
     };
 
     const cancel = () => {

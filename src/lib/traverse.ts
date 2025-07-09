@@ -9,7 +9,7 @@ export function traverseStoryTree<T>(
     visitor(node);
 
     if ('acts' in node) {
-        node.acts.forEach(child => traverseStoryTree(child, visitor));
+        node.actIds.forEach(child => traverseStoryTree(child, visitor));
     } else if ('scenes' in node) {
         node.scenes.forEach(child => traverseStoryTree(child, visitor));
     } else if ('beats' in node) {

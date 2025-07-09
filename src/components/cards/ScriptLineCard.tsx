@@ -35,7 +35,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     class='script-line-type'
                     value={line.type}
                     onChange={(e) =>
-                        storyApi.updateEntity(
+                        storyApi.updateEntityField(
                             'scriptlines',
                             line.id,
                             'type',
@@ -54,7 +54,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     <Avatar class="character"
                         characterId={line.characterId}
                         onChange={(e) =>
-                            storyApi.updateEntity(
+                            storyApi.updateEntityField(
                                 'scriptlines',
                                 line.id,
                                 'characterId',

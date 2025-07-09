@@ -31,7 +31,7 @@ describe("StoryService CRUD operations", () => {
             expect(story.acts[testActId].title).toBe("Test Act");
 
             // UPDATE
-            storyApi.updateEntity('acts', testActId, 'title', "Updated Act Title");
+            storyApi.updateEntityField('acts', testActId, 'title', "Updated Act Title");
             expect(story.acts[testActId].title).toBe("Updated Act Title");
 
             // DELETE
@@ -188,7 +188,7 @@ describe("StoryService CRUD operations", () => {
             testCharacterId = storyApi.createEntity("characters", { name: "Test Character" });
             expect(story.characters[testCharacterId]).toBeTruthy();
 
-            storyApi.updateEntity("characters", testCharacterId, "name", "Updated Character Name");
+            storyApi.updateEntityField("characters", testCharacterId, "name", "Updated Character Name");
             expect(story.characters[testCharacterId].name).toBe("Updated Character Name");
 
             storyApi.deleteEntity("characters", testCharacterId);

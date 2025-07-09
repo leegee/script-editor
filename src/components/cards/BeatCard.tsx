@@ -18,7 +18,7 @@ interface BeatCardProps {
 const BeatCard: Component<BeatCardProps> = (props) => {
     const params = useParams();
     const beat = createMemo(() => {
-        return storyApi.getBeatBySceneIdBeatId(props.sceneId, props.beatId);
+        return storyApi.getBeatsBySceneId(props.sceneId, props.beatId);
     });
 
     const scriptlines = createMemo(() => {

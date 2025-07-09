@@ -1,4 +1,4 @@
-import { type Component, For, createMemo } from 'solid-js';
+import { type Component, For, createResource } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import LocationCard from '../components/cards/LocationCard';
 import { storyApi } from '../stores/story';
@@ -6,10 +6,9 @@ import { storyApi } from '../stores/story';
 const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();
 
-    // Always build a list: either one or all
-    const locations = createMemo(() => {
+    const [locations] = createResource(async () => {
         if (params.id) {
-            const loc = storyApi.getLocation(params.id);
+            const loc = await storyApi.getLocation(params.id);
             return loc ? [loc] : [];
         }
         return storyApi.getLocations();

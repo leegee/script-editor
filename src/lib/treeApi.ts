@@ -85,7 +85,7 @@ class StoryService {
         const charIds = new Set<string>();
         traverseStoryTree(node, (n) => {
             if ('characterIds' in n) {
-                n.characterIds?.forEach(id => charIds.add(id));
+                n.characters?.forEach(id => charIds.add(id));
             } else if ('characterId' in n && typeof n.characterId === 'string') {
                 charIds.add(n.characterId);
             }

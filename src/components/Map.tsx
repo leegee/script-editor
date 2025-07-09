@@ -62,10 +62,10 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     };
 
     // Load location and geofence on mount
-    onMount(() => {
+    onMount(async () => {
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
-        const loc = storyApi.getLocation(props.locationId);
+        const loc = await storyApi.getLocation(props.locationId);
         setGeofence(loc?.geofence ?? { type: null });
 
         vectorSource = new VectorSource();
@@ -224,7 +224,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     async function updateGeofence(newGeo: Geofence) {
         setGeofence(newGeo);
         try {
-            storyApi.updateEntity('locations', props.locationId, 'geofence', newGeo);
+            storyApi.updateEntityField('locations', props.locationId, 'geofence', newGeo);
             props.onUpdate?.(newGeo);
         } catch (e) {
             console.error('Error updating geofence:', e);

@@ -1,11 +1,10 @@
 import type {
     Story,
     NormalizedStoryData,
+    StoryTree,
 } from './types';
 
-export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryData {
-    const storyArray = Array.isArray(stories) ? stories : [stories];
-
+export function normalizeStoryData(tree: StoryTree): NormalizedStoryData {
     const normalized: NormalizedStoryData = {
         stories: {},
         acts: {},
@@ -13,84 +12,64 @@ export function normalizeStoryData(stories: Story | Story[]): NormalizedStoryDat
         beats: {},
         scriptlines: {},
         characters: {},
-        locations: {},
+        locations: {}
     };
 
-    for (const story of storyArray) {
-        // Characters and Locations go straight to normalized lookup
-        for (const char of story.characters) {
-            normalized.characters[char.id] = char;
-        }
-        for (const loc of story.locations) {
-            normalized.locations[loc.id] = loc;
-        }
+    // Add story
+    normalized.stories[tree.id] = {
+        id: tree.id,
+        title: tree.title,
+        description: tree.description,
+        tags: tree.tags,
+        createdAt: tree.createdAt,
+        updatedAt: tree.updatedAt,
+        actIds: tree.acts.map(act => act.id),
+        characterIds: tree.characters.map(char => char.id),
+        locationIds: tree.locations.map(loc => loc.id)
+    };
 
-        const actIds: string[] = [];
-        for (const act of story.acts) {
-            actIds.push(act.id);
+    // Add characters
+    for (const character of tree.characters) {
+        normalized.characters[character.id] = character;
+    }
 
-            const sceneIds: string[] = [];
-            for (const scene of act.scenes) {
-                sceneIds.push(scene.id);
+    // Add locations
+    for (const location of tree.locations) {
+        normalized.locations[location.id] = location;
+    }
 
-                const beatIds: string[] = [];
-                for (const beat of scene.beats) {
-                    beatIds.push(beat.id);
+    // Walk the tree:  acts -> scenes -> beats -> scriptlines
+    for (const act of tree.acts) {
 
-                    const scriptLineIds: string[] = [];
-                    for (const sl of beat.scriptlines) {
-                        scriptLineIds.push(sl.id);
+        const { scenes, ...rest } = act;
+        normalized.acts[act.id] = {
+            ...rest,
+            title: act.title ?? `Untitled Act`,
+            sceneIds: scenes.map(scene => scene.id)
+        };
 
-                        normalized.scriptlines[sl.id] = {
-                            id: sl.id,
-                            type: sl.type,
-                            characterId: sl.characterId,
-                            text: sl.text,
-                            timestampSeconds: sl.timestampSeconds,
-                        };
-                    }
+        for (const scene of act.scenes) {
+            const { beats, ...rest } = scene;
+            normalized.scenes[scene.id] = {
+                ...rest,
+                title: act.title ?? `Untitled Scene`,
+                beatIds: beats.map(beat => beat.id)
+            };
 
-                    normalized.beats[beat.id] = {
-                        id: beat.id,
-                        number: beat.number,
-                        title: beat.title,
-                        summary: beat.summary,
-                        durationSeconds: beat.durationSeconds,
-                        scriptLineIds,
+            for (const beat of scene.beats) {
+                const { scriptlines, ...rest } = beat;
+                normalized.beats[beat.id] = {
+                    ...rest,
+                    scriptLineIds: scriptlines.map(line => line.id)
+                };
+
+                for (const scriptline of beat.scriptlines) {
+                    normalized.scriptlines[scriptline.id] = {
+                        ...scriptline,
                     };
                 }
-
-                normalized.scenes[scene.id] = {
-                    id: scene.id,
-                    number: scene.number,
-                    title: scene.title,
-                    summary: scene.summary,
-                    locationId: scene.locationId,
-                    durationSeconds: scene.durationSeconds,
-                    beatIds,
-                };
             }
-
-            normalized.acts[act.id] = {
-                id: act.id,
-                number: act.number,
-                title: act.title,
-                summary: act.summary,
-                sceneIds,
-            };
         }
-
-        normalized.stories[story.id] = {
-            id: story.id,
-            title: story.title,
-            description: story.description,
-            actIds,
-            characterIds: story.characters.map(c => c.id),
-            locationIds: story.locations.map(l => l.id),
-            tags: story.tags,
-            createdAt: story.createdAt,
-            updatedAt: story.updatedAt,
-        };
     }
 
     return normalized;
