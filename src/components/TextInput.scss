@@ -22,10 +22,20 @@
 }
 
 
-input[type=color].custom-input,
-input[type=number].custom-input {
+input[type=color].custom-input {
     min-height: 1em;
     max-width: 2em;
+}
+
+input[type=number].custom-input {
+    min-height: 1em;
+    max-width: 1em;
+}
+
+input[type=number].custom-input::-webkit-inner-spin-button,
+input[type=number].custom-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input.custom-input {

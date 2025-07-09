@@ -1,5 +1,5 @@
 import './TextInput.scss';
-import { Component, createEffect, createSignal, JSX } from 'solid-js';
+import { Component, JSX } from 'solid-js';
 
 export type InputTypesEnum = 'input' | 'textarea' | 'color' | 'url' | 'number';
 

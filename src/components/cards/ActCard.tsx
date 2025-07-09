@@ -44,7 +44,6 @@ const ActCard: Component<ActCardProps> = (props) => {
                             <span class="icon">🎭</span>
                             <TextInput as="number" {...bindField('acts', actValue().id, 'number')} />
                             <TextInput {...bindField('acts', actValue().id, 'title')} />
-                            {actValue().title}
                         </>
                     }
                     link={`/act/${actValue().id}`}
