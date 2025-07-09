@@ -189,7 +189,7 @@ export class StoryService {
         if (!entity) throw new Error(`Entity ${id} not found in ${type}`);
 
         const updatedEntity = { ...entity, [key]: value };
-        console.log('updateEntityField', entity, key, value)
+        console.info('updateEntityField put', entity, key, value)
         await table.put(updatedEntity);
     }
 

@@ -15,34 +15,6 @@ export async function getActs(
     return this.db.acts.toArray();
 }
 
-export async function getCharactersInActById(
-    this: StoryService,
-    actId: string
-): Promise<Character[]> {
-    const acts = await this.db.acts.where('id').equals(actId).toArray();
-    const sceneIds = acts.map(s => s.id);
-
-    const beats = await this.db.beats
-        .where('sceneId')
-        .anyOf(sceneIds)
-        .toArray();
-
-    const beatIds = beats.map(b => b.id);
-
-    // get scriptlines by beatIds
-    const scriptLines = await this.db.scriptlines
-        .where('beatId')
-        .anyOf(beatIds)
-        .toArray();
-
-    const characterIds = [...new Set(scriptLines.map(sl => sl.characterId))];
-
-    return this.db.characters
-        .where('id')
-        .anyOf(characterIds)
-        .toArray();
-}
-
 export async function getLocationsForAct(
     this: StoryService,
     actId: string
@@ -78,3 +50,65 @@ export async function getLocationForScene(
         .toArray();
 }
 
+
+export async function getCharactersInActById(
+    this: StoryService,
+    actId: string
+): Promise<Character[]> {
+    console.log('getCharactersInActById', actId);
+
+    // 1. Get the act, get its sceneIds
+    const act = await this.db.acts.get(actId);
+    if (!act) {
+        console.warn(`Act with id ${actId} not found.`);
+        return [];
+    }
+    const sceneIds = act.sceneIds;
+    console.log('sceneIds:', sceneIds);
+
+    if (sceneIds.length === 0) return [];
+
+    // 2. Get scenes by sceneIds, extract all beatIds
+    const scenes = await this.db.scenes
+        .where('id')
+        .anyOf(sceneIds)
+        .toArray();
+
+    const allBeatIds = scenes.flatMap(scene => scene.beatIds);
+    console.log('allBeatIds:', allBeatIds);
+
+    if (allBeatIds.length === 0) return [];
+
+    // 3. Get beats by beatIds, extract all scriptLineIds
+    const beats = await this.db.beats
+        .where('id')
+        .anyOf(allBeatIds)
+        .toArray();
+
+    const allScriptLineIds = beats.flatMap(beat => beat.scriptLineIds);
+    console.log('allScriptLineIds:', allScriptLineIds);
+
+    if (allScriptLineIds.length === 0) return [];
+
+    // 4. Get scriptLines by scriptLineIds, extract all characterIds (filter null)
+    const scriptLines = await this.db.scriptlines
+        .where('id')
+        .anyOf(allScriptLineIds)
+        .toArray();
+
+    const characterIds = Array.from(
+        new Set(scriptLines.map(sl => sl.characterId).filter((id): id is string => !!id))
+    );
+
+    console.log('characterIds:', characterIds);
+
+    if (characterIds.length === 0) return [];
+
+    // 5. Get characters by characterIds
+    const characters = await this.db.characters
+        .where('id')
+        .anyOf(characterIds)
+        .toArray();
+
+    return characters;
+}
