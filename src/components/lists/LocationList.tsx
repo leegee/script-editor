@@ -1,5 +1,5 @@
 import { For, Show, createResource } from 'solid-js';
-import type { EntityMap } from '../../lib/types';
+import type { Location, EntityMap } from '../../lib/types';
 import { storyApi } from '../../stores/story';
 import LocationCard from '../cards/LocationCard';
 
@@ -14,20 +14,20 @@ export default (props: LocationListProps) => {
             if (props.entityType === 'acts') {
                 return await storyApi.getLocationsForAct(props.entityId);
             } else if (props.entityType === 'scenes') {
-                return await storyApi.getLocationForScene(props.entityId);
+                const loc = await storyApi.getLocationForScene(props.entityId);
+                return loc ? [loc] : [];
             } else {
                 return await storyApi.getLocations();
             }
         }
     );
-
     return (
         <section>
             <Show when={locations()} fallback={<div>No locations found</div>}>
                 <section class="location-list" role="list" aria-label="Locations List">
                     <For each={locations()}>
                         {(location) => (
-                            <LocationCard location={location} summary={true} />
+                            <LocationCard location={location as Location} summary={true} />
                         )}
                     </For>
                 </section>

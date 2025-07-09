@@ -9,6 +9,7 @@ import TextInput from '../TextInput';
 import ImageThumbnail from '../ImageThumbnail';
 import DeleteLocationButton from '../delete-buttons/DeleteLocationButton';
 import RemoveLocationButton from '../delete-buttons/RemoveLocationButton';
+import { useParams } from '@solidjs/router';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -18,11 +19,18 @@ type LocationCardProps = {
 };
 
 const LocationCard: Component<LocationCardProps> = (props) => {
-    const [location] = createResource<Location | undefined>(async () => {
-        if (props.location) return props.location;
-        if (props.locationId) return await storyApi.getLocation(props.locationId);
-        return undefined;
-    });
+    const params = useParams();
+    console.log("Rendering LocationCard:", props.location);
+
+
+    const [location] = createResource(
+        () => params.locationId ?? props.locationId ?? props.location,
+        async (id) => {
+            if (props.location) return props.location;
+            if (!id) return undefined;
+            return storyApi.getLocation(id as string);
+        }
+    );
 
     const onNameInput = (e: InputEvent) => {
         const val = (e.target as HTMLInputElement).value;
