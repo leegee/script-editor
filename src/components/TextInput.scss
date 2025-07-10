@@ -13,7 +13,7 @@
 
     &:focus {
         transition: outline 0.3s ease-in-out;
-        outline: 1pt solid var(--script-cta-bg);
+        outline: 1pt solid var(--script-border-clr);
     }
 
     &.empty {

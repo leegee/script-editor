@@ -3,6 +3,10 @@
 .script-lines {
     margin: 0.3em 0;
 
+    .script-line-type-label {
+        margin-left: 0.6em;
+    }
+
     .script-line-type {
         font-variant: small-caps;
         text-transform: uppercase;
@@ -38,8 +42,10 @@
 
     .script-line {
         padding: 0;
-        margin: 1em;
+        margin: 0 1em;
         margin-top: 0;
+        padding-left: 0.6em;
+
         display: flex;
         flex-direction: row;
         align-content: flex-start;

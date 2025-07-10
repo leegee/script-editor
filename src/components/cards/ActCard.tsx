@@ -74,8 +74,6 @@ const ActCard: Component<ActCardProps> = (props) => {
                         <LocationList entityType="acts" entityId={actValue().id} />
                     </Show>
 
-                    <hr />
-
                     <SceneList actId={actValue().id} />
                 </Card>
             )}

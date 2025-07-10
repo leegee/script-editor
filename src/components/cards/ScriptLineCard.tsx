@@ -30,7 +30,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                 [`script-line-type-${lineType().toLowerCase()}`]: true,
             }}
         >
-            <label>
+            <label class='script-line-type-label'>
                 <select
                     class='script-line-type'
                     value={lineType()}
