@@ -12,7 +12,11 @@ export async function getScriptlinesByBeatId(
     const beats = await this.db.beats.where('id').equals(beatId).toArray();
     const scriptLineIds = beats.flatMap(b => b.scriptLineIds ?? []);
     const uniqueScriptLineIds = [...new Set(scriptLineIds)];
-    return this.db.scriptlines.where('id').anyOf(uniqueScriptLineIds).toArray();
+    const scriptLines = await this.db.scriptlines.where('id').anyOf(uniqueScriptLineIds).toArray();
+
+    return scriptLineIds
+        .map(id => scriptLines.find(line => line.id === id))
+        .filter((line): line is ScriptLine => line !== undefined);
 }
 
 export async function addNewScriptLineToBeat(
@@ -28,10 +32,11 @@ export async function addNewScriptLineToBeat(
 
     await this.db.scriptlines.add(newLine);
 
-    await this.db.beats.where('id').equals(beatId).modify(beat => {
-        if (!beat.scriptLineIds) beat.scriptLineIds = [];
-        beat.scriptLineIds.push(newLine.id);
-    });
+    await this.db.beats.where('id').equals(beatId)
+        .modify(beat => {
+            if (!beat.scriptLineIds) beat.scriptLineIds = [];
+            beat.scriptLineIds.push(newLine.id);
+        });
 
     return newLine;
 }
