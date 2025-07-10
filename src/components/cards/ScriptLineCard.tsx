@@ -1,5 +1,5 @@
 import "./ScriptLineCard.scss";
-import { type Component, Show } from 'solid-js';
+import { type Component, createSignal, Show } from 'solid-js';
 import Avatar from '../Avatar';
 import TextInput from '../TextInput';
 import { bindField } from '../../lib/bind-field';
@@ -10,38 +10,39 @@ interface ScriptLineCardProps {
     line: ScriptLine;
 }
 
-// const labelMap: Record<ScriptLineType, string> = {
-//     [ScriptLineType.Dialogue]: 'Dialogue',
-//     [ScriptLineType.Action]: 'Action',
-//     [ScriptLineType.Description]: 'Description',
-//     [ScriptLineType.Parenthetical]: 'Parenthetical',
-// };
-
 const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
-    const { line } = props;
-
-    // Get enum options:
     const lineTypeOptions = Object.values(ScriptLineType);
+    const [lineType, setLineType] = createSignal(props.line.type);
 
-    const deleteThisLine = () => {
-        storyApi.findParentEntity('beats', 'scriptLineIds', line.id);
-        storyApi.deleteEntity('scriptlines', line.id);
-    }
+    const deleteThisLine = async () => {
+        await Promise.allSettled([
+            storyApi.findParentEntity('beats', 'scriptLineIds', props.line.id),
+            storyApi.deleteEntity('scriptlines', props.line.id)
+        ]);
+    };
 
     return (
-        <div class='script-line-container'>
+        <div
+            class="script-line-container"
+            classList={{
+                [`script-line-type-${lineType().toLowerCase()}`]: true,
+            }}
+        >
             <label>
                 <select
                     class='script-line-type'
-                    value={line.type}
-                    onChange={(e) =>
+                    value={lineType()}
+                    onChange={(e) => {
+                        const newType = e.currentTarget.value as ScriptLineType;
+                        setLineType(newType);
                         storyApi.updateEntityField(
                             'scriptlines',
-                            line.id,
+                            props.line.id,
                             'type',
-                            e.currentTarget.value as ScriptLineType
-                        )
-                    }
+                            newType
+                        );
+                        props.line.type = newType;
+                    }}
                 >
                     {lineTypeOptions.map((type) => (
                         <option value={type}>{type}</option>
@@ -49,23 +50,28 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                 </select>
             </label>
 
-            <blockquote class={`script-line script-line-${line.type.toLowerCase()}`}>
-                <Show when={line.type === 'Dialogue'}>
-                    <Avatar class="character"
-                        characterId={line.characterId}
+            <blockquote
+                class="script-line"
+                classList={{
+                    [`script-line-${lineType().toLowerCase()}`]: true
+                }}
+            >
+                <Show when={lineType() === 'Dialogue'}>
+                    <Avatar
+                        class="character"
+                        characterId={props.line.characterId}
                         onChange={(e) =>
                             storyApi.updateEntityField(
                                 'scriptlines',
-                                line.id,
+                                props.line.id,
                                 'characterId',
                                 (e.currentTarget as HTMLSelectElement).value as string
                             )
                         }
-
                     />
                 </Show>
 
-                <TextInput as='textarea' {...bindField('scriptlines', line.id, 'text')} />
+                <TextInput as='textarea' {...bindField('scriptlines', props.line.id, 'text')} />
 
                 <button class='delete' onClick={deleteThisLine}>🗑</button>
             </blockquote>
