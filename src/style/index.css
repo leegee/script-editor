@@ -108,9 +108,11 @@ button {
 
     &.new::before {
         content: '➕';
+        padding-right: 0.6em;
     }
 
     &.refresh:before {
         content: '⟲';
+        padding-right: 0.6em;
     }
 }

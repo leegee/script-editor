@@ -42,7 +42,7 @@ export default (props: LocationListProps) => {
         <section>
             <h4>
                 <span> {props.children} </span>
-                <LocationCreator parentId={props.entityId} refresh={handleChange}><button class='new'>Change Location</button></LocationCreator>
+                <LocationCreator parentId={props.entityId} refresh={handleChange}><button class='refresh'>Change Location</button></LocationCreator>
             </h4>
             <Show when={locations()} fallback={<div>No locations found</div>}>
                 <section class="location-list" role="list" aria-label="Locations List">

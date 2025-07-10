@@ -36,3 +36,20 @@ export async function getScenesByActId(
 }
 
 
+export async function replaceLocationInScene(
+    this: StoryService,
+    sceneId: string,
+    locationId: string
+) {
+    const scene = await this.db.scenes.get(sceneId);
+    if (!scene) {
+        throw new Error(`Scene with ID ${sceneId} not found`);
+    }
+
+    const location = await this.db.locations.get(locationId);
+    if (!location) {
+        throw new Error(`Location with ID ${locationId} not found`);
+    }
+
+    await this.db.scenes.update(sceneId, { locationId });
+}
