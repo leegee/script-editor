@@ -12,19 +12,24 @@ import BeatCreator from '../creators/BeatCreator';
 import DeleteSceneButton from '../delete-buttons/DeleteSceneButton';
 import AddCharacter from '../../AddCharacter';
 import AddLocation from '../../AddLocation';
+import { Scene } from '../../lib/types';
 
 export interface SceneCardProps {
-    sceneId: string;
+    actId: string;
+    scene?: Scene;
+    sceneId?: string;
     summary: boolean;
+    onChange: () => void;
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    const [scene] = createResource(() => storyApi.getScene(props.sceneId));
+    const [scene] = createResource(() => props.scene ?? storyApi.getScene(props.sceneId));
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>
             {(scn) => (
                 <Card
+                    parentId={props.actId}
                     entityType='scenes'
                     entityId={scn().id}
                     title={

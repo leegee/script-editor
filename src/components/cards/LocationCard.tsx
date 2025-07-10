@@ -16,6 +16,8 @@ type LocationCardProps = {
     locationId?: string;
     location?: Location;
     sceneId?: string;
+    parentId?: string;
+    onChange?: () => void;
 };
 
 const LocationCard: Component<LocationCardProps> = (props) => {
@@ -54,8 +56,10 @@ const LocationCard: Component<LocationCardProps> = (props) => {
 
                 return (
                     <Card
+                        draggable={false}
                         entityType='locations'
                         entityId={loc.id}
+                        refresh={props.onChange}
                         link={`/location/${loc.id}`}
                         label={`View details for ${loc.name}`}
                         summary={!!props.summary}

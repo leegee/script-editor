@@ -34,6 +34,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
     return (
         <Show when={character()} fallback={<div class="loading">Loading character...</div>}>
             <Card
+                draggable={false}
                 entityType='characters'
                 entityId={character().id}
                 link={`/character/${character()!.id}`}
@@ -48,11 +49,15 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                         <TextInput {...bindField('characters', character().id, 'bio')} />
                     </p>
 
-                    <Show when={character()!.tags?.length}>
+                    <Show when={character().tags?.length}>
                         <div class="tags">
                             <For each={character()!.tags}>
                                 {(tag) => <span class="tag">#{tag}</span>}
                             </For>
+                        </div>
+
+                        <div class="image-preview">
+                            <img src={character().avatarImage} alt="Location photo" />
                         </div>
                     </Show>
 

@@ -7,7 +7,7 @@ type CharacterListProps = {
     characterIds?: string[];
     sceneId?: string;
     actId?: string;
-    refresh?: Date;
+    refresh?: number;
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {

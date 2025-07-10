@@ -1,5 +1,4 @@
-import './SceneList.scss';
-import { type Component, createResource, For, Show } from 'solid-js';
+import { type Component, For, createResource, createSignal } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import SceneCard from '../cards/SceneCard';
 
@@ -8,21 +7,30 @@ interface SceneListProps {
 }
 
 const SceneList: Component<SceneListProps> = (props) => {
+    const [refresh, setRefresh] = createSignal(0);
+
     const [scenes] = createResource(
-        () => props.actId,
-        async (actId) => await storyApi.getScenesByActId(actId)
+        () => [props.actId, refresh()],
+        async ([actId]) => await storyApi.getScenesByActId(String(actId))
     );
 
+    const handleChange = () => {
+        setRefresh(prev => prev + 1);
+    };
+
     return (
-        <section class="scene-list" role="list" aria-label="Scenes List">
-            <Show when={scenes()} fallback={<div>Loading scenes...</div>}>
-                <For each={scenes()}>
-                    {(scene) => <>
-                        <SceneCard sceneId={scene.id} summary={true} />
-                    </>}
-                </For>
-            </Show>
-        </section>
+        <div class="scenes">
+            <For each={scenes()}>
+                {(scene) => (
+                    <SceneCard
+                        scene={scene}
+                        actId={props.actId}
+                        onChange={handleChange}
+                        summary={false}
+                    />
+                )}
+            </For>
+        </div>
     );
 };
 

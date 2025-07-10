@@ -45,9 +45,14 @@ const BeatCard: Component<BeatCardProps> = (props) => {
         }
     };
 
+    const handleChange = () => {
+        setRefresh((prev) => prev + 1);
+    };
+
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
+                parentId={props.sceneId}
                 entityType='beats'
                 entityId={beat().id}
                 link={`/scene/${props.sceneId}/beat/${props.beatId}`}
@@ -55,6 +60,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 summary={props.summary}
                 class="beat-card"
                 title={<TextInput {...bindField('beats', beat().id, 'title')} />}
+                refresh={handleChange}
                 menuItems={
                     <>
                         <BeatCreator sceneId={props.sceneId}>New Beat</BeatCreator>
@@ -68,7 +74,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
 
                 <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptlines()}>
-                        {(line) => <ScriptLineCard line={line} onChange={handleRefresh} />}
+                        {(line) => <ScriptLineCard line={line} beatId={beat().id} onChange={handleChange} />}
                     </For>
                     <button class='new' onclick={addNewScriptLine}>Line</button>
                 </section>

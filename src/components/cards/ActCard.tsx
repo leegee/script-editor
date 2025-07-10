@@ -1,6 +1,5 @@
 import './ActCard.scss';
-
-import { type Component, createResource, createSignal, Show } from 'solid-js';
+import { type Component, createResource, Show, createSignal } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import { uiOptions } from '../../stores/ui';
 import SceneList from '../lists/SceneList';
@@ -13,26 +12,36 @@ import ActCreator from '../creators/ActCreator';
 import LocationList from '../lists/LocationList';
 import CharacterList from '../lists/CharacterList';
 import { Act } from '../../lib/types';
+import { DragDropHandler } from '../../lib/DragDropHandler';
 
 interface ActCardProps {
-    actId?: string;   // now optional
-    act?: Act;        // full act object optional
+    actId?: string;
+    act?: Act;
     summary?: boolean;
+    storyId?: string;
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    const [refrsehCharacterList, setRefrsehCharacterList] = createSignal(new Date());
+    const [characterListRefresh, setCharacterListRefresh] = createSignal(0);
+    const [actRefresh, setActRefresh] = createSignal(0);
 
     const [act] = createResource(
-        () => props.act ? null : props.actId,  // no fetch if act is provided
-        async (id) => {
-            if (!id) return undefined;
-            return await storyApi.getAct(id);
+        () => [props.act ? null : props.actId, actRefresh()],
+        async ([id]) => {
+            if (!id) return props.act;
+            return await storyApi.getAct(String(id));
         }
     );
 
-    // actData is either from props.act or fetched act
     const actData = () => props.act ?? act();
+
+    const handleRefreshCharacters = () => {
+        setCharacterListRefresh(prev => prev + 1);
+    };
+
+    const handleChange = () => {
+        setActRefresh(prev => prev + 1);
+    };
 
     return (
         <Show when={actData()} fallback={<div class="loading">Loading act...</div>}>
@@ -40,6 +49,8 @@ const ActCard: Component<ActCardProps> = (props) => {
                 <Card
                     entityType="acts"
                     entityId={actValue().id}
+                    parentId={props.storyId ?? ''}
+                    class="act-card"
                     title={
                         <>
                             <span class="icon">🎭</span>
@@ -50,7 +61,6 @@ const ActCard: Component<ActCardProps> = (props) => {
                     link={`/act/${actValue().id}`}
                     label={`View details for Act ${actValue().number}`}
                     summary={!!props.summary}
-                    class="act-card"
                     menuItems={
                         <>
                             <ActCreator />
@@ -58,6 +68,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                             <DeleteActButton actId={actValue().id} />
                         </>
                     }
+                    refresh={handleChange}
                 >
                     <Show when={uiOptions.showActMetaData}>
                         <div class="act-summary">
@@ -68,16 +79,25 @@ const ActCard: Component<ActCardProps> = (props) => {
                             />
                         </div>
 
-                        <h4>Characters present
-                            <button title='Refresh' onClick={() => setRefrsehCharacterList(new Date())} >⟲</button>
-                        </h4>
-                        <CharacterList actId={actValue().id} refresh={refrsehCharacterList()} />
+                        <div class="character-list-header">
+                            <h4>Characters present
+                                <button class="refresh-icon" onClick={handleRefreshCharacters}>↻</button>
+                            </h4>
+                        </div>
+                        <CharacterList actId={actValue().id} refresh={characterListRefresh()} />
 
-                        <h4>Locations used</h4>
-                        <LocationList entityType="acts" entityId={actValue().id} />
+                        <LocationList entityType="acts" entityId={actValue().id}>
+                            Locations used
+                        </LocationList>
                     </Show>
 
-                    <SceneList actId={actValue().id} />
+                    <section
+                        class="scenes"
+                        onDragOver={(e) => DragDropHandler.onDragOver(e, 'scenes', 'scene-card')}
+                        onDrop={(e) => DragDropHandler.onDrop(e, null, actValue().id, handleChange)}
+                    >
+                        <SceneList actId={actValue().id} />
+                    </section>
                 </Card>
             )}
         </Show>
