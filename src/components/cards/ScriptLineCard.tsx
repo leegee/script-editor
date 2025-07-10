@@ -8,6 +8,7 @@ import { storyApi } from "../../stores/story";
 
 interface ScriptLineCardProps {
     line: ScriptLine;
+    onChange?: () => void;
 }
 
 const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
@@ -19,6 +20,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
             storyApi.findParentEntity('beats', 'scriptLineIds', props.line.id),
             storyApi.deleteEntity('scriptlines', props.line.id)
         ]);
+        props.onChange?.();
     };
 
     return (

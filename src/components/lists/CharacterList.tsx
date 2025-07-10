@@ -14,7 +14,6 @@ const CharacterList: Component<CharacterListProps> = (props) => {
         () => [props.actId, props.sceneId, props.characterIds], // always an array
         async () => {
             if (props.actId) {
-                console.log('chars for act')
                 return await storyApi.getCharactersInActById(props.actId);
             }
             if (props.sceneId) {

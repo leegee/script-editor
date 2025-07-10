@@ -20,8 +20,6 @@ type LocationCardProps = {
 
 const LocationCard: Component<LocationCardProps> = (props) => {
     const params = useParams();
-    console.log("Rendering LocationCard:", props.location);
-
 
     const [location] = createResource(
         () => params.locationId ?? props.locationId ?? props.location,

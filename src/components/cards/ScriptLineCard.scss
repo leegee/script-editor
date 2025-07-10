@@ -12,6 +12,26 @@
         opacity: 50%;
     }
 
+    .script-line-type-description {
+        border-left: 4pt solid green;
+    }
+
+    .script-line-type-action {
+        border-left: 4pt solid orange;
+    }
+
+    .script-line-type-paraphetical {
+        border-left: 4pt solid cyan;
+    }
+
+    .script-line-type-shot {
+        border-left: 4pt solid white;
+    }
+
+    .script-line-type-transition {
+        border-left: 4pt solid purple;
+    }
+
     .script-line-type:hover {
         opacity: 100%;
     }

@@ -1,5 +1,5 @@
 import './BeatCard.scss';
-import { type Component, Show, For, createResource } from 'solid-js';
+import { type Component, Show, For, createResource, createSignal } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
@@ -17,26 +17,33 @@ interface BeatCardProps {
 
 const BeatCard: Component<BeatCardProps> = (props) => {
     const params = useParams();
+    const [refresh, setRefresh] = createSignal(0);
     const [beat] = createResource(() => {
         return storyApi.getBeat(props.beatId);
     });
 
-    const [scriptlines] = createResource(() => {
-        if (!beat()) return [];
-        // Property 'getScriptLinesByBeatId' does not exist on type 'StoryService'.ts(2339)
-        return storyApi.getScriptlinesByBeatId(beat().id);
-    });
+    const [scriptlines] = createResource(
+        () => [beat()?.id, refresh()],
+        async ([beatId]) => {
+            if (!beatId) return [];
+            return await storyApi.getScriptlinesByBeatId(String(beatId));
+        }
+    );
 
-    const addNewScriptLine = () => {
-        // Property 'addNewScriptLineToBeat' does not exist on type 'StoryService'.ts(2339)
-        storyApi.addNewScriptLineToBeat(beat().id)
+    const addNewScriptLine = async () => {
+        await storyApi.addNewScriptLineToBeat(beat().id);
+        setRefresh((prev) => prev + 1);
+    };
+
+    const handleRefresh = () => {
+        setRefresh((prev) => prev + 1);
     };
 
     const handleOnKeyUp = (e: KeyboardEvent) => {
         if (e.key === "Enter" && (e.ctrlKey || e.shiftKey)) {
             addNewScriptLine();
         }
-    }
+    };
 
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
@@ -61,11 +68,9 @@ const BeatCard: Component<BeatCardProps> = (props) => {
 
                 <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptlines()}>
-                        {(line) => <ScriptLineCard line={line} />}
+                        {(line) => <ScriptLineCard line={line} onChange={handleRefresh} />}
                     </For>
-
                     <button class='new' onclick={addNewScriptLine}>Line</button>
-
                 </section>
             </Card>
         </Show>
