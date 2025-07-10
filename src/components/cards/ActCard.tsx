@@ -1,6 +1,6 @@
 import './ActCard.scss';
 
-import { type Component, createResource, Show } from 'solid-js';
+import { type Component, createResource, createSignal, Show } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import { uiOptions } from '../../stores/ui';
 import SceneList from '../lists/SceneList';
@@ -21,7 +21,8 @@ interface ActCardProps {
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    // Use act prop if given, otherwise fetch by actId
+    const [refrsehCharacterList, setRefrsehCharacterList] = createSignal(new Date());
+
     const [act] = createResource(
         () => props.act ? null : props.actId,  // no fetch if act is provided
         async (id) => {
@@ -67,8 +68,10 @@ const ActCard: Component<ActCardProps> = (props) => {
                             />
                         </div>
 
-                        <h4>Characters present</h4>
-                        <CharacterList actId={actValue().id} />
+                        <h4>Characters present
+                            <button title='Refresh' onClick={() => setRefrsehCharacterList(new Date())} >⟲</button>
+                        </h4>
+                        <CharacterList actId={actValue().id} refresh={refrsehCharacterList()} />
 
                         <h4>Locations used</h4>
                         <LocationList entityType="acts" entityId={actValue().id} />

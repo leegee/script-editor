@@ -7,11 +7,12 @@ type CharacterListProps = {
     characterIds?: string[];
     sceneId?: string;
     actId?: string;
+    refresh?: Date;
 };
 
 const CharacterList: Component<CharacterListProps> = (props) => {
     const [characters] = createResource(
-        () => [props.actId, props.sceneId, props.characterIds], // always an array
+        () => [props.actId, props.sceneId, props.characterIds, props.refresh],
         async () => {
             if (props.actId) {
                 return await storyApi.getCharactersInActById(props.actId);
