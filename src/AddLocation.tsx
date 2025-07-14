@@ -23,7 +23,7 @@ export default function AddLocation(props: AddLocationProps) {
             when={availableLocations()}
             fallback={<small>No Locations Defined</small>}
         >
-            <OverflowMenu class="none" buttonContent={<span>↔ Set Location</span>}>
+            <OverflowMenu class="none" buttonContent={<small>↔ Set Location</small>}>
                 <ul class="overflow-menu-list">
                     {availableLocations().map((location) => (
                         <li>

@@ -81,7 +81,7 @@ const ActCard: Component<ActCardProps> = (props) => {
 
                         <div class="character-list-header">
                             <h4>Characters present
-                                <button class="refresh-icon" onClick={handleRefreshCharacters}>↻</button>
+                                <small><button class="refresh-icon" onClick={handleRefreshCharacters}>↻  Refresh</button></small>
                             </h4>
                         </div>
                         <CharacterList actId={actValue().id} refresh={characterListRefresh()} />

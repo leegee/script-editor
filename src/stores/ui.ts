@@ -4,6 +4,7 @@ import { createStore } from "solid-js/store";
 type UiOptionsType = {
     showActMetaData: boolean;
     showSceneMetaData: boolean;
+    showBeatMetaData: boolean;
     showLeftSidePanel: boolean;
     showRightSidePanel: boolean;
     showStoryTree: boolean;
@@ -12,6 +13,7 @@ type UiOptionsType = {
 const defaults: UiOptionsType = {
     showActMetaData: false,
     showSceneMetaData: false,
+    showBeatMetaData: false,
     showLeftSidePanel: true,
     showRightSidePanel: true,
     showStoryTree: false,

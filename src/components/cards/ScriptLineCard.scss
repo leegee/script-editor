@@ -1,6 +1,10 @@
 @use "../../style/mixins/fonts.scss";
 
 
+.script-line.script-line-dialogue {
+    margin-left: -1.6em !important;
+}
+
 .card.script-line-card .script-line.script-line-dialogue .avatar-circle {
     min-width: 1.1em;
     min-height: 1.1em;
@@ -24,6 +28,12 @@
         opacity: 50%;
     }
 
+
+    .script-line-card {
+        border: 1pt solid grey;
+        border-left: 4pt solid grey;
+    }
+
     .script-line-type-label {
         margin-left: 0.6em;
     }
@@ -37,29 +47,28 @@
         opacity: 50%;
     }
 
+    .script-line-type-dialogue {
+        border-left-width: 12pt;
+    }
+
     .script-line-type-description {
-        border: 1pt solid green;
-        border-left: 4pt solid green;
+        border-color: green;
     }
 
     .script-line-type-action {
-        border: 1pt solid orange;
-        border-left: 4pt solid orange;
+        border-color: orange;
     }
 
     .script-line-type-paraphetical {
-        border: 1pt solid cyan;
-        border-left: 4pt solid cyan;
+        border-color: cyan;
     }
 
     .script-line-type-shot {
-        border: 1pt solid oldlace;
-        border-left: 4pt solid white;
+        border-color: oldlace;
     }
 
     .script-line-type-transition {
-        border: 1pt solid purple;
-        border-left: 4pt solid purple;
+        border-color: purple;
     }
 
     .script-line-type-transition {

@@ -8,14 +8,15 @@ import TextInput from '../TextInput';
 const ActCreator = () => {
     const [newActId, setNewActId] = createSignal<string | null>(null);
 
-    const openModal = () => {
-        const actId = storyApi.createEntity('acts', {
-            number: storyApi.getNextInSequence('acts'),
+    const openModal = async () => {
+        const actId = await storyApi.createEntity('acts', {
+            id: crypto.randomUUID(),
+            number: await storyApi.getNextInSequence('acts'),
             title: 'New Act',
             summary: '',
             sceneIds: [],
         });
-        setNewActId(actId);
+        setNewActId(actId.id);
     };
 
     const cancel = () => {

@@ -8,6 +8,7 @@ import TextInput from '../TextInput';
 import ScriptLineCard from './ScriptLineCard';
 import BeatCreator from '../creators/BeatCreator';
 import DeleteBeatButton from '../delete-buttons/DeleteBeatButton';
+import { uiOptions } from '../../stores/ui';
 
 interface BeatCardProps {
     sceneId: string;
@@ -68,9 +69,12 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     </>
                 }
             >
-                <div class="beat-summary">
-                    <TextInput as='textarea' placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
-                </div>
+
+                <Show when={uiOptions.showBeatMetaData}>
+                    <div class="beat-summary">
+                        <TextInput as='textarea' placeholder='Summary' {...bindField('beats', beat().id, 'summary')} />
+                    </div>
+                </Show>
 
                 <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptlines()}>

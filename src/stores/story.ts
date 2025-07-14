@@ -146,6 +146,14 @@ export class StoryService {
         return this.db[type] as Dexie.Table<EntityMap[T], string>;
     }
 
+    async getNextInSequence(this: StoryService, entity: keyof NormalizedStoryData): Promise<number> {
+        const table = this.db[entity];
+        if (!table) throw new Error(`Unknown entity: ${entity}`);
+
+        const highest = await table.orderBy('number').last();
+        return highest ? highest.number + 1 : 1;
+    }
+
     async createEntity<T extends keyof EntityMap>(
         type: T,
         entity: EntityMap[T],

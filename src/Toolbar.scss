@@ -1,17 +1,20 @@
 .nav-bar {
+    max-height: 10vh;
+    background-color: black;
+
     ul {
         display: flex;
         list-style: none;
         align-items: stretch;
         justify-content: space-between;
         gap: 0.4em;
-        margin: 0.6em;
+        margin: 0.2em 0.6em;
         padding: 0;
 
         li {
             margin: 0;
             padding: 2pt 0.6em;
-            border: 1pt solid #fff4;
+            border: 1pt solid #ddd2;
             display: inline-flex;
             justify-content: center;
             align-items: center;

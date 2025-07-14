@@ -45,7 +45,7 @@ export default (props: LocationListProps) => {
                     <span> {props.children || ''} </span>
                     <LocationCreator parentId={props.entityId ?? null} refresh={handleChange}>
                         <Show when={props.entityId}>
-                            <button class='refresh'>Refresh Location</button>
+                            <small><button class='refresh'>Refresh Location</button></small>
                         </Show>
                     </LocationCreator>
                 </h4>

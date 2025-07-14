@@ -24,13 +24,13 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
     constructor() {
         super('StoryDB');
         this.version(1).stores({
-            story: '&id, *actIds, *characterIds, *locationIds',
-            acts: '&id, *sceneIds',
-            scenes: '&id, *beatIds',
-            beats: '&id, &sceneId, *scriptLineIds',
-            scriptlines: '&id, beatId',
-            characters: '&id',
-            locations: '&id'
+            story: '++id, *actIds, *characterIds, *locationIds',
+            acts: '++id, *sceneIds, number',
+            scenes: '++id, *beatIds, number',
+            beats: '++id, *sceneId, *scriptLineIds, number',
+            scriptlines: '++id, beatId, number',
+            characters: '++id',
+            locations: '++id'
         });
     }
 }

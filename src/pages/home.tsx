@@ -21,51 +21,44 @@ export default function Home(props) {
   });
 
   return (
-    <>
-      {/* <header class="home-layout-controls">
-        <Switch checked={uiOptions.showLeftSidePanel} onUpdate={checked => setUiOptions('showLeftSidePanel', checked)} />
-        <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
-      </header> */}
+    <main class={mainClass()}>
+      <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
+        <Card class="act-panel" title="Acts" link='/act?summary=true' open
+          menuItems={<><ActCreator /></>}
+          entityType='acts'
+          entityId={undefined}
+          draggable={true}
+          parentId=''
+        >
+          <ActDetails summary={true} />
+        </Card>
+      </aside>
 
-      <main class={mainClass()}>
-        <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
-          <Card class="act-panel" title="Acts" link='/act?summary=true' open
-            menuItems={<><ActCreator /></>}
-            entityType='acts'
-            entityId={undefined}
-            draggable={true}
-            parentId=''
-          >
-            <ActDetails summary={true} />
-          </Card>
-        </aside>
+      <article class="main-content">
+        {props.children}
+      </article>
 
-        <article class="main-content">
-          {props.children}
-        </article>
+      <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
+        <Card class="character-panel" title="Characters" link='/character' open
+          menuItems={<><CharacterCreator /></>}
+          entityType='characters'
+          entityId={undefined}
+          draggable={true}
+          parentId=''
+        >
+          <CharacterList />
+        </Card>
 
-        <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
-          <Card class="character-panel" title="Characters" link='/character' open
-            menuItems={<><CharacterCreator /></>}
-            entityType='characters'
-            entityId={undefined}
-            draggable={true}
-            parentId=''
-          >
-            <CharacterList />
-          </Card>
-
-          <Card class="location-panel" title="Location" open link='/location'
-            menuItems={<><LocationCreator /></>}
-            entityType='locations'
-            entityId={undefined}
-            draggable={true}
-            parentId=''
-          >
-            <LocationList />
-          </Card>
-        </aside>
-      </main>
-    </>
+        <Card class="location-panel" title="Location" open link='/location'
+          menuItems={<><LocationCreator /></>}
+          entityType='locations'
+          entityId={undefined}
+          draggable={true}
+          parentId=''
+        >
+          <LocationList />
+        </Card>
+      </aside>
+    </main>
   );
 }

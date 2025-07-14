@@ -26,10 +26,15 @@ export default function () {
                 <label>Scene Info</label>
                 <Switch checked={uiOptions.showSceneMetaData} onUpdate={(checked) => setUiOptions('showSceneMetaData', checked)} />
             </li>
+            <li>
+                <label>Beat Info</label>
+                <Switch checked={uiOptions.showBeatMetaData} onUpdate={(checked) => setUiOptions('showBeatMetaData', checked)} />
+            </li>
             <li class='spacer'></li>
             <li>
                 <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
-            </li><li>
+            </li>
+            <li>
                 <OverflowMenu>
                     <HomeButton />
                     <LoadStoryButton />

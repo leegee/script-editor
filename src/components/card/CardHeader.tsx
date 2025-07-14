@@ -53,9 +53,10 @@ const CardHeader: Component<CharacterHeaderProps> = (props) => {
     >
       <h3 class='card-title-text'>
         <Show when={props.link && typeof props.title === 'string'} fallback={props.title}>
-          <button onclick={() => navigate(props.link)}>{props.title}</button>
+          <button onclick={() => navigate(props.link)}>
+            {props.title}
+          </button>
         </Show>
-        {/* {props.title} */}
       </h3>
 
       <OverflowMenu>
