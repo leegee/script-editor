@@ -6,7 +6,7 @@ import LocationCard from '../cards/LocationCard';
 import LocationCreator from '../creators/LocationCreator';
 
 type LocationListProps = {
-    children: JSX.Element
+    children?: JSX.Element
 } & (
         | { entityType: keyof EntityMap; entityId: string; refresh?: number }
         | { entityType?: undefined; entityId?: undefined; refresh?: number }
@@ -40,12 +40,16 @@ export default (props: LocationListProps) => {
 
     return (
         <section>
-            <h4>
-                <span> {props.children || ''} </span>
-                <LocationCreator parentId={props.entityId ?? null} refresh={handleChange}>
-                    <button class='refresh'>Change Location</button>
-                </LocationCreator>
-            </h4>
+            <Show when={props.children && props.entityId}>
+                <h4>
+                    <span> {props.children || ''} </span>
+                    <LocationCreator parentId={props.entityId ?? null} refresh={handleChange}>
+                        <Show when={props.entityId}>
+                            <button class='refresh'>Refresh Location</button>
+                        </Show>
+                    </LocationCreator>
+                </h4>
+            </Show>
 
             <Show when={locations()} fallback={<div>No locations found</div>}>
                 <section class="location-list" role="list" aria-label="Locations List">

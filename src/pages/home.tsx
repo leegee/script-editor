@@ -22,10 +22,10 @@ export default function Home(props) {
 
   return (
     <>
-      <header class="home-layout-controls">
+      {/* <header class="home-layout-controls">
         <Switch checked={uiOptions.showLeftSidePanel} onUpdate={checked => setUiOptions('showLeftSidePanel', checked)} />
         <Switch checked={uiOptions.showRightSidePanel} onUpdate={checked => setUiOptions('showRightSidePanel', checked)} />
-      </header>
+      </header> */}
 
       <main class={mainClass()}>
         <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
@@ -62,7 +62,7 @@ export default function Home(props) {
             draggable={true}
             parentId=''
           >
-            <LocationList>Locations</LocationList>
+            <LocationList />
           </Card>
         </aside>
       </main>

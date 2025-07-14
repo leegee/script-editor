@@ -1,9 +1,9 @@
 .nav-bar {
     ul {
         display: flex;
-        justify-content: flex-end;
-        flex-direction: row;
         list-style: none;
+        align-items: stretch;
+        justify-content: space-between;
         gap: 0.4em;
         margin: 0.6em;
         padding: 0;
@@ -15,10 +15,16 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
+            height: auto;
         }
 
         li label {
             padding-right: 1em;
+        }
+
+        li.spacer {
+            flex-grow: 1;
+            border: none;
         }
     }
 }

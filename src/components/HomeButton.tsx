@@ -10,7 +10,7 @@ const HomeButton: Component = () => {
 
     return (
         <button type="button" onClick={goHome}>
-            🏚️
+            🏚️ Home
         </button>
     );
 };
