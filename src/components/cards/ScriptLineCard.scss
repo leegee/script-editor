@@ -19,6 +19,11 @@
 .script-lines {
     margin: 0.3em 0;
 
+    button.new {
+        margin-top: 1em;
+        opacity: 50%;
+    }
+
     .script-line-type-label {
         margin-left: 0.6em;
     }

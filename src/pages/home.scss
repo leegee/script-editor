@@ -50,18 +50,22 @@
             }
         }
 
-        // &.left {
-        // }
+        &.left {
+            min-width: min(20vw, 25em);
+        }
 
         &.right {
             text-align: right;
+            max-width: 15em;
         }
 
         &.open {
-            width: min(20vw, 40em);
+            width: min(20vw, 25em);
             overflow-y: auto;
             padding: 0.25em 0.5em;
             margin: 0 0.3em;
+            padding: 0;
+            margin: 0;
         }
 
         &.closed {

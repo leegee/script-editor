@@ -33,6 +33,8 @@ export default function Home(props) {
             menuItems={<><ActCreator /></>}
             entityType='acts'
             entityId={undefined}
+            draggable={true}
+            parentId=''
           >
             <ActDetails summary={true} />
           </Card>
@@ -47,6 +49,8 @@ export default function Home(props) {
             menuItems={<><CharacterCreator /></>}
             entityType='characters'
             entityId={undefined}
+            draggable={true}
+            parentId=''
           >
             <CharacterList />
           </Card>
@@ -55,8 +59,10 @@ export default function Home(props) {
             menuItems={<><LocationCreator /></>}
             entityType='locations'
             entityId={undefined}
+            draggable={true}
+            parentId=''
           >
-            <LocationList />
+            <LocationList>Locations</LocationList>
           </Card>
         </aside>
       </main>

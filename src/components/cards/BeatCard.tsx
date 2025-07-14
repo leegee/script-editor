@@ -76,7 +76,9 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     <For each={scriptlines()}>
                         {(line) => <ScriptLineCard line={line} beatId={beat().id} onChange={handleChange} />}
                     </For>
+
                     <button class='new' onclick={addNewScriptLine}>Line</button>
+
                 </section>
             </Card>
         </Show>

@@ -13,10 +13,38 @@ export async function getCharactersInSceneById(
     this: StoryService,
     sceneId: string
 ): Promise<Character[]> {
-    return this.db.characters
-        .where('sceneId')
-        .equals(sceneId)
+    const scene = await this.db.scenes.get(sceneId);
+    if (!scene) {
+        throw new Error(`Scene ${sceneId} not found.`);
+    }
+
+    const beats = await this.db.beats
+        .where('id')
+        .anyOf(scene.beatIds)
         .toArray();
+
+    const scriptLineIds = beats.flatMap(beat => beat.scriptLineIds);
+
+    const scriptLines = await this.db.scriptlines
+        .where('id')
+        .anyOf(scriptLineIds)
+        .toArray();
+
+    const characterIds = [
+        ...new Set(
+            scriptLines
+                .map(sl => sl.characterId)
+                .filter((id): id is string => id !== null)
+        ),
+    ];
+
+    // Get unique characters
+    const characters = await this.db.characters
+        .where('id')
+        .anyOf(characterIds)
+        .toArray();
+
+    return characters;
 }
 
 export async function getScenesByActId(
