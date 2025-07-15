@@ -7,49 +7,33 @@ export function useScene(
     sceneId: () => string | undefined
 ) {
     return this.createLiveResource(() => {
-        console.log('scene', sceneId())
         if (!sceneId()) return undefined;
         return this.db.scenes.get(sceneId());
     });
 }
 
-export async function getCharactersInSceneById(
+export function useCharactersInScene(
     this: StoryService,
-    sceneId: string
-): Promise<Character[]> {
-    const scene = await this.db.scenes.get(sceneId);
-    if (!scene) {
-        throw new Error(`Scene ${sceneId} not found.`);
-    }
+    sceneId: () => string | undefined
+) {
+    return this.createLiveResource(async () => {
+        const id = sceneId();
+        if (!id) return undefined;
 
-    const beats = await this.db.beats
-        .where('id')
-        .anyOf(scene.beatIds)
-        .toArray();
+        const scene = await this.db.scenes.get(id);
+        if (!scene) return undefined;
 
-    const scriptLineIds = beats.flatMap(beat => beat.scriptLineIds);
+        const beats = await this.db.beats.where('id').anyOf(scene.beatIds ?? []).toArray();
+        const scriptLineIds = beats.flatMap(beat => beat.scriptLineIds ?? []);
+        const scriptLines = await this.db.scriptlines.where('id').anyOf(scriptLineIds).toArray();
 
-    const scriptLines = await this.db.scriptlines
-        .where('id')
-        .anyOf(scriptLineIds)
-        .toArray();
+        const characterIds = [...new Set(scriptLines.map(sl => sl.characterId).filter(Boolean))];
+        const characters = await this.db.characters.where('id').anyOf(characterIds).toArray();
 
-    const characterIds = [
-        ...new Set(
-            scriptLines
-                .map(sl => sl.characterId)
-                .filter((id): id is string => id !== null)
-        ),
-    ];
-
-    // Get unique characters
-    const characters = await this.db.characters
-        .where('id')
-        .anyOf(characterIds)
-        .toArray();
-
-    return characters;
+        return characters;
+    });
 }
+
 
 export async function getScenesByActId(
     this: StoryService,

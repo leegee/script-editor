@@ -1,43 +1,45 @@
 import type { Character, ScriptLineType } from '../../../lib/types';
 import type { StoryService } from '../../story';
 
-declare module '../../story' {
-    interface StoryService {
-        getCharacter(id: string): Promise<Character | undefined>;
-        getCharacters(): Promise<Character[]>;
-    }
-}
-
-// Get a character by ID
-export async function getCharacter(
+// Get a character by ID reactively
+export function useCharacter(
     this: StoryService,
-    id: string
-): Promise<Character | undefined> {
-    return await this.db.characters.get(id);
+    id: () => string | undefined
+) {
+    return this.createLiveResource(() => {
+        const characterId = id();
+        if (!characterId) return undefined;
+        return this.db.characters.get(characterId);
+    });
 }
 
-// Get all characters
-export async function getCharacters(
-    this: StoryService
-): Promise<Character[]> {
-    return await this.db.characters.toArray();
+
+export function useCharacters(this: StoryService) {
+    return this.createLiveResource(() => this.db.characters.toArray());
 }
 
-// Get characters by a predicate function
-export async function getCharactersByFilter(
+export function useCharactersByFilter(
     this: StoryService,
-    filterFn: (char: Character) => boolean
-): Promise<Character[]> {
-    const all = await this.db.characters.toArray();
-    return all.filter(filterFn);
+    filterFn: () => ((char: Character) => boolean) | undefined
+) {
+    return this.createLiveResource(async () => {
+        const fn = filterFn();
+        if (!fn) return [];
+        const all = await this.db.characters.toArray();
+        return all.filter(fn);
+    });
 }
 
-// Get characters belonging to a specific story ID
-export async function getCharactersByStoryId(
+// Get characters by story ID reactively
+export function useCharactersByStoryId(
     this: StoryService,
-    storyId: string
-): Promise<Character[]> {
-    return await this.db.characters.where('storyId').equals(storyId).toArray();
+    storyId: () => string | undefined
+) {
+    return this.createLiveResource(() => {
+        const id = storyId();
+        if (!id) return [];
+        return this.db.characters.where('storyId').equals(id).toArray();
+    });
 }
 
 export async function removeCharacterFromScene(sceneId: string, characterId: string): Promise<void> {
@@ -57,30 +59,33 @@ export async function removeCharacterFromScene(sceneId: string, characterId: str
     });
 }
 
-export async function getCharactersNotInScene(
+export function useCharactersNotInScene(
     this: StoryService,
-    sceneId: string
-): Promise<Character[]> {
-    const scene = await this.db.scenes.get(sceneId);
-    if (!scene) {
-        console.warn(`Scene with id ${sceneId} not found.`);
-        return [];
-    }
+    sceneId: () => string | undefined
+) {
+    return this.createLiveResource(async () => {
+        const id = sceneId();
+        if (!id) return [];
 
-    const beats = await this.db.beats.bulkGet(scene.beatIds);
-    const scriptLineIds = beats.flatMap(beat => beat?.scriptLineIds || []);
-    const scriptlines = await this.db.scriptlines.bulkGet(scriptLineIds);
+        const scene = await this.db.scenes.get(id);
+        if (!scene) {
+            console.warn(`Scene with id ${id} not found.`);
+            return [];
+        }
 
-    const sceneCharacterIds = new Set(
-        scriptlines
-            .map(line => line?.characterId)
-            .filter((id): id is string => !!id)
-    );
+        const beats = await this.db.beats.bulkGet(scene.beatIds);
+        const scriptLineIds = beats.flatMap(beat => beat?.scriptLineIds || []);
+        const scriptlines = await this.db.scriptlines.bulkGet(scriptLineIds);
 
-    const allCharacters = await this.db.characters.toArray();
-    const notInScene = allCharacters.filter(char => !sceneCharacterIds.has(char.id));
+        const sceneCharacterIds = new Set(
+            scriptlines
+                .map(line => line?.characterId)
+                .filter((cid): cid is string => !!cid)
+        );
 
-    return notInScene;
+        const allCharacters = await this.db.characters.toArray();
+        return allCharacters.filter(char => !sceneCharacterIds.has(char.id));
+    });
 }
 
 

@@ -7,14 +7,10 @@ type AddCharacterProps = {
 };
 
 export default function AddCharacter(props: AddCharacterProps) {
-    const [availableCharacters, { refetch }] = createResource(
-        () => props.sceneId,
-        (sceneId) => storyApi.getCharactersNotInScene(sceneId)
-    );
+    const [availableCharacters] = storyApi.useCharactersNotInScene(() => props.sceneId);
 
     const handleAdd = async (characterId: string) => {
         await storyApi.linkCharacterToScene(props.sceneId, characterId);
-        refetch();
     };
 
     return (
@@ -26,7 +22,7 @@ export default function AddCharacter(props: AddCharacterProps) {
                 >
                     <OverflowMenu
                         class="none"
-                        buttonContent={<span>➕ Add Character</span>}
+                        buttonContent={<span class='new'>Add Character</span>}
                     >
                         <ul class="overflow-menu-list">
                             <For each={characters()}>

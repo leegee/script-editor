@@ -22,14 +22,13 @@ interface AvatarProps {
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
-    const [allCharacters] = createResource(() => storyApi.getCharacters());
+    const [allCharacters] = storyApi.useCharacters();
     const showName = props.showName ?? true;
     const isNew = props.isNew ?? false;
 
     const [selectedId, setSelectedId] = createSignal(props.characterId);
     const [showModal, setShowModal] = createSignal(false);
 
-    // Make sure selectedId defaults to the first available character once loaded
     createEffect(() => {
         if (!selectedId() && allCharacters()) {
             const firstId = allCharacters()?.[0]?.id;
@@ -37,9 +36,7 @@ const Avatar: Component<AvatarProps> = (props) => {
         }
     });
 
-    const [character] = createResource(selectedId, async (id) => {
-        return id ? await storyApi.getCharacter(id) : undefined;
-    });
+    const [character] = storyApi.useCharacter(() => selectedId());
 
     const characterSelectedChanged = (e: Event) => {
         const value = (e.target as HTMLSelectElement).value;

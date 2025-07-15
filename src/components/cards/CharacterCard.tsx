@@ -17,13 +17,7 @@ interface CharacterCardProps {
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
-    const [character] = createResource<Character | undefined>(() => {
-        if (props.character) return props.character;
-        if (props.characterId) {
-            return storyApi.getCharacter(props.characterId);
-        }
-        return undefined;
-    });
+    const [character] = storyApi.useCharacter(() => props.characterId);
 
     const menuItems = [<DeleteCharacterButton characterId={character().id} />];
 

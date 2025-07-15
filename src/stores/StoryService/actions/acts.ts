@@ -51,52 +51,54 @@ export async function getLocationForScene(
 }
 
 
-export async function getCharactersInActById(
+export function useCharactersInActById(
     this: StoryService,
-    actId: string
-): Promise<Character[]> {
-    const act = await this.db.acts.get(actId);
-    if (!act) {
-        console.warn(`Act with id ${actId} not found.`);
-        return [];
-    }
-    const sceneIds = act.sceneIds;
+    actId: () => string | undefined
+) {
+    return this.createLiveResource(async () => {
+        const id = actId();
+        if (!id) return [];
 
-    if (sceneIds.length === 0) return [];
+        const act = await this.db.acts.get(id);
+        if (!act) {
+            console.warn(`Act with id ${id} not found.`);
+            return [];
+        }
 
-    const scenes = await this.db.scenes
-        .where('id')
-        .anyOf(sceneIds)
-        .toArray();
+        const sceneIds = act.sceneIds;
+        if (sceneIds.length === 0) return [];
 
-    const allBeatIds = scenes.flatMap(scene => scene.beatIds);
+        const scenes = await this.db.scenes
+            .where('id')
+            .anyOf(sceneIds)
+            .toArray();
 
-    if (allBeatIds.length === 0) return [];
+        const allBeatIds = scenes.flatMap(scene => scene.beatIds);
+        if (allBeatIds.length === 0) return [];
 
-    const beats = await this.db.beats
-        .where('id')
-        .anyOf(allBeatIds)
-        .toArray();
+        const beats = await this.db.beats
+            .where('id')
+            .anyOf(allBeatIds)
+            .toArray();
 
-    const allScriptLineIds = beats.flatMap(beat => beat.scriptLineIds);
+        const allScriptLineIds = beats.flatMap(beat => beat.scriptLineIds);
+        if (allScriptLineIds.length === 0) return [];
 
-    if (allScriptLineIds.length === 0) return [];
+        const scriptLines = await this.db.scriptlines
+            .where('id')
+            .anyOf(allScriptLineIds)
+            .toArray();
 
-    const scriptLines = await this.db.scriptlines
-        .where('id')
-        .anyOf(allScriptLineIds)
-        .toArray();
+        const characterIds = Array.from(
+            new Set(scriptLines.map(sl => sl.characterId).filter((id): id is string => !!id))
+        );
+        if (characterIds.length === 0) return [];
 
-    const characterIds = Array.from(
-        new Set(scriptLines.map(sl => sl.characterId).filter((id): id is string => !!id))
-    );
+        const characters = await this.db.characters
+            .where('id')
+            .anyOf(characterIds)
+            .toArray();
 
-    if (characterIds.length === 0) return [];
-
-    const characters = await this.db.characters
-        .where('id')
-        .anyOf(characterIds)
-        .toArray();
-
-    return characters;
+        return characters;
+    });
 }
