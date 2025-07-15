@@ -23,24 +23,11 @@ interface ActCardProps {
 
 const ActCard: Component<ActCardProps> = (props) => {
     const [characterListRefresh, setCharacterListRefresh] = createSignal(0);
-    const [actRefresh, setActRefresh] = createSignal(0);
-
-    const [act] = createResource(
-        () => [props.act ? null : props.actId, actRefresh()],
-        async ([id]) => {
-            if (!id) return props.act;
-            return await storyApi.getAct(String(id));
-        }
-    );
-
-    const actData = () => props.act ?? act();
+    const [actResource] = storyApi.useAct(props.actId);
+    const actData = () => props.act ?? actResource();
 
     const handleRefreshCharacters = () => {
         setCharacterListRefresh(prev => prev + 1);
-    };
-
-    const handleChange = () => {
-        setActRefresh(prev => prev + 1);
     };
 
     return (
@@ -68,7 +55,6 @@ const ActCard: Component<ActCardProps> = (props) => {
                             <DeleteActButton actId={actValue().id} />
                         </>
                     }
-                    refresh={handleChange}
                 >
                     <Show when={uiOptions.showActMetaData}>
                         <div class="act-summary">
@@ -94,7 +80,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                     <section
                         class="scenes"
                         onDragOver={(e) => DragDropHandler.onDragOver(e, 'scenes', 'scene-card')}
-                        onDrop={(e) => DragDropHandler.onDrop(e, null, actValue().id, handleChange)}
+                        onDrop={(e) => DragDropHandler.onDrop(e, null, actValue().id)}
                     >
                         <SceneList actId={actValue().id} />
                     </section>

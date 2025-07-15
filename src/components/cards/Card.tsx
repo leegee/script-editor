@@ -55,9 +55,9 @@ const Card = <T extends keyof EntityMap>(props: CardProps<T>) => {
         onDrop: (e: DragEvent) => DragDropHandler.onDrop(e, props.entityId, props.parentId, props.refresh ?? (() => { }))
     } : {};
 
-    if (!props.parentId && props.draggable) {
-        console.trace('no parentId in Card', props);
-    }
+    // if (!props.parentId && props.draggable) {
+    //     console.trace('no parentId in Card', props);
+    // }
 
     return (
         <section

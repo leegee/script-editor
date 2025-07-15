@@ -1,6 +1,5 @@
 import './BeatCard.scss';
-import { type Component, Show, For, createResource, createSignal } from 'solid-js';
-import { useParams } from '@solidjs/router';
+import { type Component, Show, For, createResource, createSignal, createMemo } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
 import Card from './Card';
@@ -17,37 +16,20 @@ interface BeatCardProps {
 }
 
 const BeatCard: Component<BeatCardProps> = (props) => {
-    const params = useParams();
     const [refresh, setRefresh] = createSignal(0);
-    const [beat] = createResource(() => {
-        return storyApi.getBeat(props.beatId);
-    });
 
-    const [scriptlines] = createResource(
-        () => [beat()?.id, refresh()],
-        async ([beatId]) => {
-            if (!beatId) return [];
-            return await storyApi.getScriptlinesByBeatId(String(beatId));
-        }
-    );
+    const [beat] = storyApi.useBeat(() => props.beatId);
+
+    const [scriptlines] = storyApi.useScriptlinesByBeatId(() => props.beatId);
 
     const addNewScriptLine = async () => {
-        await storyApi.addNewScriptLineToBeat(beat().id);
-        setRefresh((prev) => prev + 1);
-    };
-
-    const handleRefresh = () => {
-        setRefresh((prev) => prev + 1);
+        storyApi.addNewScriptLineToBeat(beat().id);
     };
 
     const handleOnKeyUp = (e: KeyboardEvent) => {
         if (e.key === "Enter" && (e.ctrlKey || e.shiftKey)) {
             addNewScriptLine();
         }
-    };
-
-    const handleChange = () => {
-        setRefresh((prev) => prev + 1);
     };
 
     return (
@@ -61,7 +43,6 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                 summary={props.summary}
                 class="beat-card"
                 title={<TextInput {...bindField('beats', beat().id, 'title')} />}
-                refresh={handleChange}
                 menuItems={
                     <>
                         <BeatCreator sceneId={props.sceneId}>New Beat</BeatCreator>
@@ -78,7 +59,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
 
                 <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptlines()}>
-                        {(line) => <ScriptLineCard line={line} beatId={beat().id} onChange={handleChange} />}
+                        {(line) => <ScriptLineCard line={line} beatId={beat().id} />}
                     </For>
 
                     <button class='new' onclick={addNewScriptLine}>Line</button>

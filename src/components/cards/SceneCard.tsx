@@ -1,5 +1,5 @@
 import './SceneCard.scss';
-import { type Component, Show, createResource } from 'solid-js';
+import { type Component, Show, createMemo, createResource } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
@@ -12,7 +12,7 @@ import BeatCreator from '../creators/BeatCreator';
 import DeleteSceneButton from '../delete-buttons/DeleteSceneButton';
 import AddCharacter from '../../AddCharacter';
 import AddLocation from '../../AddLocation';
-import { Scene } from '../../lib/types';
+import { type Scene } from '../../lib/types';
 
 export interface SceneCardProps {
     actId: string;
@@ -23,7 +23,12 @@ export interface SceneCardProps {
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    const [scene] = createResource(() => props.scene ?? storyApi.getScene(props.sceneId));
+    const [sceneFromDb] = storyApi.useScene(() => props.sceneId);
+
+    const scene = createMemo(() => {
+        if (props.scene) return props.scene;
+        return sceneFromDb();
+    });
 
     return (
         <Show when={scene()} fallback={<div class="loading">Loading scene...</div>}>

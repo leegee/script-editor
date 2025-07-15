@@ -36,7 +36,7 @@ export const DragDropHandler = {
         }
     },
 
-    async onDrop(event: DragEvent, targetId: string | null, parentId: string, refresh: () => void) {
+    async onDrop(event: DragEvent, targetId: string | null, parentId: string, refresh?: () => void) {
         event.preventDefault();
         const data = event.dataTransfer?.getData('text/plain');
         if (!data || !parentId) return;
@@ -66,7 +66,7 @@ export const DragDropHandler = {
             }
 
             await storyApi.updateEntityField(config.entityType, parentId, config.field, newIds);
-            refresh();
+            if (refresh) refresh();
         } catch (error) {
             console.error('Failed to update order:', error);
         }

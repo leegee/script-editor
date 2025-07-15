@@ -1,22 +1,33 @@
 import type { StoryService } from '../../story';
-import type { Location, ScriptLine, ScriptLineType } from '../../../lib/types';
+import type { ScriptLine, ScriptLineType } from '../../../lib/types';
 
-export async function getScriptline(this: StoryService, id: string): Promise<ScriptLine | undefined> {
-    return await this.db.scriptlines.get(id);
+export function useScriptline(
+    this: StoryService,
+    scriptlineId: () => string | undefined
+) {
+    return this.createLiveResource(() => {
+        if (!scriptlineId()) return undefined;
+        return this.db.scriptlines.get(scriptlineId());
+    });
 }
 
-export async function getScriptlinesByBeatId(
+export function useScriptlinesByBeatId(
     this: StoryService,
-    beatId: string
-): Promise<ScriptLine[]> {
-    const beats = await this.db.beats.where('id').equals(beatId).toArray();
-    const scriptLineIds = beats.flatMap(b => b.scriptLineIds ?? []);
-    const uniqueScriptLineIds = [...new Set(scriptLineIds)];
-    const scriptLines = await this.db.scriptlines.where('id').anyOf(uniqueScriptLineIds).toArray();
+    beatId: () => string | undefined
+) {
+    return this.createLiveResource(async () => {
+        const id = beatId();
+        if (!id) return undefined;
 
-    return scriptLineIds
-        .map(id => scriptLines.find(line => line.id === id))
-        .filter((line): line is ScriptLine => line !== undefined);
+        const beats = await this.db.beats.where('id').equals(id).toArray();
+        const scriptLineIds = beats.flatMap(b => b.scriptLineIds ?? []);
+        const uniqueScriptLineIds = [...new Set(scriptLineIds)];
+        const scriptLines = await this.db.scriptlines.where('id').anyOf(uniqueScriptLineIds).toArray();
+
+        return scriptLineIds
+            .map(id => scriptLines.find(line => line.id === id))
+            .filter((line): line is ScriptLine => line !== undefined);
+    });
 }
 
 export async function addNewScriptLineToBeat(

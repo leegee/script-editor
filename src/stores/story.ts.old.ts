@@ -1,32 +1,23 @@
 // Store containing the whole story
-import { createResource, createSignal, onCleanup } from 'solid-js';
-import Dexie, { liveQuery } from 'dexie';
+
+import Dexie from 'dexie';
 import { db, type StoryDexie } from '../stores/db';
 import type { EntityMap, NormalizedStoryData } from '../lib/types';
 import { normalizeStoryData } from '../lib/transform-tree2normalised';
 import { denormalizeStoryTree } from '../lib/transform-noralised2tree';
-import * as ActMixin from './StoryService/actions/acts';
-import * as SceneMixin from './StoryService/actions/scenes';
-import * as BeatMixin from './StoryService/actions/beats';
-import * as ScriptlineMixin from './StoryService/actions/scriptlines';
-import * as CharacterMixin from './StoryService/actions/characters';
-import * as LocationMixin from './StoryService/actions/locations';
+import * as ActMethods from './StoryService/actions/acts';
+import * as SceneMethods from './StoryService/actions/scenes';
+import * as BeatMethods from './StoryService/actions/beats';
+import * as ScriptlineMethods from './StoryService/actions/scriptlines';
+import * as CharacterMethods from './StoryService/actions/characters';
+import * as LocationMethods from './StoryService/actions/locations';
 
-type ActMethods = typeof ActMixin;
-type BeatMethods = typeof BeatMixin;
-type CharacterMethods = typeof CharacterMixin;
-type LocationMethods = typeof LocationMixin;
-type SceneMethods = typeof SceneMixin;
-type ScriptlineMethods = typeof ScriptlineMixin
-
-const MethodModules = [
-    ActMixin,
-    BeatMixin,
-    CharacterMixin,
-    LocationMixin,
-    SceneMixin,
-    ScriptlineMixin,
-];
+type ActMethods = typeof ActMethods;
+type SceneMethods = typeof SceneMethods;
+type BeatMethods = typeof BeatMethods;
+type ScriptlineMethods = typeof ScriptlineMethods
+type CharacterMethods = typeof CharacterMethods;
+type LocationMethods = typeof LocationMethods;
 
 export interface StoryService
     extends ActMethods, SceneMethods, BeatMethods, ScriptlineMethods, CharacterMethods, LocationMethods {
@@ -55,32 +46,38 @@ export class StoryService {
     db = db;
 
     constructor() {
-        Object.assign(StoryService.prototype, ActMixin);
-        Object.assign(StoryService.prototype, CharacterMixin);
-        Object.assign(StoryService.prototype, LocationMixin);
-        Object.assign(StoryService.prototype, SceneMixin);
-        Object.assign(StoryService.prototype, BeatMixin);
-        Object.assign(StoryService.prototype, ScriptlineMixin);
+        Object.assign(StoryService.prototype, ActMethods);
+        Object.assign(StoryService.prototype, CharacterMethods);
+        Object.assign(StoryService.prototype, LocationMethods);
+        Object.assign(StoryService.prototype, SceneMethods);
+        Object.assign(StoryService.prototype, BeatMethods);
+        Object.assign(StoryService.prototype, ScriptlineMethods);
 
-        // Bind all methods from the mixins to `this`instance:
-        for (const methods of MethodModules) {
-            for (const key of Object.keys(methods)) {
-                // @ts-ignore
-                this[key] = this[key].bind(this);
-            }
+        // Bind all methods to "this" instance
+        for (const key of Object.keys(ActMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
         }
-    }
-
-    createLiveResource<T>(queryFn: () => Promise<T> | T) {
-        const [data, setData] = createSignal<T | undefined>(undefined);
-
-        const subscription = liveQuery(queryFn).subscribe({
-            next: (value) => setData(value as Exclude<T, Function>),
-        });
-
-        onCleanup(() => subscription.unsubscribe());
-
-        return [data] as const;
+        for (const key of Object.keys(CharacterMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(LocationMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(SceneMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(BeatMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
+        for (const key of Object.keys(ScriptlineMethods)) {
+            // @ts-ignore
+            this[key] = this[key].bind(this);
+        }
     }
 
     async loadStoryFromJson(rawJata): Promise<void> {
@@ -255,9 +252,9 @@ export class StoryService {
 
 }
 
-Object.assign(StoryService.prototype, ActMixin);
-Object.assign(StoryService.prototype, CharacterMixin);
-Object.assign(StoryService.prototype, LocationMixin);
-Object.assign(StoryService.prototype, SceneMixin);
+Object.assign(StoryService.prototype, ActMethods);
+Object.assign(StoryService.prototype, CharacterMethods);
+Object.assign(StoryService.prototype, LocationMethods);
+Object.assign(StoryService.prototype, SceneMethods);
 
 export const storyApi = new StoryService();

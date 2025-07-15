@@ -10,7 +10,6 @@ import Card from './Card';
 interface ScriptLineCardProps {
     line: ScriptLine;
     beatId: string;
-    onChange: () => void;
 }
 
 const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
@@ -22,7 +21,6 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
             storyApi.findParentEntity('beats', 'scriptLineIds', props.line.id),
             storyApi.deleteEntity('scriptlines', props.line.id)
         ]);
-        props.onChange();
     };
 
     return (
@@ -31,7 +29,6 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
             entityId={props.line.id}
             parentId={props.beatId}
             class={`script-line-card script-line-type-${lineType().toLowerCase()}`}
-            refresh={props.onChange}
         >
             <div class="script-line-content">
                 <label class="script-line-type-label">

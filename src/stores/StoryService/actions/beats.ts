@@ -1,8 +1,11 @@
 import type { StoryService } from '../../story';
 import type { Beat } from '../../../lib/types';
 
-export async function getBeat(this: StoryService, beatId: string): Promise<Beat | undefined> {
-    return await this.db.beats.get(beatId);
+export function useBeat(beatId: () => string | undefined) {
+    return this.createLiveResource(() => {
+        if (!beatId()) return undefined;
+        return this.db.beats.get(beatId());
+    });
 }
 
 export async function getBeatsBySceneId(

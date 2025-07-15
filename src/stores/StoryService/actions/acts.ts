@@ -1,19 +1,19 @@
 import type { StoryService } from '../../story';
 import type { Act, Character, Location } from '../../../lib/types';
 
-// Note: we declare `this: StoryService` to get correct typing and context
-export async function getAct(
+export function useAct(
     this: StoryService,
     actId: string
-): Promise<Act | undefined> {
-    return this.db.acts.get(actId);
+) {
+    return this.createLiveResource(() => this.db.acts.get(actId));
 }
 
-export async function getActs(
-    this: StoryService
-): Promise<Act[]> {
-    return this.db.acts.toArray();
+export function useActs(
+    this: StoryService,
+) {
+    return this.createLiveResource(() => this.db.acts.toArray());
 }
+
 
 export async function getLocationsForAct(
     this: StoryService,

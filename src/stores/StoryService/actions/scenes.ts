@@ -2,11 +2,15 @@
 import type { StoryService } from '../../story';
 import type { Character, Location, Scene } from '../../../lib/types';
 
-export async function getScene(
+export function useScene(
     this: StoryService,
-    sceneId: string
-): Promise<Scene | undefined> {
-    return this.db.scenes.get(sceneId);
+    sceneId: () => string | undefined
+) {
+    return this.createLiveResource(() => {
+        console.log('scene', sceneId())
+        if (!sceneId()) return undefined;
+        return this.db.scenes.get(sceneId());
+    });
 }
 
 export async function getCharactersInSceneById(

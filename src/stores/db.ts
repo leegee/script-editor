@@ -11,7 +11,6 @@ export interface StoryDexieTables {
     locations: Dexie.Table<Location, string>;
 }
 
-
 export class StoryDexie extends Dexie implements StoryDexieTables {
     story!: Table<Story, string>;
     acts!: Table<Act, string>;
