@@ -56,7 +56,7 @@ export default function Swtich(props: SwitchPropsType) {
     }
 
     return (
-        <label class={`switch ${local.class ?? ''}`}>
+        <label class={`switch ${local.class ?? ''} ${local.disabled ? 'disabled' : ''}`}>
             <input
                 type="checkbox"
                 name={local.name}

@@ -16,7 +16,7 @@ export default function () {
             <li class='spacer'></li>
             <li>
                 <label>Story Tree</label>
-                <Switch checked={uiOptions.showStoryTree} onUpdate={(checked) => setUiOptions('showStoryTree', checked)} />
+                <Switch disabled={true} checked={uiOptions.showStoryTree} onUpdate={(checked) => setUiOptions('showStoryTree', checked)} />
             </li>
             <li>
                 <label>Act Info</label>
