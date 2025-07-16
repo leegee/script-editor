@@ -12,11 +12,11 @@ export function useCharacter(
     });
 }
 
-export function useCharacters(this: StoryService) {
+export function useAllCharacters(this: StoryService) {
     return this.createLiveSignal(() => this.db.characters.toArray());
 }
 
-export function useCharactersByFilter(
+export function useAllCharactersByFilter(
     this: StoryService,
     filterFn: () => ((char: Character) => boolean) | undefined
 ) {
@@ -28,7 +28,7 @@ export function useCharactersByFilter(
     });
 }
 
-export function useCharactersByStoryId(
+export function useAllCharactersByStoryId(
     this: StoryService,
     storyId: () => string | undefined
 ) {
@@ -56,7 +56,7 @@ export async function removeCharacterFromScene(sceneId: string, characterId: str
     });
 }
 
-export function useCharactersNotInScene(
+export function useAllCharactersNotInScene(
     this: StoryService,
     sceneId: () => string | undefined
 ) {

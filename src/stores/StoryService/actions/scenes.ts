@@ -12,7 +12,7 @@ export function useScene(
     });
 }
 
-export function useCharactersInScene(
+export function useAllCharactersInScene(
     this: StoryService,
     sceneId: () => string | undefined
 ): LiveSignal<Character[]> {

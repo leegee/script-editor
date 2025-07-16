@@ -38,7 +38,7 @@ export function useLocationsForAct(
     });
 }
 
-export function useCharactersInActById(
+export function useAllCharactersInActById(
     this: StoryService,
     actId: () => string | undefined
 ) {

@@ -18,11 +18,12 @@ interface AvatarProps {
     showName?: boolean;
     class?: string;
     isNew?: boolean;
+    editable?: boolean;
     onChange?: (e: Event) => void;
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
-    const [allCharacters] = storyApi.useCharacters();
+    const [allCharacters] = storyApi.useAllCharacters();
     const showName = props.showName ?? true;
     const isNew = props.isNew ?? false;
 
@@ -91,8 +92,11 @@ const Avatar: Component<AvatarProps> = (props) => {
                             </Show>
                         </div>
 
-                        {/* Select dropdown when NOT isNew */}
-                        <Show when={!isNew && allCharacters()}>
+                        <Show when={!props.editable && allCharacters()}>
+                            {character().name}
+                        </Show>
+
+                        <Show when={(!isNew && props.editable) && allCharacters()}>
                             <select
                                 class="character-name"
                                 value={selectedId()}

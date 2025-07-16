@@ -57,6 +57,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     <Show when={lineType() === 'Dialogue'}>
                         <Avatar
                             class="character"
+                            editable={true}
                             characterId={props.line.characterId}
                             onChange={(e) =>
                                 storyApi.updateEntityField(
@@ -70,7 +71,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     </Show>
 
                     <TextInput as="textarea" {...bindField('scriptlines', props.line.id, 'text')} />
-
+                    !
                     <button class="delete" onClick={deleteThisLine}>🗑</button>
                 </blockquote>
             </div>

@@ -14,9 +14,9 @@ const CharacterList: Component<CharacterListProps> = (props) => {
     const sceneId = () => props.sceneId;
     const characterIds = () => props.characterIds;
 
-    const [allCharacters] = storyApi.useCharacters();
-    const [charactersInAct] = storyApi.useCharactersInActById(actId);
-    const [charactersInScene] = storyApi.useCharactersInScene(sceneId);
+    const [allCharacters] = storyApi.useAllCharacters();
+    const [charactersInAct] = storyApi.useAllCharactersInActById(actId);
+    const [charactersInScene] = storyApi.useAllCharactersInScene(sceneId);
 
     const characters = createMemo(() => {
         if (actId()) return charactersInAct();

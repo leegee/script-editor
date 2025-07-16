@@ -7,7 +7,7 @@ type AddCharacterProps = {
 };
 
 export default function AddCharacter(props: AddCharacterProps) {
-    const [availableCharacters] = storyApi.useCharactersNotInScene(() => props.sceneId);
+    const [availableCharacters] = storyApi.useAllCharactersNotInScene(() => props.sceneId);
 
     const handleAdd = async (characterId: string) => {
         await storyApi.linkCharacterToScene(props.sceneId, characterId);
