@@ -44,7 +44,6 @@ export function normalizeStoryData(tree: StoryTree): NormalizedStoryData {
         const { scenes, ...rest } = act;
         normalized.acts[act.id] = {
             ...rest,
-            title: act.title ?? `Untitled Act`,
             sceneIds: scenes.map(scene => scene.id)
         };
 
@@ -52,7 +51,6 @@ export function normalizeStoryData(tree: StoryTree): NormalizedStoryData {
             const { beats, ...rest } = scene;
             normalized.scenes[scene.id] = {
                 ...rest,
-                title: act.title ?? `Untitled Scene`,
                 beatIds: beats.map(beat => beat.id)
             };
 
