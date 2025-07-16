@@ -7,16 +7,7 @@ interface SceneListProps {
 }
 
 const SceneList: Component<SceneListProps> = (props) => {
-    const [refresh, setRefresh] = createSignal(0);
-
-    const [scenes] = createResource(
-        () => [props.actId, refresh()],
-        async ([actId]) => await storyApi.getScenesByActId(String(actId))
-    );
-
-    const handleChange = () => {
-        setRefresh(prev => prev + 1);
-    };
+    const [scenes] = storyApi.useScenesByActId(() => props.actId);
 
     return (
         <div class="scenes">
@@ -25,7 +16,6 @@ const SceneList: Component<SceneListProps> = (props) => {
                     <SceneCard
                         scene={scene}
                         actId={props.actId}
-                        onChange={handleChange}
                         summary={false}
                     />
                 )}

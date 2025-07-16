@@ -16,8 +16,6 @@ interface BeatCardProps {
 }
 
 const BeatCard: Component<BeatCardProps> = (props) => {
-    const [refresh, setRefresh] = createSignal(0);
-
     const [beat] = storyApi.useBeat(() => props.beatId);
 
     const [scriptlines] = storyApi.useScriptlinesByBeatId(() => props.beatId);

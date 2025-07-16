@@ -35,12 +35,12 @@ export function useCharactersInScene(
 }
 
 
-export function getScenesByActId(
+export function useScenesByActId(
     this: StoryService,
-    actId: string
+    actId: () => string | undefined
 ): LiveSignal<Scene[]> {
     return this.createLiveSignal(async () => {
-        const acts = await this.db.acts.where('id').equals(actId).toArray();
+        const acts = await this.db.acts.where('id').equals(actId()).toArray();
 
         const sceneIds = acts
             .map(s => s.sceneIds)
@@ -48,7 +48,6 @@ export function getScenesByActId(
             .flat();
 
         const uniqueSceneIds = [...new Set(sceneIds)];
-
         return this.db.scenes.where('id').anyOf(uniqueSceneIds).toArray();
     });
 }

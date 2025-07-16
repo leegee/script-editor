@@ -1,5 +1,5 @@
 import './SceneCard.scss';
-import { type Component, Show, createMemo, createResource } from 'solid-js';
+import { type Component, Show, createEffect, createMemo, createResource } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';
@@ -19,15 +19,16 @@ export interface SceneCardProps {
     scene?: Scene;
     sceneId?: string;
     summary: boolean;
-    onChange: () => void;
 }
 
 const SceneCard: Component<SceneCardProps> = (props) => {
-    const [sceneFromDb] = storyApi.useScene(() => props.sceneId);
+    const [sceneByIdFromDb] = storyApi.useScene(() => props.sceneId);
 
     const scene = createMemo(() => {
+        console.log('memo scene', props.sceneId)
         if (props.scene) return props.scene;
-        return sceneFromDb();
+        if (props.sceneId) return sceneByIdFromDb();
+        throw new Error('Can not instantiate a scene without valid props');
     });
 
     return (

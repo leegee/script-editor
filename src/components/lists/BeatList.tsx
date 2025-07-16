@@ -1,4 +1,4 @@
-import { type Component, For, Show, createResource } from 'solid-js';
+import { type Component, For, Show } from 'solid-js';
 import BeatCard from '../cards/BeatCard';
 import { storyApi } from '../../stores/story';
 
@@ -7,7 +7,7 @@ interface BeatListProps {
 }
 
 const BeatList: Component<BeatListProps> = (props) => {
-    const [beats] = createResource(props.sceneId, (sceneId) => storyApi.getBeatsBySceneId(sceneId));
+    const [beats] = storyApi.useBeatsBySceneId(() => props.sceneId);
 
     return (
         <Show when={beats() && beats().length > 0} fallback={<p>No beats found.</p>}>

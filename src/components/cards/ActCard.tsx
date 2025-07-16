@@ -22,13 +22,8 @@ interface ActCardProps {
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    const [characterListRefresh, setCharacterListRefresh] = createSignal(0);
     const [actResource] = storyApi.useAct(props.actId);
     const actData = () => props.act ?? actResource();
-
-    const handleRefreshCharacters = () => {
-        setCharacterListRefresh(prev => prev + 1);
-    };
 
     return (
         <Show when={actData()} fallback={<div class="loading">Loading act...</div>}>
@@ -67,10 +62,10 @@ const ActCard: Component<ActCardProps> = (props) => {
 
                         <div class="character-list-header">
                             <h4>Characters present
-                                <small><button class="refresh-icon" onClick={handleRefreshCharacters}>↻  Refresh</button></small>
+                                {/* <small><button class="refresh-icon" onClick={handleRefreshCharacters}>↻  Refresh</button></small> */}
                             </h4>
                         </div>
-                        <CharacterList actId={actValue().id} refresh={characterListRefresh()} />
+                        <CharacterList actId={actValue().id} />
 
                         <LocationList entityType="acts" entityId={actValue().id}>
                             Locations used

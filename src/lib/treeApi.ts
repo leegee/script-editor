@@ -25,7 +25,7 @@ import { traverseStoryTree } from './traverse';
 //     return Promise.resolve(story.acts.find(a => a.id === actId));
 // }
 
-// async getScenesByActId(actId: string): Promise<Scene[]> {
+// async useScenesByActId(actId: string): Promise<Scene[]> {
 //     const act = story.acts.find(a => a.id === actId);
 //     return Promise.resolve(act?.scenes ?? []);
 // }
