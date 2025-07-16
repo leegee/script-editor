@@ -45,7 +45,7 @@ const FileInput = <
 
         try {
             const base64 = await fileToBase64(target.files[0]);
-            storyApi.updateEntityField(entity, id, field, base64 as EntityMap[EntityType][K]);
+            await storyApi.updateEntityField(entity, id, field, base64 as EntityMap[EntityType][K]);
             props.onUpload?.();
         } catch (error) {
             console.error('Failed to convert file(s) to base64', error);

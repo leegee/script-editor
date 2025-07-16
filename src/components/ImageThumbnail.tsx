@@ -35,6 +35,7 @@ const ImageThumbnail = <
     );
 
     const src = createMemo(() => {
+        version();
         const ent = entity();
         if (!ent) return '';
         const value = ent[props.field as keyof typeof ent];

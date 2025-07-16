@@ -71,6 +71,18 @@ export class StoryService {
         }
     }
 
+    /**
+     * Wraps a `liveQuery` (cotent of which is supplied via the sole arg)
+     * so you can bind the result to SolidJS reactivity.
+     * It creates a Signal to store the query result.
+     * Subscribes to the liveQuery Observable.
+     * On each emission, it updates the Signal.
+     * Cleans up the subscription when the component disposes.
+     * Returns the Signal's getter (data).
+     * 
+     * @param queryFn `liveQuery` content
+     * @returns `Signal` getter
+     */
     createLiveResource<T>(queryFn: () => Promise<T> | T) {
         const [data, setData] = createSignal<T | undefined>(undefined);
 
