@@ -6,7 +6,7 @@ export function useCharacter(
     this: StoryService,
     id: () => string | undefined
 ) {
-    return this.createLiveResource(() => {
+    return this.createLiveSignal(() => {
         const characterId = id();
         if (!characterId) return undefined;
         return this.db.characters.get(characterId);
@@ -15,14 +15,14 @@ export function useCharacter(
 
 
 export function useCharacters(this: StoryService) {
-    return this.createLiveResource(() => this.db.characters.toArray());
+    return this.createLiveSignal(() => this.db.characters.toArray());
 }
 
 export function useCharactersByFilter(
     this: StoryService,
     filterFn: () => ((char: Character) => boolean) | undefined
 ) {
-    return this.createLiveResource(async () => {
+    return this.createLiveSignal(async () => {
         const fn = filterFn();
         if (!fn) return [];
         const all = await this.db.characters.toArray();
@@ -35,7 +35,7 @@ export function useCharactersByStoryId(
     this: StoryService,
     storyId: () => string | undefined
 ) {
-    return this.createLiveResource(() => {
+    return this.createLiveSignal(() => {
         const id = storyId();
         if (!id) return [];
         return this.db.characters.where('storyId').equals(id).toArray();
@@ -63,7 +63,7 @@ export function useCharactersNotInScene(
     this: StoryService,
     sceneId: () => string | undefined
 ) {
-    return this.createLiveResource(async () => {
+    return this.createLiveSignal(async () => {
         const id = sceneId();
         if (!id) return [];
 

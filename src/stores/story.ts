@@ -1,5 +1,5 @@
 // Store containing the whole story
-import { createResource, createSignal, onCleanup } from 'solid-js';
+import { Accessor, createResource, createSignal, onCleanup } from 'solid-js';
 import Dexie, { liveQuery } from 'dexie';
 import { db, type StoryDexie } from '../stores/db';
 import type { EntityMap, NormalizedStoryData } from '../lib/types';
@@ -18,6 +18,8 @@ type CharacterMethods = typeof CharacterMixin;
 type LocationMethods = typeof LocationMixin;
 type SceneMethods = typeof SceneMixin;
 type ScriptlineMethods = typeof ScriptlineMixin
+
+export type LiveSignal<T> = readonly [Accessor<T | undefined>];
 
 const MethodModules = [
     ActMixin,
@@ -83,7 +85,7 @@ export class StoryService {
      * @param queryFn `liveQuery` content
      * @returns `Signal` getter
      */
-    createLiveResource<T>(queryFn: () => Promise<T> | T) {
+    createLiveSignal<T>(queryFn: () => Promise<T> | T): LiveSignal<T> {
         const [data, setData] = createSignal<T | undefined>(undefined);
 
         const subscription = liveQuery(queryFn).subscribe({

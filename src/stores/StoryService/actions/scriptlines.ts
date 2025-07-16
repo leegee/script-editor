@@ -5,7 +5,7 @@ export function useScriptline(
     this: StoryService,
     scriptlineId: () => string | undefined
 ) {
-    return this.createLiveResource(() => {
+    return this.createLiveSignal(() => {
         if (!scriptlineId()) return undefined;
         return this.db.scriptlines.get(scriptlineId());
     });
@@ -15,7 +15,7 @@ export function useScriptlinesByBeatId(
     this: StoryService,
     beatId: () => string | undefined
 ) {
-    return this.createLiveResource(async () => {
+    return this.createLiveSignal(async () => {
         const id = beatId();
         if (!id) return undefined;
 

@@ -1,12 +1,12 @@
 
-import type { StoryService } from '../../story';
+import type { LiveSignal, StoryService } from '../../story';
 import type { Character, Location, Scene } from '../../../lib/types';
 
 export function useScene(
     this: StoryService,
     sceneId: () => string | undefined
 ) {
-    return this.createLiveResource(() => {
+    return this.createLiveSignal(() => {
         if (!sceneId()) return undefined;
         return this.db.scenes.get(sceneId());
     });
@@ -15,8 +15,8 @@ export function useScene(
 export function useCharactersInScene(
     this: StoryService,
     sceneId: () => string | undefined
-) {
-    return this.createLiveResource(async () => {
+): LiveSignal<Character[]> {
+    return this.createLiveSignal(async () => {
         const id = sceneId();
         if (!id) return undefined;
 
@@ -35,20 +35,22 @@ export function useCharactersInScene(
 }
 
 
-export async function getScenesByActId(
+export function getScenesByActId(
     this: StoryService,
     actId: string
-): Promise<Scene[]> {
-    const acts = await this.db.acts.where('id').equals(actId).toArray();
+): LiveSignal<Scene[]> {
+    return this.createLiveSignal(async () => {
+        const acts = await this.db.acts.where('id').equals(actId).toArray();
 
-    const sceneIds = acts
-        .map(s => s.sceneIds)
-        .filter(Boolean)
-        .flat();
+        const sceneIds = acts
+            .map(s => s.sceneIds)
+            .filter(Boolean)
+            .flat();
 
-    const uniqueSceneIds = [...new Set(sceneIds)];
+        const uniqueSceneIds = [...new Set(sceneIds)];
 
-    return this.db.scenes.where('id').anyOf(uniqueSceneIds).toArray();
+        return this.db.scenes.where('id').anyOf(uniqueSceneIds).toArray();
+    });
 }
 
 

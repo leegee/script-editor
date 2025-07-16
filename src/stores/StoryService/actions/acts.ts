@@ -1,53 +1,57 @@
-import type { StoryService } from '../../story';
-import type { Act, Character, Location } from '../../../lib/types';
+// acts.ts
+import type { LiveSignal, StoryService } from '../../story';
+import type { Location } from '../../../lib/types';
 
 export function useAct(
     this: StoryService,
     actId: string
 ) {
-    return this.createLiveResource(() => this.db.acts.get(actId));
+    return this.createLiveSignal(() => this.db.acts.get(actId));
 }
 
 export function useActs(
     this: StoryService,
 ) {
-    return this.createLiveResource(() => this.db.acts.toArray());
+    return this.createLiveSignal(() => this.db.acts.toArray());
 }
 
 
-export async function getLocationsForAct(
+export function getLocationsForAct(
     this: StoryService,
     actId: string
-): Promise<Location[]> {
-    const act = await this.db.acts.get(actId);
-    if (!act) return [];
+): LiveSignal<Location[]> {
+    return this.createLiveSignal(async () => {
+        const act = await this.db.acts.get(actId);
+        if (!act) return [];
 
-    const scenes = await this.db.scenes
-        .where('id')
-        .anyOf(act.sceneIds)
-        .toArray();
+        const scenes = await this.db.scenes
+            .where('id')
+            .anyOf(act.sceneIds)
+            .toArray();
 
-    const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
+        const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
 
-    return this.db.locations
-        .where('id')
-        .anyOf(locationIds)
-        .toArray();
+        return this.db.locations
+            .where('id')
+            .anyOf(locationIds)
+            .toArray();
+    });
 }
 
-
-
-export async function getLocationForScene(
+export function getLocationForScene(
     this: StoryService,
     sceneId: string
-): Promise<Location[]> {
-    const scenes = await this.db.scenes.where('sceneId').equals(sceneId).toArray();
-    const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
+): LiveSignal<Location[]> {
+    return this.createLiveSignal(async () => {
 
-    return this.db.locations
-        .where('id')
-        .anyOf(locationIds)
-        .toArray();
+        const scenes = await this.db.scenes.where('sceneId').equals(sceneId).toArray();
+        const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
+
+        return this.db.locations
+            .where('id')
+            .anyOf(locationIds)
+            .toArray();
+    });
 }
 
 
@@ -55,7 +59,7 @@ export function useCharactersInActById(
     this: StoryService,
     actId: () => string | undefined
 ) {
-    return this.createLiveResource(async () => {
+    return this.createLiveSignal(async () => {
         const id = actId();
         if (!id) return [];
 
