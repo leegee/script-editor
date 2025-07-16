@@ -23,14 +23,13 @@ type LocationCardProps = {
 const LocationCard: Component<LocationCardProps> = (props) => {
     const params = useParams();
 
-    const [location] = createResource(
-        () => params.locationId ?? props.locationId ?? props.location,
-        async (id) => {
-            if (props.location) return props.location;
-            if (!id) return undefined;
-            return storyApi.getLocation(id as string);
+    const location = (() => {
+        if (props.location) {
+            return () => props.location;
         }
-    );
+        const [fetched] = storyApi.useLocation(props.locationId ?? params.id ?? undefined);
+        return fetched;
+    })();
 
     const onNameInput = (e: InputEvent) => {
         const val = (e.target as HTMLInputElement).value;

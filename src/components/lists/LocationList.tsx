@@ -13,41 +13,19 @@ type LocationListProps = {
     );
 
 export default (props: LocationListProps) => {
-    const [refresh, setRefresh] = createSignal(props.refresh ?? 0);
-
-    const [locations] = createResource(
-        () => [props.entityType, props.entityId, refresh()],
-        async () => {
-            try {
-                if (props.entityType === 'acts') {
-                    return await storyApi.getLocationsForAct(props.entityId);
-                } else if (props.entityType === 'scenes') {
-                    const loc = await storyApi.getLocationForScene(props.entityId);
-                    return loc ? [loc] : [];
-                } else {
-                    return await storyApi.getLocations();
-                }
-            } catch (error) {
-                console.error('Failed to fetch locations:', error);
-                return [];
-            }
-        }
-    );
-
-    const handleChange = () => {
-        setRefresh(prev => prev + 1);
-    };
+    const [locations] =
+        props.entityType === 'acts'
+            ? storyApi.useLocationsForAct(props.entityId)
+            : props.entityType === 'scenes'
+                ? storyApi.useLocationForScene(props.entityId)
+                : storyApi.useAllLocations();
 
     return (
         <section>
             <Show when={props.children && props.entityId}>
                 <h4>
                     <span> {props.children || ''} </span>
-                    <LocationCreator parentId={props.entityId ?? null} refresh={handleChange}>
-                        <Show when={props.entityId}>
-                            <small><button class='refresh'>Refresh Location</button></small>
-                        </Show>
-                    </LocationCreator>
+                    <LocationCreator parentId={props.entityId ?? null} />
                 </h4>
             </Show>
 
@@ -56,10 +34,9 @@ export default (props: LocationListProps) => {
                     <For each={locations()}>
                         {(location) => (
                             <LocationCard
-                                location={location as Location}
+                                location={location}
                                 summary={true}
                                 parentId={props.entityId ?? ''}
-                                onChange={handleChange}
                             />
                         )}
                     </For>

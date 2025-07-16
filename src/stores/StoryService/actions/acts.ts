@@ -16,7 +16,7 @@ export function useActs(
 }
 
 
-export function getLocationsForAct(
+export function useLocationsForAct(
     this: StoryService,
     actId: string
 ): LiveSignal<Location[]> {
@@ -37,23 +37,6 @@ export function getLocationsForAct(
             .toArray();
     });
 }
-
-export function getLocationForScene(
-    this: StoryService,
-    sceneId: string
-): LiveSignal<Location[]> {
-    return this.createLiveSignal(async () => {
-
-        const scenes = await this.db.scenes.where('sceneId').equals(sceneId).toArray();
-        const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
-
-        return this.db.locations
-            .where('id')
-            .anyOf(locationIds)
-            .toArray();
-    });
-}
-
 
 export function useCharactersInActById(
     this: StoryService,

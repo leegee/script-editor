@@ -17,7 +17,7 @@ export default function Routes() {
       <Route path="/character" component={CharacterDetails} />
       <Route path="/character/:id" component={CharacterDetails} />
       <Route path="/location" component={LocationDetails} />
-      <Route path="/location/:locationId" component={LocationDetails} />
+      <Route path="/location/:id" component={LocationDetails} />
       <Route path="/act" component={ActDetails} />
       <Route path="/act/:id" component={ActDetails} />
       <Route path="/scene/:id" component={SceneDetails} />

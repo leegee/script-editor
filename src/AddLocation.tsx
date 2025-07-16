@@ -12,7 +12,7 @@ type AddLocationProps = {
  */
 export default function AddLocation(props: AddLocationProps) {
     // Use a memo or signal if needed to subscribe/react to changes in StoryService internally
-    const [availableLocations] = createResource(() => storyApi.getLocations());
+    const [availableLocations] = storyApi.useAllLocations();
 
     const handleAdd = async (locationId: string) => {
         await storyApi.replaceLocationInScene(props.sceneId, locationId);

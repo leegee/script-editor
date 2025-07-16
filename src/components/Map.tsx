@@ -21,17 +21,6 @@ interface Geofence {
     polygonCoords?: [number, number][];
 }
 
-interface Location {
-    id: string;
-    geofence: Geofence | null;
-    // other location fields...
-}
-
-interface StoryApi {
-    getLocation: (id: string) => Location | undefined;
-    updateEntity: (entityType: string, id: string, field: string, value: any) => Promise<void>;
-}
-
 export interface LocationMapProps {
     locationId: string;
     summary?: boolean;
@@ -44,6 +33,7 @@ const MAX_ZOOM_SUMMARY = 18;
 const mapFilter = "invert(20%) brightness(60%) contrast(120%) hue-rotate(0)";
 
 const LocationMap: Component<LocationMapProps> = (props) => {
+    const [loc] = storyApi.useLocation(props.locationId);
     let mapContainer!: HTMLDivElement;
     let map: Map;
     let vectorSource: VectorSource;
@@ -65,8 +55,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     onMount(async () => {
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
-        const loc = await storyApi.getLocation(props.locationId);
-        setGeofence(loc?.geofence ?? { type: null });
+        setGeofence(loc()?.geofence ?? { type: null });
 
         vectorSource = new VectorSource();
 
@@ -75,7 +64,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         let initialCenter: [number, number];
         let initialZoom: number;
 
-        if (loc?.geofence) {
+        if (loc()?.geofence) {
             initialCenter = fromLonLat([0, 0]) as [number, number];
             initialZoom = props.summary ? MAX_ZOOM_SUMMARY : MAX_ZOOM_NORMAL;
         } else {
@@ -100,8 +89,8 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         mapContainer.style.filter = mapFilter;
 
         // Add initial geofence feature(s) to vector source
-        if (loc?.geofence) {
-            addGeofenceFeature(loc.geofence);
+        if (loc()?.geofence) {
+            addGeofenceFeature(loc().geofence);
             fitMapToGeofence();
         }
 

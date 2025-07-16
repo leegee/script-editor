@@ -1,7 +1,6 @@
 import type { Character, ScriptLineType } from '../../../lib/types';
 import type { StoryService } from '../../story';
 
-// Get a character by ID reactively
 export function useCharacter(
     this: StoryService,
     id: () => string | undefined
@@ -12,7 +11,6 @@ export function useCharacter(
         return this.db.characters.get(characterId);
     });
 }
-
 
 export function useCharacters(this: StoryService) {
     return this.createLiveSignal(() => this.db.characters.toArray());
@@ -30,7 +28,6 @@ export function useCharactersByFilter(
     });
 }
 
-// Get characters by story ID reactively
 export function useCharactersByStoryId(
     this: StoryService,
     storyId: () => string | undefined
@@ -88,7 +85,7 @@ export function useCharactersNotInScene(
     });
 }
 
-
+// XXX Hmm
 export async function linkCharacterToScene(
     this: StoryService,
     sceneId: string,

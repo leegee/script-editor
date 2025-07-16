@@ -57,8 +57,8 @@ import { traverseStoryTree } from './traverse';
 //     return Promise.resolve(this.getCharactersFrom(node ?? story));
 // }
 
-// async getLocations(node: Story | Act | Scene | Beat | ScriptLine | undefined): Promise<Location[]> {
-//     return Promise.resolve(this.getLocationsFrom(node ?? story));
+// async useLocations(node: Story | Act | Scene | Beat | ScriptLine | undefined): Promise<Location[]> {
+//     return Promise.resolve(this.useLocationsFrom(node ?? story));
 // }
 
 // async getScriptLines(node: Story | Act | Scene | Beat | ScriptLine | undefined): Promise<ScriptLine[]> {
@@ -95,7 +95,7 @@ import { traverseStoryTree } from './traverse';
 //         .filter((c): c is Character => c !== undefined);
 // }
 
-// private getLocationsFrom(node: Story | Act | Scene | Beat | ScriptLine): Location[] {
+// private useLocationsFrom(node: Story | Act | Scene | Beat | ScriptLine): Location[] {
 //     const locationIds = new Set<string>();
 //     traverseStoryTree(node, (n) => {
 //         if ('locationId' in n && typeof n.locationId === 'string') {

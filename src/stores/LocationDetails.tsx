@@ -10,10 +10,9 @@ const LocationDetails: Component = () => {
 
     const fetchLocations = async (id: string | null) => {
         if (id) {
-            const loc = await storyApi.getLocation(id);
-            return loc ? [loc] : [];
+            return storyApi.useLocation(id);
         }
-        return storyApi.getLocations();
+        return storyApi.useAllLocations();
     };
 
     const [locations] = createResource(locationId(), fetchLocations);

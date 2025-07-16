@@ -71,3 +71,19 @@ export async function replaceLocationInScene(
 
     await this.db.scenes.update(sceneId, { locationId });
 }
+
+export function useLocationForScene(
+    this: StoryService,
+    sceneId: string
+): LiveSignal<Location[]> {
+    return this.createLiveSignal(async () => {
+
+        const scenes = await this.db.scenes.where('sceneId').equals(sceneId).toArray();
+        const locationIds = [...new Set(scenes.map(s => s.locationId).filter(Boolean))];
+
+        return this.db.locations
+            .where('id')
+            .anyOf(locationIds)
+            .toArray();
+    });
+}
