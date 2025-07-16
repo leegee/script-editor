@@ -41,8 +41,6 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     let modifyInteraction: Modify | null = null;
     let snapInteraction: Snap | null = null;
 
-    const [geofence, setGeofence] = createSignal<Geofence | null>(null);
-
     const handleFullscreenChange = () => {
         if (document.fullscreenElement === mapContainer) {
             mapContainer.style.filter = 'none';
@@ -216,7 +214,6 @@ const LocationMap: Component<LocationMapProps> = (props) => {
     }
 
     async function updateGeofence(newGeo: Geofence) {
-        setGeofence(newGeo);
         try {
             storyApi.updateEntityField('locations', props.locationId, 'geofence', newGeo);
             props.onUpdate?.(newGeo);
