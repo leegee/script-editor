@@ -22,7 +22,7 @@ const ActDetails: Component<ActDetailsProps> = (props) => {
 
         return (
             <section class="acts-list" role="list" aria-label="Act Detail">
-                <Show when={actResource()} fallback={<div>Loading act...</div>}>
+                <Show when={actResource()} fallback={<div>Cannot load act</div>}>
                     {(act) => <ActCard actId={act().id} summary={summaryToUse()} />}
                 </Show>
             </section>

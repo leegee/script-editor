@@ -74,6 +74,19 @@ export class StoryService {
     }
 
     /**
+     * Resets the entire story database by clearing all tables.
+     * Use with caution — this removes all data!
+     */
+    async resetStory(): Promise<void> {
+        await this.db.transaction('rw', this.db.tables, async () => {
+            for (const table of this.db.tables) {
+                await table.clear();
+            }
+        });
+        console.info('All story data has been reset.');
+    }
+
+    /**
      * Wraps a `liveQuery` (cotent of which is supplied via the sole arg)
      * so you can bind the result to SolidJS reactivity.
      * It creates a Signal to store the query result.
