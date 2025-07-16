@@ -24,8 +24,8 @@ export function normalizeStoryData(tree: StoryTree): NormalizedStoryData {
         createdAt: tree.createdAt,
         updatedAt: tree.updatedAt,
         actIds: tree.acts.map(act => act.id),
-        characterIds: tree.characters.map(char => char.id),
-        locationIds: tree.locations.map(loc => loc.id)
+        // characterIds: tree.characters.map(char => char.id),
+        // locationIds: tree.locations.map(loc => loc.id)
     };
 
     // Add characters
