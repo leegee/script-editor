@@ -51,11 +51,16 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         }
     };
 
-    // Load location and geofence on mount
+    createEffect(() => {
+        const geo = loc()?.geofence;
+        if (geo) {
+            addGeofenceFeature(geo);
+            fitMapToGeofence();
+        }
+    });
+
     onMount(async () => {
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-
-        setGeofence(loc()?.geofence ?? { type: null });
 
         vectorSource = new VectorSource();
 
