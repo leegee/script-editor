@@ -1,6 +1,12 @@
 # Prototype Script Editor
 
-Experiments in modelling a film script.
+Experiments in modelling a film script, using SolidJS, Dexie, and liveQuery.
+
+## To do
+
+### DnD
+
+### Add CRDT
 
 ### Branded types?
 

@@ -25,7 +25,6 @@ const SceneCard: Component<SceneCardProps> = (props) => {
     const [sceneByIdFromDb] = storyApi.useScene(() => props.sceneId);
 
     const scene = createMemo(() => {
-        console.log('memo scene', props.sceneId)
         if (props.scene) return props.scene;
         if (props.sceneId) return sceneByIdFromDb();
         throw new Error('Can not instantiate a scene without valid props');
