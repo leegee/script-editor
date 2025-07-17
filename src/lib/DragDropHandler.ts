@@ -2,6 +2,7 @@ import { storyApi } from '../stores/story';
 import { EntityMap } from './types';
 
 let draggedData: { cardId: string; entityType: string, parentId: string, parentType: string, } | null = null;
+let lastHighlightedElement: HTMLElement | null = null;
 
 export class DragDropHandler {
     static hierarchy = {
@@ -38,21 +39,26 @@ export class DragDropHandler {
         console.log(`[DragDrop] onDragStart - Drag started for cardId='${cardId}', entityType='${entityType}', parentType='${parentType}', parentId='${parentId}'`);
     }
 
-
     static onDragOver(event: DragEvent, targetElement: HTMLElement) {
         event.preventDefault();
 
         if (!draggedData || !event.dataTransfer) {
-            console.log('[DragDrop] onDragOver - No draggedData or dataTransfer available');
             event.dataTransfer.dropEffect = 'none';
+            if (lastHighlightedElement) {
+                lastHighlightedElement.classList.remove('drag-over-valid');
+                lastHighlightedElement = null;
+            }
             return;
         }
 
         const { entityType: draggedType } = draggedData;
         const allowedParentType = this.hierarchy[draggedType]?.parentClass;
         if (!allowedParentType) {
-            console.log(`[DragDrop] onDragOver - No allowed parent type found for draggedType='${draggedType}'`);
             event.dataTransfer.dropEffect = 'none';
+            if (lastHighlightedElement) {
+                lastHighlightedElement.classList.remove('drag-over-valid');
+                lastHighlightedElement = null;
+            }
             return;
         }
 
@@ -61,12 +67,23 @@ export class DragDropHandler {
         if (targetEntityType === allowedParentType) {
             event.dataTransfer.dropEffect = 'move';
             event.stopPropagation();
-            console.log(`[DragDrop] onDragOver - Allowed drop on target entityType='${targetEntityType}'`);
+
+            if (lastHighlightedElement && lastHighlightedElement !== targetElement) {
+                lastHighlightedElement.classList.remove('drag-over-valid');
+            }
+            if (!targetElement.classList.contains('drag-over-valid')) {
+                targetElement.classList.add('drag-over-valid');
+            }
+            lastHighlightedElement = targetElement;
         } else {
             event.dataTransfer.dropEffect = 'none';
-            // console.log(`[DragDrop] onDragOver - Disallowed drop on target entityType='${targetEntityType}', expected='${allowedParentType}'`);
+            if (lastHighlightedElement) {
+                lastHighlightedElement.classList.remove('drag-over-valid');
+                lastHighlightedElement = null;
+            }
         }
     }
+
 
     static async onDrop(event: DragEvent, targetElement: HTMLElement, refresh?: () => void) {
         event.preventDefault();
@@ -154,12 +171,20 @@ export class DragDropHandler {
             console.error('[DragDrop] onDrop - Error updating entity:', error);
         } finally {
             draggedData = null;
+            if (lastHighlightedElement) {
+                lastHighlightedElement.classList.remove('drag-over-valid');
+                lastHighlightedElement = null;
+            }
             console.log('[DragDrop] onDrop - Reset draggedData');
         }
     }
 
     static onDragEnd(e) {
         // console.log('[ragDrop] onDragEnd - Drag operation ended, reset draggedData', draggedData, e);
+        if (lastHighlightedElement) {
+            lastHighlightedElement.classList.remove('drag-over-valid');
+            lastHighlightedElement = null;
+        }
         // draggedData = null;
     }
 }

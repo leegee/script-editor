@@ -125,3 +125,7 @@ button {
         padding-right: 0.6em;
     }
 }
+
+.drag-over-valid {
+    outline: 2pt solid yellow;
+}
