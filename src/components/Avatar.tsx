@@ -18,7 +18,7 @@ interface AvatarProps {
     showName?: boolean;
     class?: string;
     isNew?: boolean;
-    editable?: boolean;
+    selectable?: boolean;
     onChange?: (e: Event) => void;
 }
 
@@ -92,11 +92,11 @@ const Avatar: Component<AvatarProps> = (props) => {
                             </Show>
                         </div>
 
-                        <Show when={!props.editable && allCharacters()}>
+                        <Show when={!props.selectable && allCharacters()}>
                             {character().name}
                         </Show>
 
-                        <Show when={(!isNew && props.editable) && allCharacters()}>
+                        <Show when={(!isNew && props.selectable) && allCharacters()}>
                             <select
                                 class="character-name"
                                 value={selectedId()}

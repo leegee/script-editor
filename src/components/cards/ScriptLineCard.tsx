@@ -59,7 +59,7 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     <Show when={lineType() === 'Dialogue'}>
                         <Avatar
                             class="character"
-                            editable={true}
+                            selectable={true}
                             characterId={props.line.characterId}
                             onChange={(e) =>
                                 storyApi.updateEntityField(

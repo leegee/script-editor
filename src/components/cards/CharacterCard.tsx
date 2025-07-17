@@ -35,8 +35,8 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 label={`View details for ${character()!.name}`}
                 summary={!!props.summary}
                 class="character-card"
-                title={<Avatar characterId={character().id} />}
-                menuItems=<>{menuItems}</>
+                title={<Avatar selectable={true} characterId={character().id} />}
+                menuItems={<>{menuItems}</>}
             >
                 <div class='character-content'>
                     <p class="bio">
