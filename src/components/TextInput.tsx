@@ -39,7 +39,6 @@ const TextInput: Component<TextInputProps> = (props) => {
                     class='custom-input'
                     classList={{ empty: isEmpty() }}
                     value={value()}
-                    placeholder={rest.placeholder ?? ''}
                     {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
                 />
             </>
