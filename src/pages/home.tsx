@@ -28,7 +28,6 @@ export default function Home(props) {
           entityType='acts'
           entityId={undefined}
           draggable={true}
-          parentId=''
         >
           <ActDetails summary={true} />
         </Card>
@@ -44,7 +43,6 @@ export default function Home(props) {
           entityType='characters'
           entityId={undefined}
           draggable={true}
-          parentId=''
         >
           <CharacterList />
         </Card>
@@ -54,11 +52,11 @@ export default function Home(props) {
           entityType='locations'
           entityId={undefined}
           draggable={true}
-          parentId=''
         >
           <LocationList />
         </Card>
       </aside>
+
     </main>
   );
 }

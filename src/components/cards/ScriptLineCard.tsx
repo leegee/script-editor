@@ -25,8 +25,10 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
 
     return (
         <Card
+            data-card-type='script-line-card'
             entityType="scriptlines"
             entityId={props.line.id}
+            parentType='beats'
             parentId={props.beatId}
             class={`script-line-card script-line-type-${lineType().toLowerCase()}`}
         >

@@ -200,6 +200,7 @@ export class StoryService {
         type: T,
         id: string
     ): Promise<EntityMap[T] | undefined> {
+        console.log('GET ENTITY TYPE', type)
         return await this.getTable(type).get(id);
     }
 

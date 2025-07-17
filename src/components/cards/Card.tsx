@@ -24,11 +24,13 @@ interface BaseCardProps<T extends keyof EntityMap> {
 interface DraggableCardProps<T extends keyof EntityMap> extends BaseCardProps<T> {
     draggable?: true | undefined;
     parentId: string;
+    parentType: string;
 }
 
 interface NonDraggableCardProps<T extends keyof EntityMap> extends BaseCardProps<T> {
     draggable: false;
     parentId?: string;
+    parentType?: string;
 }
 
 export type CardProps<T extends keyof EntityMap> = DraggableCardProps<T> | NonDraggableCardProps<T>;
@@ -50,21 +52,26 @@ const Card = <T extends keyof EntityMap>(props: CardProps<T>) => {
 
     const dragProps = props.draggable !== false ? {
         draggable: true,
-        onDragStart: (e: DragEvent) => DragDropHandler.onDragStart(e, props.entityId, props.class ?? ''),
-        onDragOver: (e: DragEvent) => DragDropHandler.onDragOver(e, props.class ?? '', props.class ?? ''),
-        onDrop: (e: DragEvent) => DragDropHandler.onDrop(e, props.entityId, props.parentId, props.refresh ?? (() => { }))
+        onDragStart: (e: DragEvent) => DragDropHandler.onDragStart(
+            e,
+            props.parentType ?? '', props.parentId,
+            props.entityType ?? '', props.entityId,
+        ),
+        onDragOver: (e: DragEvent) => DragDropHandler.onDragOver(e, e.currentTarget as HTMLElement),
+        onDrop: (e: DragEvent) => DragDropHandler.onDrop(e, e.currentTarget as HTMLElement, props.refresh ?? (() => { })),
+        onDragEnd: DragDropHandler.onDragEnd,
     } : {};
-
-    // if (!props.parentId && props.draggable) {
-    //     console.trace('no parentId in Card', props);
-    // }
 
     return (
         <section
             class={`card ${props.class ?? ''} ${isOpen() ? 'open' : 'closed'} ${props.summary ? 'summary' : ''}`}
+            data-entity-type={props.entityType}
+            data-entity-id={props.entityId}
+            data-parent-type={props.parentType}
+            data-parent-id={props.parentId}
             tabIndex={0}
-            aria-expanded={isOpen()}
             role="region"
+            aria-expanded={isOpen()}
             aria-label={props.label}
             {...dragProps}
         >

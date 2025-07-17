@@ -12,7 +12,6 @@ import ActCreator from '../creators/ActCreator';
 import LocationList from '../lists/LocationList';
 import CharacterList from '../lists/CharacterList';
 import { Act } from '../../lib/types';
-import { DragDropHandler } from '../../lib/DragDropHandler';
 
 interface ActCardProps {
     actId?: string;
@@ -29,9 +28,10 @@ const ActCard: Component<ActCardProps> = (props) => {
         <Show when={actData()} fallback={<div class="loading">No acts found.</div>}>
             {(actValue) => (
                 <Card
+                    parentId=''
+                    parentType=''
                     entityType="acts"
                     entityId={actValue().id}
-                    parentId={props.storyId ?? ''}
                     class="act-card"
                     title={
                         <>
@@ -72,11 +72,7 @@ const ActCard: Component<ActCardProps> = (props) => {
                         </LocationList>
                     </Show>
 
-                    <section
-                        class="scenes"
-                        onDragOver={(e) => DragDropHandler.onDragOver(e, 'scenes', 'scene-card')}
-                        onDrop={(e) => DragDropHandler.onDrop(e, null, actValue().id)}
-                    >
+                    <section class="scenes" >
                         <SceneList actId={actValue().id} />
                     </section>
                 </Card>

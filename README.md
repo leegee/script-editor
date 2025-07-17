@@ -1,6 +1,6 @@
 # Prototype Script Editor
 
-Experiments in modelling a film script, using SolidJS, Dexie, and liveQuery.
+Experiments in modelling a film script, using SolidJS, Dexie and a reasonably good entity model, and liveQuery so that model updates are simply reflected.
 
 ## To do
 

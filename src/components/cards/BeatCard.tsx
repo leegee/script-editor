@@ -33,9 +33,10 @@ const BeatCard: Component<BeatCardProps> = (props) => {
     return (
         <Show when={beat()} fallback={<div class="loading">Loading beat...</div>}>
             <Card
-                parentId={props.sceneId}
                 entityType='beats'
                 entityId={beat().id}
+                parentType='scenes'
+                parentId={props.sceneId}
                 link={`/scene/${props.sceneId}/beat/${props.beatId}`}
                 label={`View details for Beat ${beat().id}`}
                 summary={props.summary}
@@ -55,7 +56,7 @@ const BeatCard: Component<BeatCardProps> = (props) => {
                     </div>
                 </Show>
 
-                <section class="script-lines" tabIndex={0} onKeyUp={handleOnKeyUp}>
+                <section class="scriptlines" tabIndex={0} onKeyUp={handleOnKeyUp}>
                     <For each={scriptlines()}>
                         {(line) => <ScriptLineCard line={line} beatId={beat().id} />}
                     </For>
