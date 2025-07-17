@@ -1,9 +1,12 @@
 import type { LiveSignal, StoryService } from '../../story';
 import type { Location } from '../../../lib/types';
 
-export function useLocation(this: StoryService, id: string): LiveSignal<Location | undefined> {
+export function useLocation(
+    this: StoryService,
+    getId: () => string
+): LiveSignal<Location | undefined> {
     return this.createLiveSignal(async () => {
-        return await this.db.locations.get(id);
+        return await this.db.locations.get(getId());
     });
 }
 

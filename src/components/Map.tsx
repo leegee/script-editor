@@ -33,7 +33,7 @@ const MAX_ZOOM_SUMMARY = 18;
 const mapFilter = "invert(20%) brightness(60%) contrast(120%) hue-rotate(0)";
 
 const LocationMap: Component<LocationMapProps> = (props) => {
-    const [loc] = storyApi.useLocation(props.locationId);
+    const [loc] = storyApi.useLocation(() => props.locationId);
     let mapContainer!: HTMLDivElement;
     let map: Map;
     let vectorSource: VectorSource;

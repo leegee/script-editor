@@ -1,30 +1,27 @@
-import { type Component, For, createResource, createSignal } from 'solid-js';
+import { type Component, createMemo, For } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import LocationCard from '../components/cards/LocationCard';
 import { storyApi } from './story';
 
 const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();
-    const [locationId, setLocationId] = createSignal<string | null>(params.id ?? null);
+    const id = () => params.id ?? null;
+    const [location] = storyApi.useLocation(() => id()!);
+    const [allLocations] = storyApi.useAllLocations();
 
-
-    const fetchLocations = async (id: string | null) => {
-        if (id) {
-            return storyApi.useLocation(id);
+    const locations = createMemo(() => {
+        if (id()) {
+            const loc = location();
+            return loc ? [loc] : [];
         }
-        return storyApi.useAllLocations();
-    };
-
-    const [locations] = createResource(locationId(), fetchLocations);
+        return allLocations() ?? [];
+    });
 
     return (
         <section class="location-details">
-            {/* <h2>Locations!</h2> */}
             <section class="locations-list" role="list" aria-label="Locations">
                 <For each={locations()}>
-                    {(loc) => (
-                        <LocationCard locationId={loc.id} summary={false} />
-                    )}
+                    {(loc) => <LocationCard locationId={loc.id} summary={false} />}
                 </For>
             </section>
         </section>

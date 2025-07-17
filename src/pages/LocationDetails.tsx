@@ -7,7 +7,7 @@ const LocationDetails: Component = () => {
     const params = useParams<{ id: string }>();
 
     const locationsSignal = params.id
-        ? storyApi.useLocation(params.id)
+        ? storyApi.useLocation(() => params.id)
         : storyApi.useAllLocations();
 
     const getLocations = locationsSignal[0];
