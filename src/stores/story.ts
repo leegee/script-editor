@@ -136,6 +136,15 @@ export class StoryService {
         console.log('Story loaded into Dexie successfully!');
     }
 
+    useFirstStoryId() {
+        return this.createLiveSignal(async () => {
+            const firstItem = await this.db.story
+                .toCollection()
+                .first();
+            return firstItem?.id ?? null;
+        });
+    }
+
     private async updateParentList<T extends keyof EntityMap>(
         type: T,
         childId: string,

@@ -14,6 +14,7 @@ import CharacterList from '../lists/CharacterList';
 import { Act } from '../../lib/types';
 
 interface ActCardProps {
+    parentId: string;
     actId?: string;
     act?: Act;
     summary?: boolean;
@@ -28,8 +29,8 @@ const ActCard: Component<ActCardProps> = (props) => {
         <Show when={actData()} fallback={<div class="loading">No acts found.</div>}>
             {(actValue) => (
                 <Card
-                    parentId=''
-                    parentType=''
+                    parentType='stories'
+                    parentId={props.parentId}
                     entityType="acts"
                     entityId={actValue().id}
                     class="act-card"

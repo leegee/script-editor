@@ -1,5 +1,5 @@
 import './LocationCard.scss';
-import { type Component, Show, For, createMemo, createResource } from 'solid-js';
+import { type Component, Show, For } from 'solid-js';
 import type { Location } from '../../lib/types';
 import { storyApi } from '../../stores/story';
 import Map from '../Map';

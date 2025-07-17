@@ -1,5 +1,5 @@
 import './SceneCard.scss';
-import { type Component, Show, createEffect, createMemo, createResource } from 'solid-js';
+import { type Component, Show, createMemo } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import CharacterList from '../lists/CharacterList';
 import LocationCard from './LocationCard';

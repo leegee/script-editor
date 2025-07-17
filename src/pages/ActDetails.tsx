@@ -1,7 +1,7 @@
 import { type Component, For, Show, createMemo, createResource } from "solid-js";
 import { useSearchParams, type RouteSectionProps } from "@solidjs/router";
-import ActCard from "../components/cards/ActCard";
 import { storyApi } from "../stores/story";
+import ActCard from "../components/cards/ActCard";
 
 type ActDetailsOwnProps = {
     id?: string;
@@ -12,32 +12,44 @@ type ActDetailsProps = ActDetailsOwnProps & Partial<RouteSectionProps>;
 
 const ActDetails: Component<ActDetailsProps> = (props) => {
     const [searchParams] = useSearchParams();
+
+    const [parentId] = storyApi.useFirstStoryId();
+
     const idToUse = createMemo(() => props.id ?? props.params?.id);
     const summaryToUse = createMemo(() =>
         typeof props.summary === "boolean" ? props.summary : searchParams.summary === "true"
     );
 
-    if (idToUse()) {
-        const [actResource] = storyApi.useAct(idToUse());
+    const [actsSingle] = storyApi.useAct(idToUse());
+    const [actsAll] = storyApi.useActs();
 
-        return (
-            <section class="acts-list" role="list" aria-label="Act Detail">
-                <Show when={actResource()} fallback={<div>Cannot load act</div>}>
-                    {(act) => <ActCard actId={act().id} summary={summaryToUse()} />}
+    return (
+        <section class="acts-list" role="list" aria-label="Acts">
+            <Show when={idToUse()}>
+                <Show when={actsSingle() && parentId()} fallback={<div>Cannot load act</div>}>
+                    <ActCard
+                        parentId={parentId()}
+                        actId={actsSingle().id}
+                        summary={summaryToUse()}
+                    />
                 </Show>
-            </section>
-        );
-    } else {
-        const [actsResource] = storyApi.useActs();
+            </Show>
 
-        return (
-            <section class="acts-list" role="list" aria-label="Acts List">
-                <For each={actsResource() ?? []}>
-                    {(act) => <ActCard act={act} summary={summaryToUse()} />}
-                </For>
-            </section>
-        );
-    }
+            <Show when={!idToUse()}>
+                <Show when={parentId()}>
+                    <For each={actsAll() ?? []}>
+                        {(act) => (
+                            <ActCard
+                                parentId={parentId()}
+                                act={act}
+                                summary={summaryToUse()}
+                            />
+                        )}
+                    </For>
+                </Show>
+            </Show>
+        </section>
+    );
 };
 
 export default ActDetails;

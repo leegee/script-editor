@@ -1,5 +1,5 @@
 import './BeatCard.scss';
-import { type Component, Show, For, createResource, createSignal, createMemo } from 'solid-js';
+import { type Component, Show, For } from 'solid-js';
 import { storyApi } from '../../stores/story';
 import { bindField } from '../../lib/bind-field';
 import Card from './Card';
