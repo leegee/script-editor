@@ -73,7 +73,6 @@ const ScriptLineCard: Component<ScriptLineCardProps> = (props) => {
                     </Show>
 
                     <TextInput as="textarea" {...bindField('scriptlines', props.line.id, 'text')} />
-                    !
                     <button class="delete" onClick={deleteThisLine}>🗑</button>
                 </blockquote>
             </div>
