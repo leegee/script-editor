@@ -100,12 +100,12 @@
         .card:not(.card .card) {
             margin-top: 0;
             min-width: 30vw;
-            background-color: transparent;
+            padding: 0.5em;
         }
 
         .card .card {
             margin: 0;
-            padding: 0;
+            padding: 0.25em;
             margin-top: 0.5em;
             padding-bottom: 0.5em;
         }
