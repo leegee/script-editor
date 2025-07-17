@@ -25,6 +25,8 @@ export default function Home(props) {
       <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
         <Card class="act-panel" title="Acts" link='/act?summary=true' open
           menuItems={<><ActCreator /></>}
+          parentType=''
+          parentId=''
           entityType='acts'
           entityId={undefined}
           draggable={true}
@@ -40,6 +42,8 @@ export default function Home(props) {
       <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
         <Card class="character-panel" title="Characters" link='/character' open
           menuItems={<><CharacterCreator /></>}
+          parentType=''
+          parentId=''
           entityType='characters'
           entityId={undefined}
           draggable={true}
@@ -49,6 +53,8 @@ export default function Home(props) {
 
         <Card class="location-panel" title="Location" open link='/location'
           menuItems={<><LocationCreator /></>}
+          parentType=''
+          parentId=''
           entityType='locations'
           entityId={undefined}
           draggable={true}
