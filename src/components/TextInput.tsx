@@ -13,12 +13,12 @@ interface TextInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement |
 const TextInput: Component<TextInputProps> = (props) => {
     const { as = 'input', value, ...rest } = props;
 
-    if (typeof props.value !== 'function') {
+    if (typeof value !== 'function') {
         throw new TypeError('.value should be a getter: value()');
     }
 
     const isEmpty = () => {
-        const val = props.value();
+        const val = value();
         return typeof val === 'string' && val.length === 0;
     };
 
@@ -28,7 +28,7 @@ const TextInput: Component<TextInputProps> = (props) => {
                 title={props.tooltip || ''}
                 class='custom-input'
                 classList={{ empty: isEmpty() }}
-                value={props.value()}
+                value={value()}
                 {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)}
             />
         ) : (
@@ -38,7 +38,7 @@ const TextInput: Component<TextInputProps> = (props) => {
                     title={props.tooltip || ''}
                     class='custom-input'
                     classList={{ empty: isEmpty() }}
-                    value={props.value()}
+                    value={value()}
                     placeholder={rest.placeholder ?? ''}
                     {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
                 />
