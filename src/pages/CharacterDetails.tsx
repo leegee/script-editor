@@ -24,7 +24,7 @@ const CharacterDetails: Component = () => {
             <section class="characters-list" role="list" aria-label="Characters List">
                 <For each={getCharacters()}>
                     {(character) => (
-                        <CharacterCard characterId={character.id} summary={false} />
+                        <CharacterCard editable={true} characterId={character.id} summary={false} />
                     )}
                 </For>
             </section>

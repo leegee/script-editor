@@ -14,11 +14,11 @@ interface CharacterCardProps {
     character?: Character;
     characterId?: string;
     sceneId?: string;
+    editable?: boolean;
 }
 
 const CharacterCard: Component<CharacterCardProps> = (props) => {
     const [character] = storyApi.useCharacter(() => props.characterId);
-
     const menuItems = [<DeleteCharacterButton characterId={character().id} />];
 
     if (props.sceneId) {
@@ -31,11 +31,11 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                 draggable={false}
                 entityType='characters'
                 entityId={character().id}
-                link={`/character/${character()!.id}`}
-                label={`View details for ${character()!.name}`}
+                link={`/character/${character().id}`}
+                label={`View details for ${character().name}`}
                 summary={!!props.summary}
                 class="character-card"
-                title={<Avatar selectable={true} characterId={character().id} />}
+                title={<Avatar editable={props.editable === true} characterId={character().id} />}
                 menuItems={<>{menuItems}</>}
             >
                 <div class='character-content'>
@@ -45,7 +45,7 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
 
                     <Show when={character().tags?.length}>
                         <div class="tags">
-                            <For each={character()!.tags}>
+                            <For each={character().tags}>
                                 {(tag) => <span class="tag">#{tag}</span>}
                             </For>
                         </div>
@@ -56,15 +56,15 @@ const CharacterCard: Component<CharacterCardProps> = (props) => {
                     </Show>
 
                     {/* 
-          <Show when={character()!.totalScreenTimeSeconds}>
+          <Show when={character().totalScreenTimeSeconds}>
             <div class="meta">
-              Screen Time: {Math.round(character()!.totalScreenTimeSeconds!)}s
+              Screen Time: {Math.round(character().totalScreenTimeSeconds)}s
             </div>
           </Show>
 
-          <Show when={character()!.firstAppearanceSceneId}>
+          <Show when={character().firstAppearanceSceneId}>
             <div class="meta">
-              First Appeared in Scene: {character()!.firstAppearanceSceneId}
+              First Appeared in Scene: {character().firstAppearanceSceneId}
             </div>
           </Show> 
           */}

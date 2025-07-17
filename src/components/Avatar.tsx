@@ -6,7 +6,8 @@ import {
     createResource,
     Show,
     For,
-    Component
+    Component,
+    createMemo
 } from 'solid-js';
 import ImageThumbnail from './ImageThumbnail';
 import TextInput from './TextInput';
@@ -19,16 +20,18 @@ interface AvatarProps {
     class?: string;
     isNew?: boolean;
     selectable?: boolean;
+    editable?: boolean;
     onChange?: (e: Event) => void;
 }
 
 const Avatar: Component<AvatarProps> = (props) => {
     const [allCharacters] = storyApi.useAllCharacters();
-    const showName = props.showName ?? true;
-    const isNew = props.isNew ?? false;
 
-    const [selectedId, setSelectedId] = createSignal(props.characterId);
+    const initialId = props.characterId ?? allCharacters()?.[0]?.id;
+    const [selectedId, setSelectedId] = createSignal(initialId);
     const [showModal, setShowModal] = createSignal(false);
+
+    const isEditable = createMemo(() => props.isNew === true || props.editable === true);
 
     createEffect(() => {
         if (!selectedId() && allCharacters()) {
@@ -92,12 +95,13 @@ const Avatar: Component<AvatarProps> = (props) => {
                             </Show>
                         </div>
 
-                        <Show when={!props.selectable && allCharacters()}>
-                            {character().name}
+                        <Show when={!isEditable() && !props.selectable}>
+                            {char().name}
                         </Show>
 
-                        <Show when={(!isNew && props.selectable) && allCharacters()}>
+                        <Show when={props.selectable && allCharacters()}>
                             <select
+                                aria-label="Select character"
                                 class="character-name"
                                 value={selectedId()}
                                 onChange={characterSelectedChanged}
@@ -108,8 +112,8 @@ const Avatar: Component<AvatarProps> = (props) => {
                             </select>
                         </Show>
 
-                        {/* Editable name input when isNew */}
-                        <Show when={isNew && showName}>
+                        {/* Editable name input  */}
+                        <Show when={(isEditable())}>
                             <em>
                                 <TextInput
                                     tooltip="Character Name"

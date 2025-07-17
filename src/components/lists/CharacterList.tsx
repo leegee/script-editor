@@ -32,7 +32,7 @@ const CharacterList: Component<CharacterListProps> = (props) => {
             <Show when={characters()?.length} fallback={<div>No characters found</div>}>
                 <For each={characters()}>
                     {(character) => (
-                        <CharacterCard characterId={character.id} summary sceneId={props.sceneId} />
+                        <CharacterCard editable={false} characterId={character.id} summary sceneId={props.sceneId} />
                     )}
                 </For>
             </Show>
