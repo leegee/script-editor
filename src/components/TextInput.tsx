@@ -1,5 +1,5 @@
 import './TextInput.scss';
-import { Component, createEffect, JSX } from 'solid-js';
+import { Component, createEffect, createSignal, JSX } from 'solid-js';
 
 export type InputTypesEnum = 'text' | 'textarea' | 'color' | 'url' | 'number';
 
@@ -17,6 +17,7 @@ const TextInput: Component<TextInputProps> = (props) => {
         throw new TypeError('.value should be a getter: value()');
     }
 
+    const [localValue, setLocalValue] = createSignal(value().toString());
     let textareaRef: HTMLTextAreaElement | undefined;
 
     const isEmpty = () => {
@@ -28,6 +29,12 @@ const TextInput: Component<TextInputProps> = (props) => {
         if (textareaRef) {
             textareaRef.style.height = 'auto'; // Reset height to shrink if needed
             textareaRef.style.height = textareaRef.scrollHeight + 'px';
+        }
+    };
+
+    const inputTextKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            (e.currentTarget as HTMLElement).blur()
         }
     };
 
@@ -54,6 +61,7 @@ const TextInput: Component<TextInputProps> = (props) => {
                 class='custom-input'
                 classList={{ empty: isEmpty() }}
                 value={value()}
+                onKeyDown={inputTextKeyDown}
                 {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
             />
         );
