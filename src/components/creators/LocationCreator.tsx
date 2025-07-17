@@ -8,9 +8,9 @@ import Map from '../Map';
 import { Location } from '../../lib/types';
 
 interface LocationCreatorProps {
-    parentId?: string; // Optional storyId or actId to link the location
-    refresh?: () => void; // Notify parent (e.g., LocationList) of changes
-    children?: JSX.Element; // Optional button content
+    parentId?: string;
+    refresh?: () => void;
+    children?: JSX.Element;
 }
 
 const LocationCreator = (props: LocationCreatorProps) => {
@@ -18,25 +18,13 @@ const LocationCreator = (props: LocationCreatorProps) => {
     const [name, setName] = createSignal('');
     const [description, setDescription] = createSignal('');
 
-    // Fetch location data for image preview
-    const [savedLocation] = createResource(newLocationId, async (id) => {
-        if (!id) return null;
-        try {
-            const loc = await storyApi.getLocation(id);
-            return loc;
-        } catch (error) {
-            console.error('Failed to fetch location:', error);
-            return null;
-        }
-    });
+    const [savedLocation] = storyApi.useLocation(() => newLocationId());
 
-    // Sync local state with fetched location
     const syncState = (loc: Location | null) => {
         setName(loc?.name ?? '');
         setDescription(loc?.description ?? '');
     };
 
-    // Open modal and create a new location
     const openModal = async () => {
         try {
             const newLocation = await storyApi.createEntity('locations', {
@@ -53,8 +41,8 @@ const LocationCreator = (props: LocationCreatorProps) => {
         }
     };
 
-    // Cancel and delete the temporary location
-    const cancel = async () => {
+    // On cancel, delete the temporary location
+    const onCancel = async () => {
         const id = newLocationId();
         if (id) {
             try {
@@ -68,8 +56,7 @@ const LocationCreator = (props: LocationCreatorProps) => {
         syncState(null);
     };
 
-    // Save the location and close the modal
-    const saveLocation = async () => {
+    const onSave = async () => {
         try {
             const id = newLocationId();
             if (id) {
@@ -84,7 +71,6 @@ const LocationCreator = (props: LocationCreatorProps) => {
         }
     };
 
-    // Update store and local state on name input
     const onNameInput = (e: InputEvent) => {
         const val = (e.target as HTMLInputElement).value;
         setName(val);
@@ -111,8 +97,8 @@ const LocationCreator = (props: LocationCreatorProps) => {
     return (
         <>
             <button onClick={openModal}>{props.children ?? 'New Location'}</button>
-            <Show when={newLocationId()}>
-                <Modal title="Create A New Location" open={!!newLocationId()} onClose={cancel}>
+            <Show when={newLocationId() && savedLocation()}>
+                <Modal title="Create A New Location" open={!!newLocationId()} onClose={onCancel}>
                     <div class="creator-form">
                         <label>
                             <span class="text">Name:</span>
@@ -148,8 +134,8 @@ const LocationCreator = (props: LocationCreatorProps) => {
                         <Map locationId={newLocationId()!} />
 
                         <footer class="actions">
-                            <button class="cancel" onClick={cancel}>Cancel</button>
-                            <button class="save" onClick={saveLocation}>Save</button>
+                            <button class="cancel" onClick={onCancel}>Cancel</button>
+                            <button class="save" onClick={onSave}>Save</button>
                         </footer>
                     </div>
                 </Modal>
