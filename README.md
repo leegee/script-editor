@@ -11,8 +11,6 @@ Experiments in modelling a film script,
 
 ## To do
 
-* Restore Character's editable name in details view
-
 * Add history
 
 * Add CRDT
