@@ -238,8 +238,25 @@ export class StoryService {
         await table.put(updatedEntity);
     }
 
-    async deleteEntity<T extends keyof EntityMap>(type: T, id: string): Promise<void> {
+    async deleteEntity<T extends keyof EntityMap>(
+        type: T,
+        id: string,
+        parentInfo?: {
+            parentType: keyof EntityMap;
+            parentListField: string;
+            parentId: string;
+        }
+    ): Promise<void> {
         await this.getTable(type).delete(id);
+
+        if (parentInfo) {
+            await this.updateParentList(
+                type,
+                id,
+                parentInfo.parentId,
+                'remove'
+            );
+        }
     }
 
     async findParentEntity(
