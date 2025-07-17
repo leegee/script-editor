@@ -51,7 +51,7 @@
         }
 
         &.left {
-            min-width: min(20vw, 25em);
+            max-width: 15em;
         }
 
         &.right {
@@ -70,6 +70,7 @@
         &.closed {
             width: 0;
             padding: 0;
+            margin: 0;
             overflow: hidden;
         }
 
