@@ -1,5 +1,5 @@
 import './TextInput.scss';
-import { Component, JSX } from 'solid-js';
+import { Component, createEffect, JSX } from 'solid-js';
 
 export type InputTypesEnum = 'text' | 'textarea' | 'color' | 'url' | 'number';
 
@@ -17,14 +17,30 @@ const TextInput: Component<TextInputProps> = (props) => {
         throw new TypeError('.value should be a getter: value()');
     }
 
+    let textareaRef: HTMLTextAreaElement | undefined;
+
     const isEmpty = () => {
         const val = value();
         return typeof val === 'string' && val.length === 0;
     };
 
+    const adjustHeight = () => {
+        if (textareaRef) {
+            textareaRef.style.height = 'auto'; // Reset height to shrink if needed
+            textareaRef.style.height = textareaRef.scrollHeight + 'px';
+        }
+    };
+
+    createEffect(() => {
+        if (as === 'textarea') {
+            requestAnimationFrame(() => adjustHeight());
+        }
+    });
+
     const rv = as === 'textarea'
         ? (
             <textarea
+                ref={el => textareaRef = el}
                 title={props.tooltip || ''}
                 class='custom-input'
                 classList={{ empty: isEmpty() }}
@@ -32,16 +48,14 @@ const TextInput: Component<TextInputProps> = (props) => {
                 {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)}
             />
         ) : (
-            <>
-                <input
-                    type={as}
-                    title={props.tooltip || ''}
-                    class='custom-input'
-                    classList={{ empty: isEmpty() }}
-                    value={value()}
-                    {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
-                />
-            </>
+            <input
+                type={as}
+                title={props.tooltip || ''}
+                class='custom-input'
+                classList={{ empty: isEmpty() }}
+                value={value()}
+                {...(rest as JSX.InputHTMLAttributes<HTMLInputElement>)}
+            />
         );
 
     return rv;
