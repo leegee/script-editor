@@ -1,15 +1,19 @@
 # Prototype Script Editor
 
-Experiments in modelling a film script, using SolidJS, Dexie and a reasonably good entity model, and liveQuery so that model updates are simply reflected.
+[https://leegee.github.io/script-editor/](https://leegee.github.io/script-editor/)
+
+Experiments in modelling a film script, 
+
+* SolidJS
+* Local-first with Dexie and a reasonably good entity model
+* `liveQuery` so that model updates are simply reflected
+* Drag-and-drop to re-order and move acts, scenes, beats, script lines.
 
 ## To do
 
-### DnD
+* Add CRDT
 
-### Add CRDT
-
-### Branded types?
-
-    type StoryId = string & { __brand: 'StoryId' };
-    type ActId = string & { __brand: 'ActId' };
-    type ISODateString = string & { __brand: 'ISODateString' };
+* Branded types?
+    - `type StoryId = string & { __brand: 'StoryId' };`
+    - `type ActId = string & { __brand: 'ActId' };`
+    - `type ISODateString = string & { __brand: 'ISODateString' };`
