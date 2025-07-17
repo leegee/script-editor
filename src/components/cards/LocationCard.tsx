@@ -1,5 +1,5 @@
 import './LocationCard.scss';
-import { type Component, Show, For } from 'solid-js';
+import { type Component, Show, For, createMemo } from 'solid-js';
 import type { Location } from '../../lib/types';
 import { storyApi } from '../../stores/story';
 import Map from '../Map';
@@ -10,6 +10,7 @@ import ImageThumbnail from '../ImageThumbnail';
 import DeleteLocationButton from '../delete-buttons/DeleteLocationButton';
 import RemoveLocationButton from '../delete-buttons/RemoveLocationButton';
 import { useParams } from '@solidjs/router';
+import { bindField } from '../../lib/bind-field';
 
 type LocationCardProps = {
     summary?: boolean;
@@ -22,26 +23,8 @@ type LocationCardProps = {
 
 const LocationCard: Component<LocationCardProps> = (props) => {
     const params = useParams();
-
-    const location = (() => {
-        if (props.location) {
-            return () => props.location;
-        }
-        const [fetched] = storyApi.useLocation(props.locationId ?? params.id ?? undefined);
-        return fetched;
-    })();
-
-    const onNameInput = (e: InputEvent) => {
-        const val = (e.target as HTMLInputElement).value;
-        const loc = location();
-        if (loc) storyApi.updateEntityField('locations', loc.id, 'name', val);
-    };
-
-    const onDescriptionInput = (e: InputEvent) => {
-        const val = (e.target as HTMLTextAreaElement).value;
-        const loc = location();
-        if (loc) storyApi.updateEntityField('locations', loc.id, 'description', val);
-    };
+    const [fetchedLoc] = storyApi.useLocation(() => props.locationId ?? params.id ?? "");
+    const location = createMemo(() => props.location ?? fetchedLoc());
 
     return (
         <Show when={location()} keyed fallback={<div class="no-content">No Location Set</div>}>
@@ -66,14 +49,15 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                         title={
                             <span class='location-heading'>
                                 <LocationPinIcon />
-                                <TextInput value={() => loc.name} onInput={onNameInput} />
+                                <TextInput {...bindField('locations', location().id, 'name')} />
+
                             </span>
                         }
                         menuItems={menuItems}
                     >
                         <h5>Description</h5>
                         <div class='location-desc-and-photo'>
-                            <TextInput value={() => loc.description} onInput={onDescriptionInput} as="textarea" />
+                            <TextInput as='textarea' {...bindField('locations', location().id, 'description')} />
                             <ImageThumbnail entityType='locations' entityId={loc.id} field='photoUrl' />
                         </div>
 
