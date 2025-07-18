@@ -22,3 +22,25 @@ export function useBeatsBySceneId(this: StoryService, sceneId: () => string | un
         return beats.filter((b): b is Beat => !!b);
     });
 }
+
+
+export async function addNewBeatToScene(
+    this: StoryService,
+    sceneId: string,
+): Promise<Beat> {
+    const newId = crypto.randomUUID();
+    const number = await this.getNextInSequence('beats');
+
+    const newBeat: Beat = {
+        id: newId,
+        number,
+        title: `Beat ${number}`,
+        summary: '',
+        scriptLineIds: [],
+        plotIds: [],
+    };
+
+    await this.createEntity('beats', newBeat, sceneId);
+
+    return newBeat;
+}
