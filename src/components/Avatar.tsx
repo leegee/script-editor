@@ -114,12 +114,10 @@ const Avatar: Component<AvatarProps> = (props) => {
 
                         {/* Editable name input  */}
                         <Show when={(isEditable())}>
-                            <em>
-                                <TextInput
-                                    tooltip="Character Name"
-                                    {...bindField('characters', char().id, 'name')}
-                                />
-                            </em>
+                            <TextInput
+                                tooltip="Character Name"
+                                {...bindField('characters', char().id, 'name')}
+                            />
                         </Show>
                     </>
                 )}
