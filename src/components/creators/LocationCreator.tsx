@@ -5,7 +5,6 @@ import Modal from '../Modal';
 import TextInput from '../TextInput';
 import FileInput from '../FileInput';
 import Map from '../Map';
-import { Location } from '../../lib/types';
 import { bindField } from '../../lib/bind-field';
 
 interface LocationCreatorProps {
@@ -29,7 +28,7 @@ const LocationCreator = (props: LocationCreatorProps) => {
             (async () => {
                 try {
                     const newLocation = await storyApi.createEntity('locations', {
-                        id: String(Date.now()),
+                        id: crypto.randomUUID(),
                         name: 'New Location',
                         description: '',
                         geofence: null,
@@ -52,17 +51,18 @@ const LocationCreator = (props: LocationCreatorProps) => {
                 console.error('Failed to delete location:', error);
             }
         }
-        setNewLocationId(null);
-        props.onClose();
+        reset();
     };
 
-    const onSave = async () => {
-        try {
+    const reset = () => {
+        props.onClose();
+        setTimeout(() => {
             setNewLocationId(null);
-            props.onClose();
-        } catch (error) {
-            console.error('Failed to save location:', error);
-        }
+        }, 0);
+    }
+
+    const onSave = async () => {
+        reset();
     };
 
     return (
