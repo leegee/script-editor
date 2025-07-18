@@ -3,6 +3,11 @@
 
 .script-line.script-line-dialogue {
     margin-left: -1.75em !important;
+
+    textarea {
+        font-family: IBMPlexMono, 'Courier New', Courier, monospace;
+        font-size: 10pt;
+    }
 }
 
 .card.script-line-card .script-line.script-line-dialogue .avatar-circle {
@@ -32,6 +37,7 @@
     .script-line-card {
         border: 1pt solid grey;
         border-left: 4pt solid grey;
+        font-size: 10pt;
     }
 
     .script-line-type-label {
