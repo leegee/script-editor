@@ -58,7 +58,7 @@ const MapCollection: Component<MapCollectionProps> = (props) => {
         if (feature && labelPosition) {
             feature.setStyle(new Style({
                 stroke: new Stroke({ color: '#333', width: 2 }),
-                fill: new Fill({ color: 'rgba(100, 100, 200, 0.1)' }),
+                fill: new Fill({ color: 'rgba(250, 165, 0, 0.5)' }),
                 text: new TextStyle({
                     text: loc.name,
                     font: 'bold 12pt sans-serif',
