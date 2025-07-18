@@ -15,6 +15,7 @@ const ActCreator = () => {
             title: 'New Act',
             summary: '',
             sceneIds: [],
+            plotIds: [],
         });
         setNewActId(actId.id);
     };
