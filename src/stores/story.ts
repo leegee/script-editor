@@ -199,6 +199,7 @@ export class StoryService {
         entity: EntityMap[T],
         parentId?: string
     ): Promise<EntityMap[T]> {
+        console.log('story.createEntity called with id', entity.id);
         await this.getTable(type).add(entity);
 
         if (parentId) {
