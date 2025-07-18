@@ -1,4 +1,5 @@
 import { makePersisted } from "@solid-primitives/storage";
+import { createMemo } from "solid-js";
 import { createStore } from "solid-js/store";
 
 type UiOptionsType = {
@@ -8,6 +9,8 @@ type UiOptionsType = {
     showLeftSidePanel: boolean;
     showRightSidePanel: boolean;
     showStoryTree: boolean;
+    showCharacterCreator: boolean,
+    showLocationCreator: boolean,
 };
 
 const defaults: UiOptionsType = {
@@ -17,6 +20,8 @@ const defaults: UiOptionsType = {
     showLeftSidePanel: true,
     showRightSidePanel: true,
     showStoryTree: false,
+    showCharacterCreator: false,
+    showLocationCreator: false,
 };
 
 export const [uiOptions, setUiOptions] = makePersisted(

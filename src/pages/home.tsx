@@ -3,7 +3,7 @@ import LocationList from '../components/lists/LocationList';
 import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
 import ActCreator from '../components/creators/ActCreator';
-import { uiOptions } from '../stores/ui';
+import { setUiOptions, uiOptions } from '../stores/ui';
 import { createMemo, createSignal } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
@@ -11,9 +11,6 @@ import ActDetails from './ActDetails';
 import PlotList from '../components/lists/PlotList';
 
 export default function Home(props) {
-
-  const [showCharacterCreator, setShowCharacterCreator] = createSignal(false);
-  const [showLocationCreator, setShowLocationCreator] = createSignal(false);
 
   const mainClass = createMemo(() => {
     const left = uiOptions.showLeftSidePanel;
@@ -46,7 +43,7 @@ export default function Home(props) {
       <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
         <Card class="character-panel" title="Characters" link='/character' open
           menuItems={<>
-            <button onClick={() => setShowCharacterCreator(true)}>New Character</button>
+            <button onClick={() => setUiOptions('showCharacterCreator', true)}>New Character</button>
           </>}
           parentType=''
           parentId=''
@@ -59,7 +56,7 @@ export default function Home(props) {
 
         <Card class="location-panel" title="Locations" open link='/location'
           menuItems={<>
-            <button onClick={() => setShowLocationCreator(true)}>New Location</button>
+            <button onClick={() => setUiOptions('showLocationCreator', true)}>New Location</button>
           </>}
           parentType=''
           parentId=''
@@ -87,8 +84,8 @@ export default function Home(props) {
         </Card>
       </aside>
 
-      <CharacterCreator open={showCharacterCreator()} onClose={() => setShowCharacterCreator(false)} />
-      <LocationCreator open={showLocationCreator()} onClose={() => setShowLocationCreator(false)} />
+      <CharacterCreator open={uiOptions.showCharacterCreator} onClose={() => setUiOptions('showCharacterCreator', false)} />
+      <LocationCreator open={uiOptions.showLocationCreator} onClose={() => setUiOptions('showLocationCreator', false)} />
     </main>
 
   );

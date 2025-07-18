@@ -251,7 +251,7 @@ export class StoryService {
         }
     ): Promise<void> {
         await this.getTable(type).delete(id);
-
+        console.info(`Deleted from ${type} id ${id}`);
         if (parentInfo) {
             await this.updateParentList(
                 type,

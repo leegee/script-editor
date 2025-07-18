@@ -4,6 +4,7 @@ import type { Location, EntityMap } from '../../lib/types';
 import { storyApi } from '../../stores/story';
 import LocationCard from '../cards/LocationCard';
 import LocationCreator from '../creators/LocationCreator';
+import { setUiOptions, uiOptions } from '../../stores/ui';
 
 type LocationListProps = {
     children?: JSX.Element
@@ -25,7 +26,7 @@ export default (props: LocationListProps) => {
             <Show when={props.children && props.entityId}>
                 <h4>
                     <span> {props.children || ''} </span>
-                    <LocationCreator parentId={props.entityId ?? null} />
+                    <LocationCreator open={uiOptions.showLocationCreator} onClose={() => setUiOptions('showLocationCreator', false)} />
                 </h4>
             </Show>
 
