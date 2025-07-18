@@ -4,13 +4,16 @@ import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
 import ActCreator from '../components/creators/ActCreator';
 import { uiOptions } from '../stores/ui';
-import { createMemo } from 'solid-js';
+import { createMemo, createSignal } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
 import ActDetails from './ActDetails';
 import PlotList from '../components/lists/PlotList';
 
 export default function Home(props) {
+
+  const [showCharacterCreator, setShowCharacterCreator] = createSignal(false);
+
   const mainClass = createMemo(() => {
     const left = uiOptions.showLeftSidePanel;
     const right = uiOptions.showRightSidePanel;
@@ -41,7 +44,9 @@ export default function Home(props) {
 
       <aside class={"panel right " + (uiOptions.showRightSidePanel ? "open" : "closed")}>
         <Card class="character-panel" title="Characters" link='/character' open
-          menuItems={<><CharacterCreator /></>}
+          menuItems={<>
+            <button onClick={() => setShowCharacterCreator(true)}>New Character</button>
+          </>}
           parentType=''
           parentId=''
           entityType='characters'
@@ -63,7 +68,12 @@ export default function Home(props) {
         </Card>
 
         <Card class="plot-panel" title="Plots" open link='/plot'
-          menuItems={<><PlotCreator /></>}
+          menuItems={
+            <>
+              <p></p>
+              {/* <PlotCreator /> */}
+            </>
+          }
           parentType=''
           parentId=''
           entityType='plots'
@@ -74,6 +84,8 @@ export default function Home(props) {
         </Card>
       </aside>
 
+      <CharacterCreator open={showCharacterCreator()} onClose={() => setShowCharacterCreator(false)} />
     </main>
+
   );
 }

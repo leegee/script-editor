@@ -1,6 +1,23 @@
 import type { Character, ScriptLineType } from '../../../lib/types';
 import type { StoryService } from '../../story';
 
+
+export async function createCharacter(
+    this: StoryService,
+): Promise<Character> {
+    const newId = crypto.randomUUID();
+
+    const newCharacter: Character = {
+        id: newId,
+        name: 'New Character',
+    };
+
+    await this.createEntity('characters', newCharacter);
+
+    return newCharacter;
+}
+
+
 export function useCharacter(
     this: StoryService,
     id: () => string | undefined
