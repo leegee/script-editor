@@ -21,7 +21,7 @@ export default function AddLocation(props: AddLocationProps) {
     return (
         <Show
             when={availableLocations()}
-            fallback={<small>No Locations Defined</small>}
+            fallback={<h2 class='no-content'>No locations found</h2>}
         >
             <OverflowMenu class="none" buttonContent={<small>↔ Set Location</small>}>
                 <ul class="overflow-menu-list">

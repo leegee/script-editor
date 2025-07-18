@@ -27,7 +27,7 @@ const LocationCard: Component<LocationCardProps> = (props) => {
     const location = createMemo(() => props.location ?? fetchedLoc());
 
     return (
-        <Show when={location()} keyed fallback={<div class="no-content">No Location Set</div>}>
+        <Show when={location()} keyed fallback={<h2 class='no-content'>Not found</h2>}>
             {(loc) => {
                 const menuItems = [
                     <DeleteLocationButton locationId={loc.id} />

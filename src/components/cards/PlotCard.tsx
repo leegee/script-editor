@@ -26,7 +26,7 @@ const PlotCard: Component<PlotCardProps> = (props) => {
     const plot = createMemo(() => props.plot ?? fetchedPlot());
 
     return (
-        <Show when={plot()} keyed fallback={<div class="no-content">No Plot Set</div>}>
+        <Show when={plot()} keyed fallback={<h2 class='no-content'>Not found</h2>}>
             {(loc) => {
                 const menuItems = [
                     <DeletePlotButton plotId={loc.id} />

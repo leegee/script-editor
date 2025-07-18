@@ -24,7 +24,7 @@ const LocationDetails: Component = () => {
     return (
         <section class="location-details">
             <section class="locations-list" role="list" aria-label="Locations">
-                <Show when={getLocations()} fallback={<p>No location</p>}>
+                <Show when={getLocations()} fallback={<h2 class='no-content'>No such location found</h2>}>
                     <For each={locationsArray()}>
                         {(loc) => (
                             <LocationCard locationId={loc.id} summary={false} />

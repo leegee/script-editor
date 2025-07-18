@@ -32,7 +32,7 @@ const PlotList: Component<PlotListProps> = (props) => {
 
     return (
         <section class="plot-list">
-            <Show when={plots()?.length} fallback={<div>No plots found</div>}>
+            <Show when={plots()?.length} fallback={<p>No plots</p>}>
                 <For each={plots()}>
                     {(plot) => (
                         <PlotCard plotId={plot.id} summary />

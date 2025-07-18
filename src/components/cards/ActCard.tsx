@@ -26,7 +26,7 @@ const ActCard: Component<ActCardProps> = (props) => {
     const actData = () => props.act ?? actResource();
 
     return (
-        <Show when={actData()} fallback={<div class="loading">No acts found.</div>}>
+        <Show when={actData()} fallback={<h2 class='no-content'>Not found</h2>}>
             {(actValue) => (
                 <Card
                     parentType='stories'

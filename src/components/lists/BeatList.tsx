@@ -10,7 +10,7 @@ const BeatList: Component<BeatListProps> = (props) => {
     const [beats] = storyApi.useBeatsBySceneId(() => props.sceneId);
 
     return (
-        <Show when={beats() && beats().length > 0} fallback={<p>No beats found.</p>}>
+        <Show when={beats() && beats().length > 0} fallback={<h2 class='no-cntent'>No beats found</h2>}>
             <section class="beat-list" role="list" aria-label="Beats List">
                 <For each={beats()}>
                     {(beat) => (

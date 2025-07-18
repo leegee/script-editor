@@ -24,7 +24,7 @@ const PlotDetails: Component = () => {
     return (
         <section class="plot-details">
             <section class="plots-list" role="list" aria-label="Plots">
-                <Show when={getPlots()} fallback={<div>No plots</div>}>
+                <Show when={getPlots()} fallback={<h2 class='no-cntent'>Not found</h2>}>
                     <For each={plotsArray()}>
                         {(p) => (
                             <PlotCard plotId={p.id} summary={false} />

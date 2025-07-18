@@ -29,7 +29,7 @@ const CharacterList: Component<CharacterListProps> = (props) => {
 
     return (
         <section class="character-list">
-            <Show when={characters()?.length} fallback={<div>No characters found</div>}>
+            <Show when={characters()?.length} fallback={<h2 class='no-cntent'>No characters found</h2>}>
                 <For each={characters()}>
                     {(character) => (
                         <CharacterCard editable={false} characterId={character.id} summary sceneId={props.sceneId} />

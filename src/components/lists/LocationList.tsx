@@ -30,7 +30,7 @@ export default (props: LocationListProps) => {
                 </h4>
             </Show>
 
-            <Show when={locations()} fallback={<div>No locations found</div>}>
+            <Show when={locations()} fallback={<h2 class='no-cntent'>Not found</h2>}>
                 <section class="location-list" role="list" aria-label="Locations List">
                     <For each={locations()}>
                         {(location) => (
