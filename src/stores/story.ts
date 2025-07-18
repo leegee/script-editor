@@ -17,9 +17,9 @@ type ActMethods = typeof ActMixin;
 type BeatMethods = typeof BeatMixin;
 type CharacterMethods = typeof CharacterMixin;
 type LocationMethods = typeof LocationMixin;
+type PlotMethods = typeof PlotMixin;
 type SceneMethods = typeof SceneMixin;
 type ScriptlineMethods = typeof ScriptlineMixin
-type PlotMethods = typeof PlotMixin;
 
 export type LiveSignal<T> = readonly [Accessor<T | undefined>];
 
@@ -28,14 +28,14 @@ const MethodModules = [
     BeatMixin,
     CharacterMixin,
     LocationMixin,
+    PlotMixin,
     SceneMixin,
     ScriptlineMixin,
 ];
 
-export interface StoryService
-    extends ActMethods, SceneMethods, BeatMethods, ScriptlineMethods, CharacterMethods, LocationMethods {
-    db: StoryDexie;
-}
+export interface StoryService extends
+    ActMethods, SceneMethods, BeatMethods,
+    ScriptlineMethods, CharacterMethods, LocationMethods, PlotMethods { db: StoryDexie; }
 
 type ParentOptions<T extends keyof EntityMap> = {
     parentType: T;
@@ -51,6 +51,7 @@ export const ParentMap = {
     scriptlines: { parentType: 'beats', parentListField: 'scriptLineIds' },
     characters: { parentType: 'story', parentListField: 'characterIds' },
     locations: { parentType: 'story', parentListField: 'locationIds' },
+    plots: { parentType: 'story', parentListField: 'plotIds' },
     story: undefined // root has no parent
 } as const;
 
@@ -275,6 +276,30 @@ export class StoryService {
         });
     }
 
+    async unlinkEntityFromParent<T extends keyof EntityMap>(
+        parentType: T,
+        parentId: string,
+        childId: string,
+        listField: keyof EntityMap[T]
+    ): Promise<void> {
+        const parentTable = this.getTable(parentType);
+        const parent = await parentTable.get(parentId);
+        if (!parent) throw new Error(`Parent ${parentType} ${parentId} not found`);
+
+        const currentList = parent[listField];
+        if (!Array.isArray(currentList)) {
+            throw new Error(`${String(listField)} is not an array field on ${parentType}`);
+        }
+
+        const updatedList = currentList.filter((id: string) => id !== childId);
+        const updatedParent = {
+            ...parent,
+            [listField]: updatedList,
+        };
+
+        await parentTable.put(updatedParent);
+    }
+
     async asObjectUrl(): Promise<string | undefined> {
         try {
             const stories = await this.db.story.toArray();
@@ -314,5 +339,8 @@ Object.assign(StoryService.prototype, ActMixin);
 Object.assign(StoryService.prototype, CharacterMixin);
 Object.assign(StoryService.prototype, LocationMixin);
 Object.assign(StoryService.prototype, SceneMixin);
+Object.assign(StoryService.prototype, PlotMixin);
+Object.assign(StoryService.prototype, BeatMixin);
+Object.assign(StoryService.prototype, ScriptlineMixin);
 
 export const storyApi = new StoryService();

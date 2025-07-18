@@ -79,6 +79,7 @@ export interface Beat {
     summary: string;
     durationSeconds?: number;
     scriptLineIds: string[];
+    plotIds: string[];
 }
 
 export interface Scene {
@@ -87,6 +88,7 @@ export interface Scene {
     title: string;
     summary: string;
     locationId: string;
+    plotIds: Plot[];
     durationSeconds?: number;
     beatIds: string[];
 }
@@ -97,6 +99,7 @@ export interface Act {
     title: string;
     summary: string;
     sceneIds: string[];
+    plotIds: string[];
 }
 
 export interface Story {

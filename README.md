@@ -11,6 +11,10 @@ Experiments in modelling a film script,
 
 ## To do
 
+* Add Plots
+
+* Use tags
+
 * Add history
 
 * Add CRDT

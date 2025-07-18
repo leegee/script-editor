@@ -6,8 +6,8 @@ interface RemoveLocationButtonProps {
 }
 
 export default (props: RemoveLocationButtonProps) => {
-    const removeLocation = () => {
-        storyApi.unlinkEntityFromScene(props.sceneId, props.locationId, 'locationId');
+    const removeLocation = async () => {
+        await storyApi.unlinkEntityFromParent('scenes', props.sceneId, props.locationId, 'locationId');
     };
     return (
         <button class='remove' onclick={removeLocation}>Remove</button>
