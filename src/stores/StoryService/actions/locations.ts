@@ -6,7 +6,9 @@ export function useLocation(
     getId: () => string
 ): LiveSignal<Location | undefined> {
     return this.createLiveSignal(async () => {
-        return await this.db.locations.get(getId());
+        const id = getId();
+        if (!id) return undefined;
+        return await this.db.locations.get(id);
     });
 }
 

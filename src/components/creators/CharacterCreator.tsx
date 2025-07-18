@@ -1,64 +1,80 @@
-import './Creator.scss';
-import { storyApi } from "../../stores/story";
-import { createEffect, createSignal, onCleanup, onMount, Show } from 'solid-js';
-import { bindField } from '../../lib/bind-field';
+import './LocationCreator.scss';
+import { createSignal, createEffect, Show } from 'solid-js';
+import { storyApi } from '../../stores/story';
 import Modal from '../Modal';
 import TextInput from '../TextInput';
-import ImageThumbnail from '../ImageThumbnail';
+import FileInput from '../FileInput';
+import Map from '../Map';
+import { bindField } from '../../lib/bind-field';
 
-interface CharacterCreatorProps {
+interface LocationCreatorProps {
     open: boolean;
     onClose: () => void;
+    parentId?: string;
 }
 
-const CharacterCreator = (props: CharacterCreatorProps) => {
-    const [newCharacterId, setNewCharacterId] = createSignal<string | null>(null);
+const LocationCreator = (props: LocationCreatorProps) => {
+    const [newLocationId, setNewLocationId] = createSignal<string | null>(null);
+    const [prevOpen, setPrevOpen] = createSignal(false);
 
-    let prevOpen = false;
-
-    const cancel = () => {
-        if (newCharacterId()) {
-            storyApi.deleteEntity('characters', newCharacterId());
-        }
-        setNewCharacterId(null);
-        props.onClose();
-    };
-
-    const saveCharacter = () => {
-        setNewCharacterId(null);
-        props.onClose();
-    };
-
+    // Create new location only when modal opens for the first time
     createEffect(() => {
         const isOpen = props.open;
+        console.log('Create Location a:', props.open, prevOpen());
+        if (isOpen && !prevOpen()) {
+            console.log('Create Location');
 
-        if (isOpen && !prevOpen) {
             (async () => {
-                const newChar = await storyApi.createCharacter();
-                setNewCharacterId(newChar.id);
+                try {
+                    const newLocation = await storyApi.createEntity('locations', {
+                        id: String(Date.now()),
+                        name: 'New Location',
+                        description: '',
+                        geofence: null,
+                        tags: [],
+                    }, props.parentId);
+                    setNewLocationId(newLocation.id);
+                    console.log('New Location created:', newLocation);
+                } catch (error) {
+                    console.error('Failed to create location:', error);
+                }
             })();
         }
-
-        prevOpen = isOpen;
+        setPrevOpen(isOpen);
     });
 
+    const onCancel = async () => {
+        const id = newLocationId();
+        if (id) {
+            try {
+                await storyApi.deleteEntity('locations', id);
+            } catch (error) {
+                console.error('Failed to delete location:', error);
+            }
+        }
+        setNewLocationId(null);
+        props.onClose();
+    };
+
+    const onSave = () => {
+        setNewLocationId(null);
+        props.onClose();
+    };
+
     return (
-        <Show when={props.open && newCharacterId()}>
+        <Show when={props.open && newLocationId()}>
             {(id) => {
-                console.log('id:', id);
-                console.log('typeof id:', typeof id);
-                console.log('id():', id());
-                console.log('typeof id():', typeof id());
                 if (!id) return null;
-                const nameField = bindField('characters', id(), 'name');
-                const avatarColorField = bindField('characters', id(), 'avatarColor');
-                const bioField = bindField('characters', id(), 'bio');
+
+                // Bind reactive fields
+                const nameField = bindField('locations', id(), 'name');
+                const descriptionField = bindField('locations', id(), 'description');
 
                 return (
-                    <Modal title="Create A New Character" open={true} onClose={cancel}>
-                        <div class='creator-form'>
+                    <Modal title="Create A New Location" open={true} onClose={onCancel}>
+                        <div class="creator-form">
                             <label>
-                                <span class='text'>Name:</span>
+                                <span class="text">Name:</span>
                                 <TextInput
                                     value={nameField.value}
                                     onInput={nameField.onInput}
@@ -67,29 +83,37 @@ const CharacterCreator = (props: CharacterCreatorProps) => {
                             </label>
 
                             <label>
-                                <span class='text'>Avatar Color:</span>
-                                <TextInput {...avatarColorField} as="color" />
-                            </label>
-
-                            <label>
-                                <span class='text'>Bio:</span>
+                                <span class="text">Description:</span>
                                 <TextInput
-                                    placeholder='Background of the character'
-                                    value={bioField.value}
-                                    onInput={bioField.onInput}
-                                    onBlur={bioField.onBlur}
-                                    as='textarea'
+                                    value={descriptionField.value}
+                                    onInput={descriptionField.onInput}
+                                    onBlur={descriptionField.onBlur}
+                                    as="textarea"
                                 />
                             </label>
 
                             <label>
-                                <span class='text'>Image (optional): {id()}</span>
-                                <ImageThumbnail entityType='characters' entityId={id()} field='avatarImage' />
+                                <span class="text">Image (optional):</span>
+                                <FileInput
+                                    entity="locations"
+                                    id={id()}
+                                    field="photoUrl"
+                                />
+                                {/* Show image preview if photoUrl exists */}
+                                <Show when={bindField('locations', id(), 'photoUrl').value()}>
+                                    {(photoUrl) => (
+                                        <div class="image-preview">
+                                            <img src={photoUrl()} alt="Location photo" />
+                                        </div>
+                                    )}
+                                </Show>
                             </label>
 
+                            <Map locationId={id()} />
+
                             <footer class="actions">
-                                <button class="cancel" onClick={cancel}>Cancel</button>
-                                <button class="save" onClick={saveCharacter}>Save</button>
+                                <button class="cancel" onClick={onCancel}>Cancel</button>
+                                <button class="save" onClick={onSave}>Save</button>
                             </footer>
                         </div>
                     </Modal>
@@ -99,4 +123,4 @@ const CharacterCreator = (props: CharacterCreatorProps) => {
     );
 };
 
-export default CharacterCreator;
+export default LocationCreator;

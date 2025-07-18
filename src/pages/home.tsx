@@ -13,6 +13,7 @@ import PlotList from '../components/lists/PlotList';
 export default function Home(props) {
 
   const [showCharacterCreator, setShowCharacterCreator] = createSignal(false);
+  const [showLocationCreator, setShowLocationCreator] = createSignal(false);
 
   const mainClass = createMemo(() => {
     const left = uiOptions.showLeftSidePanel;
@@ -57,7 +58,9 @@ export default function Home(props) {
         </Card>
 
         <Card class="location-panel" title="Locations" open link='/location'
-          menuItems={<><LocationCreator /></>}
+          menuItems={<>
+            <button onClick={() => setShowLocationCreator(true)}>New Location</button>
+          </>}
           parentType=''
           parentId=''
           entityType='locations'
@@ -85,6 +88,7 @@ export default function Home(props) {
       </aside>
 
       <CharacterCreator open={showCharacterCreator()} onClose={() => setShowCharacterCreator(false)} />
+      <LocationCreator open={showLocationCreator()} onClose={() => setShowLocationCreator(false)} />
     </main>
 
   );
