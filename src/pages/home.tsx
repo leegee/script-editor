@@ -4,7 +4,7 @@ import Card from '../components/cards/Card';
 import CharacterList from '../components/lists/CharacterList';
 import ActCreator from '../components/creators/ActCreator';
 import { setUiOptions, uiOptions } from '../stores/ui';
-import { createMemo, createSignal } from 'solid-js';
+import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
 import ActDetails from './ActDetails';
@@ -64,7 +64,7 @@ export default function Home(props) {
           entityId={undefined}
           draggable={true}
         >
-          <LocationList />
+          <LocationList summary={true} />
         </Card>
 
         <Card class="plot-panel" title="Plots" open link='/plot'

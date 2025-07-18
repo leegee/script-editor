@@ -224,7 +224,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
             style={{
                 transition: 'filter 0.2s ease-in',
                 width: '100%',
-                height: '250pt',
+                height: props.summary ? '100pt' : '250pt',
             }}
         />
     );
