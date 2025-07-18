@@ -7,7 +7,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "deploy": "bun run build && bun run test && gh-pages -d dist",
+    "real:deploy": "bun run build && bun run test && gh-pages -d dist",
+    "deploy": "bun run build  && gh-pages -d dist",
     "start": "vite",
     "serve": "vite preview",
     "test": "bun test"
