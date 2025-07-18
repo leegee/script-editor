@@ -1,5 +1,5 @@
 import Dexie, { Table } from 'dexie';
-import type { Scene, Beat, ScriptLine, Story, Act, Character, Location } from '../lib/types';
+import type { Scene, Beat, ScriptLine, Story, Act, Character, Location, Plot } from '../lib/types';
 
 export interface StoryDexieTables {
     story: Dexie.Table<Story, string>;
@@ -9,6 +9,7 @@ export interface StoryDexieTables {
     scriptlines: Dexie.Table<ScriptLine, string>;
     characters: Dexie.Table<Character, string>;
     locations: Dexie.Table<Location, string>;
+    plots: Dexie.Table<Location, string>;
 }
 
 export class StoryDexie extends Dexie implements StoryDexieTables {
@@ -19,6 +20,7 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
     scriptlines!: Table<ScriptLine, string>;
     characters!: Table<Character, string>;
     locations!: Table<Location, string>;
+    plots!: Table<Location, string>;
 
     constructor() {
         super('StoryDB');
@@ -29,7 +31,8 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
             beats: '++id, *sceneId, *scriptLineIds, number',
             scriptlines: '++id, beatId, number',
             characters: '++id',
-            locations: '++id'
+            locations: '++id',
+            plots: '++id',
         });
     }
 }

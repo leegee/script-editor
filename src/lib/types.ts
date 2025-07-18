@@ -37,6 +37,16 @@ export interface Character {
     mediaLinkIds?: string[];
 }
 
+
+export interface Plot {
+    id: string;
+    name: string;
+    description?: string;
+    photoUrl?: string;
+    mediaLinkIds?: string[];
+    tags?: string[];
+}
+
 export interface Location {
     id: string;
     name: string;
@@ -108,6 +118,7 @@ export interface NormalizedStoryData {
     scriptlines: Record<string, ScriptLine>;
     characters: Record<string, Character>;
     locations: Record<string, Location>;
+    plots: Record<string, Location>;
 }
 
 export type EntityMap = {
@@ -118,6 +129,7 @@ export type EntityMap = {
     scriptlines: ScriptLine;
     characters: Character;
     locations: Location;
+    plots: Plot;
 };
 
 export type EntityType = keyof NormalizedStoryData;

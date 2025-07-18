@@ -11,6 +11,7 @@ import * as BeatMixin from './StoryService/actions/beats';
 import * as ScriptlineMixin from './StoryService/actions/scriptlines';
 import * as CharacterMixin from './StoryService/actions/characters';
 import * as LocationMixin from './StoryService/actions/locations';
+import * as PlotMixin from './StoryService/actions/plots';
 
 type ActMethods = typeof ActMixin;
 type BeatMethods = typeof BeatMixin;
@@ -18,6 +19,7 @@ type CharacterMethods = typeof CharacterMixin;
 type LocationMethods = typeof LocationMixin;
 type SceneMethods = typeof SceneMixin;
 type ScriptlineMethods = typeof ScriptlineMixin
+type PlotMethods = typeof PlotMixin;
 
 export type LiveSignal<T> = readonly [Accessor<T | undefined>];
 
