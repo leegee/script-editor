@@ -1,5 +1,5 @@
 import 'ol/ol.css';
-import { onCleanup, onMount, createSignal, createEffect, type Component } from 'solid-js';
+import { onCleanup, onMount, createEffect, type Component } from 'solid-js';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { fromLonLat, toLonLat } from 'ol/proj';
