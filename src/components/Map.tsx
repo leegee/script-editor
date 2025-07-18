@@ -1,3 +1,4 @@
+import './Map.scss';
 import 'ol/ol.css';
 import { onCleanup, onMount, createEffect, type Component } from 'solid-js';
 import Map from 'ol/Map';
@@ -97,37 +98,38 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         }
 
         // Setup modify interaction for editing
-        modifyInteraction = new Modify({ source: vectorSource });
-        map.addInteraction(modifyInteraction);
+        if (!props.summary) {
+            modifyInteraction = new Modify({ source: vectorSource });
+            map.addInteraction(modifyInteraction);
 
-        snapInteraction = new Snap({ source: vectorSource });
-        map.addInteraction(snapInteraction);
+            snapInteraction = new Snap({ source: vectorSource });
+            map.addInteraction(snapInteraction);
 
-        modifyInteraction.on('modifyend', () => {
-            const updatedFeature = vectorSource.getFeatures()[0];
-            if (updatedFeature) {
-                const newGeofence = featureToGeofence(updatedFeature);
+            modifyInteraction.on('modifyend', () => {
+                const updatedFeature = vectorSource.getFeatures()[0];
+                if (updatedFeature) {
+                    const newGeofence = featureToGeofence(updatedFeature);
+                    if (newGeofence) {
+                        updateGeofence(newGeofence);
+                    }
+                }
+            });
+
+            // Setup draw interaction to allow user to draw polygon or circle geofence
+            // For simplicity, let's enable polygon drawing only; you can extend to circles as needed
+            drawInteraction = new Draw({
+                source: vectorSource,
+                type: 'Polygon',
+            });
+            map.addInteraction(drawInteraction);
+
+            drawInteraction.on('drawend', (event) => {
+                const newGeofence = featureToGeofence(event.feature);
                 if (newGeofence) {
                     updateGeofence(newGeofence);
                 }
-            }
-        });
-
-        // Setup draw interaction to allow user to draw polygon or circle geofence
-        // For simplicity, let's enable polygon drawing only; you can extend to circles as needed
-        drawInteraction = new Draw({
-            source: vectorSource,
-            type: 'Polygon',
-        });
-        map.addInteraction(drawInteraction);
-
-        drawInteraction.on('drawend', (event) => {
-            const newGeofence = featureToGeofence(event.feature);
-            if (newGeofence) {
-                updateGeofence(newGeofence);
-            }
-        });
-
+            });
+        }
     });
 
     onCleanup(() => {
@@ -218,6 +220,7 @@ const LocationMap: Component<LocationMapProps> = (props) => {
 
     return (
         <section
+            class={`location-map ${props.summary ? 'summary' : ''}`}
             ref={mapContainer}
             onmouseenter={() => mapContainer.style.filter = 'none'}
             onmouseout={() => mapContainer.style.filter = mapFilter}

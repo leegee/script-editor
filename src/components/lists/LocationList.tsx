@@ -7,7 +7,8 @@ import LocationCreator from '../creators/LocationCreator';
 import { setUiOptions, uiOptions } from '../../stores/ui';
 
 type LocationListProps = {
-    children?: JSX.Element
+    children?: JSX.Element;
+    summary?: boolean;
 } & (
         | { entityType: keyof EntityMap; entityId: string; refresh?: number }
         | { entityType?: undefined; entityId?: undefined; refresh?: number }
@@ -36,7 +37,7 @@ export default (props: LocationListProps) => {
                         {(location) => (
                             <LocationCard
                                 location={location}
-                                summary={true}
+                                summary={props.summary}
                                 parentId={props.entityId ?? ''}
                             />
                         )}

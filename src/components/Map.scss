@@ -1,0 +1,7 @@
+.location-map {
+    &.summary {
+        .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible * {
+            font-size: 4pt !important;
+        }
+    }
+}
