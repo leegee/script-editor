@@ -20,10 +20,7 @@ const LocationCreator = (props: LocationCreatorProps) => {
     // Create new location only when modal opens for the first time
     createEffect(() => {
         const isOpen = props.open;
-        console.log('Create Location a:', props.open, prevOpen());
         if (isOpen && !prevOpen()) {
-            console.log('Create Location');
-
             (async () => {
                 try {
                     const newLocation = await storyApi.createEntity('locations', {
@@ -34,7 +31,7 @@ const LocationCreator = (props: LocationCreatorProps) => {
                         tags: [],
                     }, props.parentId);
                     setNewLocationId(newLocation.id);
-                    console.log('New Location created:', newLocation);
+                    console.info('New Location created:', newLocation);
                 } catch (error) {
                     console.error('Failed to create location:', error);
                 }
