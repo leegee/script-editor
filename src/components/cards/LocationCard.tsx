@@ -58,7 +58,12 @@ const LocationCard: Component<LocationCardProps> = (props) => {
                         <h5>Description</h5>
                         <div class='location-desc-and-photo'>
                             <TextInput as='textarea' {...bindField('locations', location().id, 'description')} />
-                            <ImageThumbnail entityType='locations' entityId={loc.id} field='photoUrl' />
+                            <Show when={!props.summary}>
+                                <ImageThumbnail entityType='locations' entityId={loc.id} field='photoUrl' />
+                            </Show>
+                            <Show when={props.summary && loc.photoUrl}>
+                                <ImageThumbnail entityType='locations' entityId={loc.id} field='photoUrl' />
+                            </Show>
                         </div>
 
                         <Map locationId={loc.id} summary={props.summary} />
