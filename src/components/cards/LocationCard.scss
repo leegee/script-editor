@@ -16,4 +16,9 @@
         height: 10em;
         display: flex;
     }
+
+    &.summary .location-desc-and-photo {
+        max-height: 5em;
+        margin-bottom: 1em;
+    }
 }
