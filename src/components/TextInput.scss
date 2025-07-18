@@ -45,13 +45,12 @@ input.custom-input {
 
 textarea.custom-input {
     border: none;
-    border-bottom: 1pt dotted #fff5;
+    border: 1pt dotted #fff5;
     min-height: 1.6em;
     max-height: 12em;
     height: 1em;
     width: 100%;
     display: flex;
-    resize: vertical;
-    background: transparent;
-    box-sizing: border-box;
+    // resize: vertical;
+    resize: none;
 }

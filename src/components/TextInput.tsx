@@ -17,8 +17,7 @@ const TextInput: Component<TextInputProps> = (props) => {
         throw new TypeError('.value should be a getter: value()');
     }
 
-    const [localValue, setLocalValue] = createSignal(value().toString());
-    let textareaRef: HTMLTextAreaElement | undefined;
+    const [textareaRef, setTextareaRef] = createSignal<HTMLTextAreaElement | null>(null);
 
     const isEmpty = () => {
         const val = value();
@@ -26,11 +25,12 @@ const TextInput: Component<TextInputProps> = (props) => {
     };
 
     const adjustHeight = () => {
-        if (textareaRef) {
-            textareaRef.style.height = 'auto'; // Reset height to shrink if needed
-            textareaRef.style.height = textareaRef.scrollHeight + 'px';
+        const el = textareaRef();
+        if (el) {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
         }
-    };
+    }
 
     const inputTextKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
@@ -47,11 +47,12 @@ const TextInput: Component<TextInputProps> = (props) => {
     const rv = as === 'textarea'
         ? (
             <textarea
-                ref={el => textareaRef = el}
+                ref={setTextareaRef}
                 title={props.tooltip || ''}
                 class='custom-input'
                 classList={{ empty: isEmpty() }}
                 value={value()}
+                onkeydown={adjustHeight}
                 {...(rest as JSX.TextareaHTMLAttributes<HTMLTextAreaElement>)}
             />
         ) : (
