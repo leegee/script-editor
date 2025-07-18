@@ -8,6 +8,7 @@ import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
 import ActDetails from './ActDetails';
+import PlotList from '../components/lists/PlotList';
 
 export default function Home(props) {
   const mainClass = createMemo(() => {
@@ -50,7 +51,7 @@ export default function Home(props) {
           <CharacterList />
         </Card>
 
-        <Card class="location-panel" title="Location" open link='/location'
+        <Card class="location-panel" title="Locations" open link='/location'
           menuItems={<><LocationCreator /></>}
           parentType=''
           parentId=''
@@ -59,6 +60,17 @@ export default function Home(props) {
           draggable={true}
         >
           <LocationList />
+        </Card>
+
+        <Card class="plot-panel" title="Plots" open link='/plot'
+          menuItems={<><PlotCreator /></>}
+          parentType=''
+          parentId=''
+          entityType='plots'
+          entityId={undefined}
+          draggable={true}
+        >
+          <PlotList />
         </Card>
       </aside>
 
