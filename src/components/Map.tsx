@@ -91,7 +91,6 @@ const LocationMap: Component<LocationMapProps> = (props) => {
 
         mapContainer.style.filter = mapFilter;
 
-        // Add initial geofence feature(s) to vector source
         if (loc()?.geofence) {
             addGeofenceFeature(loc().geofence);
             fitMapToGeofence();
@@ -123,11 +122,6 @@ const LocationMap: Component<LocationMapProps> = (props) => {
         map.addInteraction(drawInteraction);
 
         drawInteraction.on('drawend', (event) => {
-            // Remove old features, only keep the new one
-            vectorSource.clear();
-            vectorSource.addFeature(event.feature);
-
-            // Convert feature to geofence and update
             const newGeofence = featureToGeofence(event.feature);
             if (newGeofence) {
                 updateGeofence(newGeofence);
