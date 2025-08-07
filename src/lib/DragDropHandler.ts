@@ -4,6 +4,22 @@ import { EntityMap } from './types';
 let draggedData: { cardId: string; entityType: string, parentId: string, parentType: string, } | null = null;
 let lastHighlightedElement: HTMLElement | null = null;
 
+const resetState = () => {
+    draggedData = null;
+    if (lastHighlightedElement) {
+        lastHighlightedElement.classList.remove('drag-over-valid');
+        lastHighlightedElement = null;
+    }
+    console.log('[DragDrop] onDrop - Reset draggedData');
+};
+
+const validate = (condition: boolean, message: string) => {
+    if (!condition) {
+        console.warn(`[DragDrop] onDrop - ${message}`);
+        return false;
+    }
+    return true;
+};
 export class DragDropHandler {
     static hierarchy = {
         'scriptlines': { parentClass: 'beats', childIdsField: 'scriptLineIds' },
@@ -42,41 +58,37 @@ export class DragDropHandler {
     static onDragOver(event: DragEvent, targetElement: HTMLElement) {
         event.preventDefault();
 
-        if (!draggedData || !event.dataTransfer) {
-            event.dataTransfer.dropEffect = 'none';
-            if (lastHighlightedElement) {
-                lastHighlightedElement.classList.remove('drag-over-valid');
-                lastHighlightedElement = null;
+        let isValidTarget = false;
+
+        if (draggedData && event.dataTransfer) {
+            const { entityType: draggedType } = draggedData;
+            const allowedParentType = this.hierarchy[draggedType]?.parentClass;
+
+            if (allowedParentType) {
+                const { entityType: targetEntityType } = this.getEntityInfoFromElement(targetElement);
+
+                if (targetEntityType === allowedParentType) {
+                    event.dataTransfer.dropEffect = 'move';
+                    event.stopPropagation();
+                    isValidTarget = true;
+
+                    if (lastHighlightedElement && lastHighlightedElement !== targetElement) {
+                        lastHighlightedElement.classList.remove('drag-over-valid');
+                    }
+
+                    if (!targetElement.classList.contains('drag-over-valid')) {
+                        targetElement.classList.add('drag-over-valid');
+                    }
+
+                    lastHighlightedElement = targetElement;
+                }
             }
-            return;
         }
 
-        const { entityType: draggedType } = draggedData;
-        const allowedParentType = this.hierarchy[draggedType]?.parentClass;
-        if (!allowedParentType) {
-            event.dataTransfer.dropEffect = 'none';
-            if (lastHighlightedElement) {
-                lastHighlightedElement.classList.remove('drag-over-valid');
-                lastHighlightedElement = null;
+        if (!isValidTarget) {
+            if (event.dataTransfer) {
+                event.dataTransfer.dropEffect = 'none';
             }
-            return;
-        }
-
-        const { entityType: targetEntityType } = this.getEntityInfoFromElement(targetElement);
-
-        if (targetEntityType === allowedParentType) {
-            event.dataTransfer.dropEffect = 'move';
-            event.stopPropagation();
-
-            if (lastHighlightedElement && lastHighlightedElement !== targetElement) {
-                lastHighlightedElement.classList.remove('drag-over-valid');
-            }
-            if (!targetElement.classList.contains('drag-over-valid')) {
-                targetElement.classList.add('drag-over-valid');
-            }
-            lastHighlightedElement = targetElement;
-        } else {
-            event.dataTransfer.dropEffect = 'none';
             if (lastHighlightedElement) {
                 lastHighlightedElement.classList.remove('drag-over-valid');
                 lastHighlightedElement = null;
@@ -84,84 +96,63 @@ export class DragDropHandler {
         }
     }
 
-
     static async onDrop(event: DragEvent, targetElement: HTMLElement, refresh?: () => void) {
         event.preventDefault();
 
-        if (!draggedData) {
-            console.warn('[DragDrop] onDrop - No dragged data available');
-            return;
-        }
+        if (!validate(!!draggedData, 'No dragged data available')) return;
 
         const { entityType: parentEntityType, entityId: parentId } = this.getEntityInfoFromElement(targetElement);
-
-        if (!parentEntityType || !parentId) {
-            console.warn('[DragDrop] onDrop - Invalid drop target: missing entityType or entityId');
-            return;
-        }
+        if (!validate(!!parentEntityType && !!parentId, 'Invalid drop target: missing entityType or entityId')) return;
 
         const allowedParentType = this.hierarchy[draggedData.entityType]?.parentClass;
-        if (parentEntityType !== allowedParentType) {
-            console.warn(`[DragDrop] onDrop - Invalid drop target entityType='${parentEntityType}' for dragged entityType='${draggedData.entityType}'. Expected parent type='${allowedParentType}'`);
-            return;
-        }
+        if (!validate(parentEntityType === allowedParentType,
+            `Invalid drop target entityType='${parentEntityType}' for dragged entityType='${draggedData.entityType}'. Expected parent type='${allowedParentType}'`)) return;
 
-        console.log(`[DragDrop] ############# onDrop - Dropping cardId='${draggedData.cardId}' into parent '${parentEntityType}' with ID='${parentId}'`);
+        console.log(`[DragDrop] onDrop - Dropping cardId='${draggedData.cardId}' into parent '${parentEntityType}' with ID='${parentId}'`);
 
         try {
             const cardId = draggedData.cardId;
             const childIdsField = this.hierarchy[draggedData.entityType].childIdsField;
 
-            // Get the new parent entity (the drop target)
-            const newParent = await storyApi.getEntity(parentEntityType as keyof EntityMap, parentId);
-            if (!newParent) {
-                console.warn('[DragDrop] onDrop - New parent entity not found');
-                return;
-            }
-            if (!newParent[childIdsField]) {
-                console.warn(`[DragDrop] onDrop - New parent entity missing childIdsField '${childIdsField}'`);
-                return;
-            }
+            const fetchAndValidateEntity = async (type: string, id: string, context: 'New' | 'Old') => {
+                const entity = await storyApi.getEntity(type as keyof EntityMap, id);
+                if (!validate(!!entity, `${context} parent entity not found`)) return null;
+                if (!validate(!!entity[childIdsField], `${context} parent entity missing childIdsField '${childIdsField}'`)) return null;
+                return entity;
+            };
 
-            const oldParentType = draggedData.parentType;
-            const oldParentId = draggedData.parentId;
+            const newParent = await fetchAndValidateEntity(parentEntityType, parentId, 'New');
+            if (!newParent) return;
 
-            // If the old parent is different from the new parent, remove card from old parent's children
+            const { parentType: oldParentType, parentId: oldParentId } = draggedData;
+
             if (oldParentId !== parentId || oldParentType !== parentEntityType) {
-                const oldParent = await storyApi.getEntity(oldParentType as keyof EntityMap, oldParentId);
-                if (!oldParent) {
-                    console.warn('[DragDrop] onDrop - Old parent entity not found');
-                    return;
-                }
-                if (!oldParent[childIdsField]) {
-                    console.warn(`[DragDrop] onDrop - Old parent entity missing childIdsField '${childIdsField}'`);
-                    return;
-                }
+                const oldParent = await fetchAndValidateEntity(oldParentType, oldParentId, 'Old');
+                if (!oldParent) return;
 
                 const oldIds = oldParent[childIdsField] as string[];
                 const oldIndex = oldIds.indexOf(cardId);
                 if (oldIndex !== -1) {
                     oldIds.splice(oldIndex, 1);
-                    console.log(`[DragDrop] onDrop - Removed dragged cardId='${cardId}' from old parent '${oldParentType}' ID='${oldParentId}' at position ${oldIndex}`);
+                    console.log(`[DragDrop] onDrop - Removed cardId='${cardId}' from old parent '${oldParentType}' ID='${oldParentId}' at index ${oldIndex}`);
                     await storyApi.updateEntityField(oldParentType as keyof EntityMap, oldParentId, childIdsField, oldIds);
-                    console.log('[DragDrop] onDrop - Old parent entity updated successfully');
+                    console.log('[DragDrop] onDrop - Old parent updated');
                 } else {
-                    console.log('[DragDrop] onDrop - Dragged cardId not found in old parent children');
+                    console.log('[DragDrop] onDrop - Dragged cardId not found in old parent');
                 }
             }
 
-            // Now update new parent children array
             const newIds = [...(newParent[childIdsField] as string[])];
-            const sourceIndex = newIds.indexOf(cardId);
-            if (sourceIndex !== -1) {
-                newIds.splice(sourceIndex, 1);
-                console.log(`[DragDrop] onDrop - Removed dragged cardId='${cardId}' from position ${sourceIndex} in new parent (possible reorder)`);
+            const existingIndex = newIds.indexOf(cardId);
+            if (existingIndex !== -1) {
+                newIds.splice(existingIndex, 1);
+                console.log(`[DragDrop] onDrop - Removed duplicate cardId from index ${existingIndex} in new parent (reordering)`);
             }
             newIds.push(cardId);
-            console.log(`[DragDrop] onDrop - New children IDs order after drop: [${newIds.join(', ')}]`);
+            console.log(`[DragDrop] onDrop - New children order: [${newIds.join(', ')}]`);
 
             await storyApi.updateEntityField(parentEntityType as keyof EntityMap, parentId, childIdsField, newIds);
-            console.log('[DragDrop] onDrop - New parent entity updated successfully');
+            console.log('[DragDrop] onDrop - New parent updated successfully');
 
             if (refresh) {
                 refresh();
@@ -170,14 +161,10 @@ export class DragDropHandler {
         } catch (error) {
             console.error('[DragDrop] onDrop - Error updating entity:', error);
         } finally {
-            draggedData = null;
-            if (lastHighlightedElement) {
-                lastHighlightedElement.classList.remove('drag-over-valid');
-                lastHighlightedElement = null;
-            }
-            console.log('[DragDrop] onDrop - Reset draggedData');
+            resetState();
         }
     }
+
 
     static onDragEnd(e) {
         // console.log('[ragDrop] onDragEnd - Drag operation ended, reset draggedData', draggedData, e);
