@@ -66,12 +66,12 @@ export default function Home(props) {
         >
           <LocationList summary={true} />
         </Card>
-
+        {/* 
         <Card class="plot-panel" title="Plots" open link='/plot'
           menuItems={
             <>
               <p></p>
-              {/* <PlotCreator /> */}
+              <PlotCreator />
             </>
           }
           parentType=''
@@ -81,7 +81,7 @@ export default function Home(props) {
           draggable={true}
         >
           <PlotList />
-        </Card>
+        </Card> */}
       </aside>
 
       <CharacterCreator open={uiOptions.showCharacterCreator} onClose={() => setUiOptions('showCharacterCreator', false)} />

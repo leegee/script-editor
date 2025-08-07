@@ -52,10 +52,18 @@
 
         &.left {
             max-width: 25em;
+            font-size: 80%;
+
+            .script-line-content * {
+                font-size: 4pt !important;
+            }
+
+            .scriptlines .script-line-type-dialogue {
+                border-left-width: 1pt !important;
+            }
         }
 
         &.right {
-            text-align: right;
             max-width: 15em;
         }
 
