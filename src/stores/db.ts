@@ -20,7 +20,7 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
     scriptlines!: Table<ScriptLine, string>;
     characters!: Table<Character, string>;
     locations!: Table<Location, string>;
-    plots!: Table<Location, string>;
+    plots!: Table<Plot, string>;
 
     constructor() {
         super('StoryDB');
