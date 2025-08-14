@@ -213,7 +213,14 @@ export class StoryService {
         type: T,
         id: string
     ): Promise<EntityMap[T] | undefined> {
-        return await this.getTable(type).get(id);
+        let rv;
+        try {
+            rv = await this.getTable(type).get(id);
+        } catch (e) {
+            console.error(e);
+            throw new Error('Could not get entity type ' + type + ' id ' + id);
+        }
+        return rv;
     }
 
     async setEntity<T extends keyof EntityMap>(type: T, entity: EntityMap[T]): Promise<void> {

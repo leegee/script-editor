@@ -107,6 +107,9 @@ export interface Story {
     title: string;
     description: string;
     actIds: string[];
+    characterIds?: string[];
+    locationIds?: string[];
+    plotIds?: string[];
     tags: string[];
     createdAt: string;
     updatedAt: string;
