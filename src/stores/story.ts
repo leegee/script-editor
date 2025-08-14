@@ -1,5 +1,5 @@
 // Store containing the whole story
-import { Accessor, createResource, createSignal, onCleanup } from 'solid-js';
+import { Accessor, createSignal, onCleanup } from 'solid-js';
 import Dexie, { liveQuery } from 'dexie';
 import { db, type StoryDexie } from '../stores/db';
 import type { EntityMap, NormalizedStoryData } from '../lib/types';
@@ -45,14 +45,14 @@ type ParentOptions<T extends keyof EntityMap> = {
 
 // To document who owns whom, and where:
 export const ParentMap = {
-    acts: { parentType: 'story', parentListField: 'actIds' },
-    scenes: { parentType: 'acts', parentListField: 'sceneIds' },
+    acts: { parentType: 'stories', parentListField: 'actIds' },
     beats: { parentType: 'scenes', parentListField: 'beatIds' },
     scriptlines: { parentType: 'beats', parentListField: 'scriptLineIds' },
-    characters: { parentType: 'story', parentListField: 'characterIds' },
-    locations: { parentType: 'story', parentListField: 'locationIds' },
-    plots: { parentType: 'story', parentListField: 'plotIds' },
-    story: undefined // root has no parent
+    characters: { parentType: 'stories', parentListField: 'characterIds' },
+    locations: { parentType: 'stories', parentListField: 'locationIds' },
+    plots: { parentType: 'stories', parentListField: 'plotIds' },
+    stories: undefined, // root has no parent
+    scenes: { parentType: 'acts', parentListField: 'sceneIds' },
 } as const;
 
 
@@ -126,7 +126,7 @@ export class StoryService {
 
             // Bulk insert: convert each map to array
             await Promise.all([
-                await db.story.bulkPut(Object.values(normalized.stories)),
+                await db.stories.bulkPut(Object.values(normalized.stories)),
                 await db.acts.bulkPut(Object.values(normalized.acts)),
                 await db.scenes.bulkPut(Object.values(normalized.scenes)),
                 await db.beats.bulkPut(Object.values(normalized.beats)),
@@ -141,7 +141,7 @@ export class StoryService {
 
     useFirstStoryId() {
         return this.createLiveSignal(async () => {
-            const firstItem = await this.db.story
+            const firstItem = await this.db.stories
                 .toCollection()
                 .first();
             return firstItem?.id ?? null;
@@ -310,7 +310,7 @@ export class StoryService {
 
     async asObjectUrl(): Promise<string | undefined> {
         try {
-            const stories = await this.db.story.toArray();
+            const stories = await this.db.stories.toArray();
             const acts = await this.db.acts.toArray();
             const scenes = await this.db.scenes.toArray();
             const beats = await this.db.beats.toArray();

@@ -12,7 +12,8 @@ export function normalizeStoryData(tree: StoryTree): NormalizedStoryData {
         beats: {},
         scriptlines: {},
         characters: {},
-        locations: {}
+        locations: {},
+        plots: {},
     };
 
     // Add story

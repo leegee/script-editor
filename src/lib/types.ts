@@ -1,5 +1,3 @@
-// src/types/story.ts
-
 export type ArrayKeys<T> = {
     [K in keyof T]: T[K] extends Array<any> ? K : never
 }[keyof T];
@@ -29,6 +27,7 @@ export interface MediaLink {
 
 export interface Character {
     id: string;
+    number: number;
     name: string;
     bio?: string;
     tags?: string[];
@@ -40,6 +39,7 @@ export interface Character {
 
 export interface Plot {
     id: string;
+    number: number;
     name: string;
     description?: string;
     photoUrl?: string;
@@ -49,6 +49,7 @@ export interface Plot {
 
 export interface Location {
     id: string;
+    number: number;
     name: string;
     description?: string;
     photoUrl?: string;
@@ -63,9 +64,9 @@ export interface Location {
     };
 }
 
-
 export interface ScriptLine {
     id: string;
+    number: number;
     type: ScriptLineType;
     characterId: string | null;
     text: string;
@@ -104,6 +105,7 @@ export interface Act {
 
 export interface Story {
     id: string;
+    number: number; // unused just to be consistent
     title: string;
     description: string;
     actIds: string[];
@@ -128,7 +130,7 @@ export interface NormalizedStoryData {
 }
 
 export type EntityMap = {
-    story: Story;
+    stories: Story;
     acts: Act;
     scenes: Scene;
     beats: Beat;

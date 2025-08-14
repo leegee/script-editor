@@ -25,9 +25,9 @@ export default function Home(props) {
     <main class={mainClass()}>
       <aside class={"panel left " + (uiOptions.showLeftSidePanel ? "open" : "closed")}>
         <Card class="act-panel" title="Acts" link='/act?summary=true' open
-          menuItems={<><ActCreator /></>}
-          parentType=''
-          parentId=''
+          menuItems={<ActCreator />}
+          parentType='stories'
+          parentId='story-001'
           entityType='acts'
           entityId={undefined}
           draggable={true}

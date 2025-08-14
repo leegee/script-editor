@@ -29,6 +29,7 @@ const ActCard: Component<ActCardProps> = (props) => {
         <Show when={actData()} fallback={<h2 class='no-content'>Not found</h2>}>
             {(actValue) => (
                 <Card
+                    draggable={true}
                     parentType='stories'
                     parentId={props.parentId}
                     entityType="acts"

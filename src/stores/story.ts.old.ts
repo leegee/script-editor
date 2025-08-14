@@ -32,13 +32,13 @@ type ParentOptions<T extends keyof EntityMap> = {
 
 // To document who owns whom, and where:
 export const ParentMap = {
-    acts: { parentType: 'story', parentListField: 'actIds' },
     scenes: { parentType: 'acts', parentListField: 'sceneIds' },
     beats: { parentType: 'scenes', parentListField: 'beatIds' },
     scriptlines: { parentType: 'beats', parentListField: 'scriptLineIds' },
-    characters: { parentType: 'story', parentListField: 'characterIds' },
-    locations: { parentType: 'story', parentListField: 'locationIds' },
-    story: undefined // root has no parent
+    acts: { parentType: 'stories', parentListField: 'actIds' },
+    characters: { parentType: 'stories', parentListField: 'characterIds' },
+    locations: { parentType: 'stories', parentListField: 'locationIds' },
+    story: undefined, // root has no parent
 } as const;
 
 
