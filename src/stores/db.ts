@@ -28,7 +28,7 @@ export class StoryDexie extends Dexie implements StoryDexieTables {
             story: '++id, *actIds, *characterIds, *locationIds',
             acts: '++id, *sceneIds, number',
             scenes: '++id, *beatIds, number',
-            beats: '++id, *sceneId, *scriptLineIds, number',
+            beats: '++id, sceneId, *scriptLineIds, number',
             scriptlines: '++id, beatId, number',
             characters: '++id',
             locations: '++id',
