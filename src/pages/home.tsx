@@ -28,8 +28,8 @@ export default function Home(props) {
           menuItems={<ActCreator />}
           parentType='stories'
           parentId='story-001'
-          entityType='acts'
-          entityId={undefined}
+          entityType='stories'
+          entityId={"story-001"}
           draggable={true}
         >
           <ActDetails summary={true} />
