@@ -1,7 +1,5 @@
 # Prototype Script Editor
 
-[https://leegee.github.io/script-editor/](https://leegee.github.io/script-editor/)
-
 Experiments in modelling a film script, 
 
 * SolidJS
