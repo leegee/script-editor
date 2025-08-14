@@ -270,6 +270,7 @@ export class StoryService {
         }
     }
 
+    // Only used by ScriptLineCard - and does that even use it?
     async findParentEntity(
         entityType: keyof NormalizedStoryData,  // eg 'beats'
         arrayKey: string,                       // eg 'scriptLineIds'
