@@ -22,7 +22,7 @@ interface ActCardProps {
 }
 
 const ActCard: Component<ActCardProps> = (props) => {
-    const [actResource] = storyApi.useAct(props.actId);
+    const [actResource] = storyApi.useAct(() => props.actId);
     const actData = () => props.act ?? actResource();
 
     return (
@@ -38,12 +38,11 @@ const ActCard: Component<ActCardProps> = (props) => {
                     title={
                         <>
                             <span class="icon">🎭</span>
-                            <TextInput as="number" {...bindField('acts', actValue().id, 'number')} />
                             <TextInput {...bindField('acts', actValue().id, 'title')} />
                         </>
                     }
                     link={`/act/${actValue().id}`}
-                    label={`View details for Act ${actValue().number}`}
+                    label={`View details of  this act`}
                     summary={!!props.summary}
                     menuItems={
                         <>

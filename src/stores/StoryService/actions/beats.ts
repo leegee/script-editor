@@ -29,12 +29,10 @@ export async function addNewBeatToScene(
     sceneId: string,
 ): Promise<Beat> {
     const newId = crypto.randomUUID();
-    const number = await this.getNextInSequence('beats');
 
     const newBeat: Beat = {
         id: newId,
-        number,
-        title: `Beat ${number}`,
+        title: `Untitled beat`,
         summary: '',
         scriptLineIds: [],
         plotIds: [],

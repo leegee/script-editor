@@ -27,7 +27,7 @@ export interface MediaLink {
 
 export interface Character {
     id: string;
-    number: number;
+
     name: string;
     bio?: string;
     tags?: string[];
@@ -39,7 +39,7 @@ export interface Character {
 
 export interface Plot {
     id: string;
-    number: number;
+
     name: string;
     description?: string;
     photoUrl?: string;
@@ -49,7 +49,7 @@ export interface Plot {
 
 export interface Location {
     id: string;
-    number: number;
+
     name: string;
     description?: string;
     photoUrl?: string;
@@ -66,7 +66,6 @@ export interface Location {
 
 export interface ScriptLine {
     id: string;
-    number: number;
     type: ScriptLineType;
     characterId: string | null;
     text: string;
@@ -75,7 +74,7 @@ export interface ScriptLine {
 
 export interface Beat {
     id: string;
-    number: number;
+
     title?: string;
     summary: string;
     durationSeconds?: number;
@@ -85,7 +84,7 @@ export interface Beat {
 
 export interface Scene {
     id: string;
-    number: number;
+
     title: string;
     summary: string;
     locationId: string;
@@ -96,7 +95,7 @@ export interface Scene {
 
 export interface Act {
     id: string;
-    number: number;
+
     title: string;
     summary: string;
     sceneIds: string[];
@@ -105,7 +104,7 @@ export interface Act {
 
 export interface Story {
     id: string;
-    number: number; // unused just to be consistent
+    // unused just to be consistent
     title: string;
     description: string;
     actIds: string[];
@@ -156,7 +155,7 @@ export interface StoryTree {
 
 export interface ActTree {
     id: string;
-    number: number;
+
     title: string;
     summary: string;
     scenes: SceneTree[];
@@ -164,7 +163,7 @@ export interface ActTree {
 
 export interface SceneTree {
     id: string;
-    number: number;
+
     title: string;
     summary: string;
     locationId: string;
@@ -174,7 +173,7 @@ export interface SceneTree {
 
 export interface BeatTree {
     id: string;
-    number: number;
+
     title: string;
     summary: string;
     durationSeconds?: number;

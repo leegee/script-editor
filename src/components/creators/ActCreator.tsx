@@ -11,7 +11,6 @@ const ActCreator = () => {
     const openModal = async () => {
         const actId = await storyApi.createEntity('acts', {
             id: crypto.randomUUID(),
-            number: await storyApi.getNextInSequence('acts'),
             title: 'New Act',
             summary: '',
             sceneIds: [],
@@ -39,7 +38,6 @@ const ActCreator = () => {
                 <Modal title="Create New Act" open={!!newActId()} onClose={cancel}>
                     {newActId() && (() => {
                         const id = newActId()!;
-                        const numberField = bindField('acts', id, 'number');
                         const titleField = bindField('acts', id, 'title');
                         const summaryField = bindField('acts', id, 'summary');
 
@@ -47,7 +45,6 @@ const ActCreator = () => {
                             <div class="creator-form">
                                 <label>
                                     <span class="text">Number:</span>
-                                    <TextInput value={numberField.value} as="number" />
                                 </label>
 
                                 <label>

@@ -93,7 +93,7 @@ export class StoryService {
 
             // Bulk insert: convert each map to array
             await Promise.all([
-                await db.story.bulkPut(Object.values(normalized.stories)),
+                await db.stories.bulkPut(Object.values(normalized.stories)),
                 await db.acts.bulkPut(Object.values(normalized.acts)),
                 await db.scenes.bulkPut(Object.values(normalized.scenes)),
                 await db.beats.bulkPut(Object.values(normalized.beats)),
@@ -142,14 +142,6 @@ export class StoryService {
 
     private getTable<T extends keyof EntityMap>(type: T): Dexie.Table<EntityMap[T], string> {
         return this.db[type] as Dexie.Table<EntityMap[T], string>;
-    }
-
-    async getNextInSequence(this: StoryService, entity: keyof NormalizedStoryData): Promise<number> {
-        const table = this.db[entity];
-        if (!table) throw new Error(`Unknown entity: ${entity}`);
-
-        const highest = await table.orderBy('number').last();
-        return highest ? highest.number + 1 : 1;
     }
 
     async createEntity<T extends keyof EntityMap>(
@@ -219,7 +211,7 @@ export class StoryService {
 
     async asObjectUrl(): Promise<string | undefined> {
         try {
-            const stories = await this.db.story.toArray();
+            const stories = await this.db.stories.toArray();
             const acts = await this.db.acts.toArray();
             const scenes = await this.db.scenes.toArray();
             const beats = await this.db.beats.toArray();

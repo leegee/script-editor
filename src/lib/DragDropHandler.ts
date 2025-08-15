@@ -1,7 +1,7 @@
 import { storyApi } from '../stores/story';
 import { EntityMap } from './types';
 
-let draggedData: { entityId: string; entityType: string, parentId: string, parentType: string, } | null = null;
+let draggedData: { entityId: string; entityType: keyof EntityMap } | null = null;
 let lastHighlightedElement: HTMLElement | null = null;
 
 const resetState = () => {
@@ -10,85 +10,150 @@ const resetState = () => {
         lastHighlightedElement.classList.remove('drag-over-valid');
         lastHighlightedElement = null;
     }
-    console.log('[DragDrop] onDrop - Reset draggedData');
+    console.log('[DragDrop] Reset draggedData');
 };
 
 const validate = (condition: boolean, message: string) => {
     if (!condition) {
-        console.warn(`[DragDrop] onDrop - ${message}`);
+        console.warn(`[DragDrop] ${message}`);
         return false;
     }
     return true;
 };
+
+// Use storyApi.getEntities to find parent
+async function findParentEntity(entityType: keyof EntityMap, entityId: string) {
+    console.log(`[DragDrop] Looking up parent for entityType='${entityType}', entityId='${entityId}'`);
+    const hierarchy = DragDropHandler.hierarchy[entityType];
+    if (!hierarchy) return null;
+
+    const { parentClass, childIdsField } = hierarchy;
+    if (!parentClass) return null;
+
+    const parents = await storyApi.getEntities(parentClass);
+    console.log(`[DragDrop] Checking ${parents.length} potential parents (${parentClass})`);
+
+    for (const parent of parents) {
+        if (Array.isArray(parent[childIdsField]) && (parent[childIdsField] as string[]).includes(entityId)) {
+            console.log(`[DragDrop] Found parentId='${parent.id}' (${parentClass}) for ${entityType} ${entityId}`);
+            return { parent, parentType: parentClass };
+        }
+    }
+    console.warn(`[DragDrop] No parent found for ${entityType} ${entityId}`);
+    return null;
+}
+
 export class DragDropHandler {
-    static hierarchy = {
-        'scriptlines': { parentClass: 'beats', childIdsField: 'scriptLineIds' },
-        'beats': { parentClass: 'scenes', childIdsField: 'beatIds' },
-        'scenes': { parentClass: 'acts', childIdsField: 'sceneIds' },
-        'acts': { parentClass: 'stories', childIdsField: 'actIds' },
+    static hierarchy: Record<keyof EntityMap, { parentClass: keyof EntityMap | null; childIdsField: keyof any | null }> = {
+        scriptlines: { parentClass: 'beats', childIdsField: 'scriptLineIds' },
+        beats: { parentClass: 'scenes', childIdsField: 'beatIds' },
+        scenes: { parentClass: 'acts', childIdsField: 'sceneIds' },
+        acts: { parentClass: 'stories', childIdsField: 'actIds' },
+        characters: { parentClass: 'stories', childIdsField: 'characterIds' },
+        locations: { parentClass: 'stories', childIdsField: 'locationIds' },
+        plots: { parentClass: 'stories', childIdsField: 'plotIds' },
+        stories: { parentClass: null, childIdsField: null }
     };
 
-    static getEntityInfoFromElement(element: HTMLElement): { entityType: string | null; entityId: string | null } {
-        const entityType = element.dataset.entityType || null;
-        const entityId = element.dataset.entityId || null;
+    static getEntityInfoFromElement(element: HTMLElement | null): { entityType: keyof EntityMap | null; entityId: string | null } {
+        if (!element) return { entityType: null, entityId: null };
+        const closest = element.closest<HTMLElement>('[data-entity-id][data-entity-type]');
+        if (!closest) return { entityType: null, entityId: null };
+        const entityType = closest.dataset.entityType as keyof EntityMap;
+        const entityId = closest.dataset.entityId || null;
         return { entityType, entityId };
     }
 
-    static onDragStart(
-        event: DragEvent,
-        parentType: string,
-        parentId: string,
-        entityType: string,
-        entityId: string,
-    ) {
-        if (!entityType || !event.dataTransfer) {
-            console.warn('[DragDrop] onDragStart - Missing entityType or dataTransfer');
-            return;
-        }
+    static onDragStart(event: DragEvent) {
+        if (!event.dataTransfer) return;
+
+        const { entityType, entityId } = this.getEntityInfoFromElement(event.target as HTMLElement);
+        if (!validate(!!entityType && !!entityId, 'Missing entityType or entityId for drag')) return;
+
         event.stopPropagation();
-        const data = JSON.stringify({ entityId, entityType, parentType, parentId });
-        event.dataTransfer.setData('text/plain', data);
+        event.dataTransfer.setData('text/plain', JSON.stringify({ entityType, entityId }));
         event.dataTransfer.effectAllowed = 'move';
 
-        draggedData = { entityId, entityType, parentType, parentId };
-
-        console.log(`[DragDrop] onDragStart - Drag started for entityId='${entityId}', entityType='${entityType}', parentType='${parentType}', parentId='${parentId}'`);
+        draggedData = { entityType: entityType!, entityId: entityId! };
+        console.log(`[DragDrop] onDragStart - Dragging ${entityType} ${entityId}`);
     }
+
+    static async onDrop(event: DragEvent, targetElement: HTMLElement) {
+        event.preventDefault();
+        event.stopPropagation(); //  prevent bubbling to parent drop zones
+
+        if (!draggedData) return;
+
+        const { entityType: draggedType, entityId: draggedId } = draggedData;
+        const { entityType: targetType, entityId: targetId } = this.getEntityInfoFromElement(targetElement);
+
+        console.log(`[DragDrop] onDrop - dragged=${draggedType}:${draggedId}, target=${targetType}:${targetId}`);
+
+        if (!validate(!!targetType && !!targetId, 'Invalid drop target')) return;
+
+        // Same-type reorder
+        if (draggedType === targetType) {
+            const draggedParentInfo = await findParentEntity(draggedType, draggedId);
+            const targetParentInfo = await findParentEntity(targetType, targetId);
+
+            if (!draggedParentInfo || !targetParentInfo) return;
+
+            // Same parent → reorder
+            if (draggedParentInfo.parent.id === targetParentInfo.parent.id) {
+                const listField = this.hierarchy[draggedType].childIdsField!;
+                const parentList = [...(targetParentInfo.parent[listField] as string[])];
+
+                const fromIndex = parentList.indexOf(draggedId);
+                const toIndex = parentList.indexOf(targetId!);
+                if (fromIndex === -1 || toIndex === -1) return;
+
+                parentList.splice(fromIndex, 1);
+                parentList.splice(toIndex, 0, draggedId);
+
+                console.log(`[DragDrop] Reordering ${draggedType} within parent ${targetParentInfo.parent.id}`, parentList);
+                await storyApi.updateEntity(targetParentInfo.parentType, {
+                    ...targetParentInfo.parent,
+                    [listField]: parentList
+                });
+                console.log('-'.repeat(30))
+            } else {
+                // Moving between different parents of same type (e.g. scene from act-1 to act-2)
+                console.log(`[DragDrop] Moving ${draggedType} from ${draggedParentInfo.parent.id} to ${targetParentInfo.parent.id}`);
+                // TODO: implement same-type move logic
+            }
+        } else {
+            console.warn('[DragDrop] Moving to different type is not supported yet');
+        }
+
+        resetState();
+    }
+
 
     static onDragOver(event: DragEvent, targetElement: HTMLElement) {
         event.preventDefault();
-
         let isValidTarget = false;
 
         if (draggedData && event.dataTransfer) {
             const { entityType: draggedType } = draggedData;
-            const allowedParentType = this.hierarchy[draggedType]?.parentClass;
+            const { entityType: targetEntityType } = this.getEntityInfoFromElement(targetElement);
 
-            if (allowedParentType) {
-                const { entityType: targetEntityType } = this.getEntityInfoFromElement(targetElement);
+            if (draggedType === targetEntityType) {
+                event.dataTransfer.dropEffect = 'move';
+                event.stopPropagation();
+                isValidTarget = true;
 
-                if (targetEntityType === allowedParentType) {
-                    event.dataTransfer.dropEffect = 'move';
-                    event.stopPropagation();
-                    isValidTarget = true;
-
-                    if (lastHighlightedElement && lastHighlightedElement !== targetElement) {
-                        lastHighlightedElement.classList.remove('drag-over-valid');
-                    }
-
-                    if (!targetElement.classList.contains('drag-over-valid')) {
-                        targetElement.classList.add('drag-over-valid');
-                    }
-
-                    lastHighlightedElement = targetElement;
+                if (lastHighlightedElement && lastHighlightedElement !== targetElement) {
+                    lastHighlightedElement.classList.remove('drag-over-valid');
                 }
+                if (!targetElement.classList.contains('drag-over-valid')) {
+                    targetElement.classList.add('drag-over-valid');
+                }
+                lastHighlightedElement = targetElement;
             }
         }
 
         if (!isValidTarget) {
-            if (event.dataTransfer) {
-                event.dataTransfer.dropEffect = 'none';
-            }
+            if (event.dataTransfer) event.dataTransfer.dropEffect = 'none';
             if (lastHighlightedElement) {
                 lastHighlightedElement.classList.remove('drag-over-valid');
                 lastHighlightedElement = null;
@@ -96,84 +161,11 @@ export class DragDropHandler {
         }
     }
 
-    static async onDrop(event: DragEvent, targetElement: HTMLElement, refresh?: () => void) {
-        console.log('Enter onDrop')
-        event.preventDefault();
-
-        if (!validate(!!draggedData, 'No dragged data available')) return;
-
-        const { entityType: parentEntityType, entityId: parentId } = this.getEntityInfoFromElement(targetElement);
-        if (!validate(!!parentEntityType && !!parentId, 'Invalid drop target: missing entityType or entityId')) return;
-
-        const allowedParentType = this.hierarchy[draggedData.entityType]?.parentClass;
-        if (!validate(parentEntityType === allowedParentType,
-            `Invalid drop target entityType='${parentEntityType}' for dragged entityType='${draggedData.entityType}'. Expected parent type='${allowedParentType}'`)) return;
-
-        console.log(`[DragDrop] onDrop - Dropping entityId='${draggedData.entityId}' into parent '${parentEntityType}' with ID='${parentId}'`);
-
-        try {
-            const entityId = draggedData.entityId;
-            const childIdsField = this.hierarchy[draggedData.entityType].childIdsField;
-
-            // TODO Raise this function after adding childIdsField
-            const fetchAndValidateEntity = async (type: string, id: string, context: 'New' | 'Old') => {
-                const entity = await storyApi.getEntity(type as keyof EntityMap, id);
-                if (!validate(!!entity, `${context} parent entity not found`)) return null;
-                if (!validate(!!entity[childIdsField], `${context} parent entity missing childIdsField '${childIdsField}'`)) return null;
-                return entity;
-            };
-
-            const newParent = await fetchAndValidateEntity(parentEntityType, parentId, 'New');
-            if (!newParent) return;
-
-            const { parentType: oldParentType, parentId: oldParentId } = draggedData;
-
-            if (oldParentId !== parentId || oldParentType !== parentEntityType) {
-                const oldParent = await fetchAndValidateEntity(oldParentType, oldParentId, 'Old');
-                if (!oldParent) return;
-
-                const oldIds = oldParent[childIdsField] as string[];
-                const oldIndex = oldIds.indexOf(entityId);
-                if (oldIndex !== -1) {
-                    oldIds.splice(oldIndex, 1);
-                    console.log(`[DragDrop] onDrop - Removed entityId='${entityId}' from old parent '${oldParentType}' ID='${oldParentId}' at index ${oldIndex}`);
-                    await storyApi.updateEntityField(oldParentType as keyof EntityMap, oldParentId, childIdsField, oldIds);
-                    console.log('[DragDrop] onDrop - Old parent updated');
-                } else {
-                    console.log('[DragDrop] onDrop - Dragged entityId not found in old parent');
-                }
-            }
-
-            const newIds = [...(newParent[childIdsField] as string[])];
-            const existingIndex = newIds.indexOf(entityId);
-            if (existingIndex !== -1) {
-                newIds.splice(existingIndex, 1);
-                console.log(`[DragDrop] onDrop - Removed duplicate entityId from index ${existingIndex} in new parent (reordering)`);
-            }
-            newIds.push(entityId);
-            console.log(`[DragDrop] onDrop - New children order: [${newIds.join(', ')}]`);
-
-            await storyApi.updateEntityField(parentEntityType as keyof EntityMap, parentId, childIdsField, newIds);
-            console.log('[DragDrop] onDrop - New parent updated successfully');
-
-            if (refresh) {
-                refresh();
-                console.log('[DragDrop] onDrop - UI refresh triggered');
-            }
-        } catch (error) {
-            console.error('[DragDrop] onDrop - Error updating entity:', error);
-        } finally {
-            resetState();
-        }
-    }
-
-
-    static onDragEnd(e) {
-        // console.log('[ragDrop] onDragEnd - Drag operation ended, reset draggedData', draggedData, e);
+    static onDragEnd() {
         if (lastHighlightedElement) {
             lastHighlightedElement.classList.remove('drag-over-valid');
             lastHighlightedElement = null;
         }
-        // draggedData = null;
+        resetState();
     }
 }

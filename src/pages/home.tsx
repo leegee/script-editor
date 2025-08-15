@@ -7,7 +7,7 @@ import { setUiOptions, uiOptions } from '../stores/ui';
 import { createMemo } from 'solid-js';
 import CharacterCreator from '../components/creators/CharacterCreator';
 import LocationCreator from '../components/creators/LocationCreator';
-import ActDetails from './ActDetails';
+import ActList from '../components/lists/ActList';
 import PlotList from '../components/lists/PlotList';
 
 export default function Home(props) {
@@ -32,7 +32,7 @@ export default function Home(props) {
           entityId={"story-001"}
           draggable={true}
         >
-          <ActDetails summary={true} />
+          <ActList />
         </Card>
       </aside>
 

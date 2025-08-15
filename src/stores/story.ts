@@ -1,5 +1,5 @@
 // Store containing the whole story
-import { Accessor, createSignal, onCleanup } from 'solid-js';
+import { Accessor, createEffect, createSignal, onCleanup } from 'solid-js';
 import Dexie, { liveQuery } from 'dexie';
 import { db, type StoryDexie } from '../stores/db';
 import type { EntityMap, NormalizedStoryData } from '../lib/types';
@@ -89,26 +89,28 @@ export class StoryService {
         console.info('All story data has been reset.');
     }
 
-    /**
-     * Wraps a `liveQuery` (cotent of which is supplied via the sole arg)
-     * so you can bind the result to SolidJS reactivity.
-     * It creates a Signal to store the query result.
-     * Subscribes to the liveQuery Observable.
-     * On each emission, it updates the Signal.
-     * Cleans up the subscription when the component disposes.
-     * Returns the Signal's getter (data).
-     * 
-     * @param queryFn `liveQuery` content
-     * @returns `Signal` getter
-     */
-    createLiveSignal<T>(queryFn: () => Promise<T> | T): LiveSignal<T> {
+
+    createLiveSignal<T>(queryFn: () => Promise<T> | T) {
         const [data, setData] = createSignal<T | undefined>(undefined);
 
-        const subscription = liveQuery(queryFn).subscribe({
-            next: (value) => setData(value as Exclude<T, Function>),
-        });
+        createEffect(() => {
+            const result = queryFn();
 
-        onCleanup(() => subscription.unsubscribe());
+            if (result instanceof Promise) {
+                let cancelled = false;
+                result.then((value) => {
+                    if (!cancelled) setData(() => value as T);
+                });
+                onCleanup(() => { cancelled = true });
+            } else {
+                // If queryFn returns a Dexie collection or Table, wrap it in liveQuery directly
+                const observable = liveQuery(() => queryFn() as T);
+                const subscription = observable.subscribe({
+                    next: (value) => setData(() => value as T),
+                });
+                onCleanup(() => subscription.unsubscribe());
+            }
+        });
 
         return [data] as const;
     }
@@ -186,14 +188,6 @@ export class StoryService {
         return this.db[type] as Dexie.Table<EntityMap[T], string>;
     }
 
-    async getNextInSequence(this: StoryService, entity: keyof NormalizedStoryData): Promise<number> {
-        const table = this.db[entity];
-        if (!table) throw new Error(`Unknown entity: ${entity}`);
-
-        const highest = await table.orderBy('number').last();
-        return highest ? highest.number + 1 : 1;
-    }
-
     async createEntity<T extends keyof EntityMap>(
         type: T,
         entity: EntityMap[T],
@@ -223,6 +217,14 @@ export class StoryService {
         return rv;
     }
 
+
+    async getEntities<T extends keyof EntityMap>(type: T): Promise<EntityMap[T][]> {
+        const table = this.db[type] as Dexie.Table<EntityMap[T], string>;
+        const allEntities = await table.toArray();
+        console.log(`[StoryService] getEntities - Fetched ${allEntities.length} entities of type='${type}'`);
+        return allEntities;
+    }
+
     async setEntity<T extends keyof EntityMap>(type: T, entity: EntityMap[T]): Promise<void> {
         await this.getTable(type).put(entity);
     }
@@ -231,7 +233,11 @@ export class StoryService {
         type: T,
         entity: EntityMap[T]
     ): Promise<void> {
-        await this.getTable(type).put(entity);
+        console.log('storyApi.updateEntity: type = ' + type, 'entity =', JSON.stringify(entity))
+        const table = this.getTable(type);
+        console.log('Before put, current row:', JSON.stringify(await table.get(entity.id)));
+        await table.put(entity);
+        console.log('After put, row:', JSON.stringify(await table.get(entity.id)));
     }
 
     async updateEntityField<T extends keyof EntityMap, K extends keyof EntityMap[T]>(
