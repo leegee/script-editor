@@ -1,4 +1,4 @@
-import type { StoryService } from '../../story';
+import type { LiveSignal, StoryService } from '../../story';
 import type { ScriptLine, ScriptLineType } from '../../../lib/types';
 
 function orderByIds<T extends { id: string }>(items: T[], idOrder: string[]): T[] {
@@ -19,21 +19,22 @@ export function useScriptline(
 export function useScriptlinesByBeatId(
     this: StoryService,
     beatId: () => string | undefined
-) {
+): LiveSignal<ScriptLine[]> {
     return this.createLiveSignal(async () => {
-        const id = beatId();
-        if (!id) return [];
-
-        const beats = await this.db.beats.where('id').equals(id).toArray();
+        const beats = await this.db.beats.where('id').equals(beatId()).toArray();
         const scriptLineIds = beats.flatMap(b => b.scriptLineIds ?? []);
-        if (scriptLineIds.length === 0) return [];
-
         const uniqueScriptLineIds = [...new Set(scriptLineIds)];
-        const scriptLines = await this.db.scriptlines.where('id').anyOf(uniqueScriptLineIds).toArray();
 
-        return orderByIds(scriptLines, scriptLineIds);
+        const scriptLines = await this.db.scriptlines.bulkGet(uniqueScriptLineIds);
+
+        const sortedScriptLines = scriptLineIds
+            .map(id => scriptLines.find(sl => sl?.id === id))
+            .filter((sl): sl is ScriptLine => sl !== undefined);
+
+        return sortedScriptLines;
     });
 }
+
 
 export async function addNewScriptLineToBeat(
     this: StoryService,

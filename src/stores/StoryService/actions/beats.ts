@@ -8,18 +8,24 @@ export function useBeat(beatId: () => string | undefined): LiveSignal<Beat | und
     });
 }
 
-export function useBeatsBySceneId(this: StoryService, sceneId: () => string | undefined): LiveSignal<Beat[]> {
+export function useBeatsBySceneId(
+    this: StoryService,
+    sceneId: () => string | undefined
+): LiveSignal<Beat[]> {
     return this.createLiveSignal(async () => {
-        const id = sceneId();
-        if (!id) return [];
+        const scenes = await this.db.scenes.where('id').equals(sceneId()).toArray();
+        const beatIds = scenes
+            .map(s => s.beatIds ?? [])
+            .flat();
+        const uniqueBeatIds = [...new Set(beatIds)];
 
-        const scene = await this.db.scenes.get(id);
-        if (!scene || scene.beatIds.length === 0) return [];
+        const beats = await this.db.beats.bulkGet(uniqueBeatIds);
 
-        const beats = await this.db.beats.bulkGet(scene.beatIds);
+        const sortedBeats = beatIds
+            .map(id => beats.find(beat => beat?.id === id))
+            .filter((beat): beat is Beat => beat !== undefined);
 
-        // Filter out potential undef
-        return beats.filter((b): b is Beat => !!b);
+        return sortedBeats;
     });
 }
 

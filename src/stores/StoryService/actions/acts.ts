@@ -19,25 +19,26 @@ export function useActs(this: StoryService) {
     return this.createLiveSignal(() => this.db.acts.toArray());
 }
 
+
 export function useScenesByActId(
     this: StoryService,
     actId: () => string | undefined
 ): LiveSignal<Scene[]> {
     return this.createLiveSignal(async () => {
-        if (!actId()) return [];
+        const acts = await this.db.acts.where('id').equals(actId()).toArray();
+        const sceneIds = acts
+            .map(s => s.sceneIds)
+            .flat();
+        const uniqueSceneIds = [...new Set(sceneIds)];
 
-        // live query depends on the act row
-        const act = await this.db.acts.get(actId());
-        if (!act) return [];
+        const scenes = await this.db.scenes.bulkGet(uniqueSceneIds);
 
-        const sceneIds = act.sceneIds ?? [];
-        if (sceneIds.length === 0) return [];
+        // Sort scenes to match the order in act.sceneIds
+        const sortedScenes = sceneIds
+            .map(id => scenes.find(scene => scene?.id === id))
+            .filter((scene): scene is Scene => scene !== undefined);
 
-        const scenes = await this.db.scenes.bulkGet(sceneIds);
-
-        // preserve order according to act.sceneIds
-        const sceneMap = new Map(scenes.map(s => [s.id, s]));
-        return sceneIds.map(id => sceneMap.get(id)).filter(Boolean) as Scene[];
+        return sortedScenes;
     });
 }
 
